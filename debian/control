@@ -1,0 +1,22 @@
+## This file is part of Whonix.
+## Copyright (C) 2015 Patrick Schleizer <adrelanos@riseup.net>
+## See the file COPYING for copying conditions.
+
+Source: sdwdate-gui
+Section: misc
+Priority: optional
+Maintainer: troubadoour <trobador@riseup.net>
+Build-Depends: debhelper (>= 9), faketime, genmkfile
+Homepage: https://www.whonix.org/wiki/Dev/TimeSync
+Vcs-Browser: https://github.com/Whonix/sdwdate-gui
+Vcs-Git: https://github.com/Whonix/sdwdate-gui.git
+Standards-Version: 3.9.6
+
+Package: sdwdate-gui
+Architecture: all
+Depends: sdwdate, sudo, python, ${misc:Depends}
+Recommends: vbox-disable-timesync
+Description: Sdwdate Monitor
+ sdwdate-gui is a systray icon monitor for sdwdate: checks sdwdate's status
+ and modify the tray icon accordingly. In addition, it allows the user to
+ restart sdwdate and view the log.

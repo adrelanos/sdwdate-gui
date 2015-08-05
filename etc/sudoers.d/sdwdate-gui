@@ -1,0 +1,14 @@
+## This file is part of Whonix.
+## Copyright (C) 2012 - 2014 Patrick Schleizer <adrelanos@riseup.net>
+## See the file COPYING for copying conditions.
+
+## sdwdate-gui is running as user
+ALL ALL=NOPASSWD: /usr/sbin/service timesanitycheck status
+ALL ALL=NOPASSWD: /usr/sbin/service timesanitycheck start
+ALL ALL=NOPASSWD: /usr/sbin/service timesanitycheck stop
+ALL ALL=NOPASSWD: /usr/sbin/service timesanitycheck restart
+ALL ALL=NOPASSWD: /usr/sbin/service bootclockrandomization status
+
+## Allow Network Time Synchronization without password.
+## Required when manually starting timesync as user.
+ALL ALL=NOPASSWD: /bin/systemctl restart sdwdate
