@@ -1,13 +1,12 @@
 #! /usr/bin/env python
-from PyQt4 import QtGui
-from PyQt4.QtCore import QThread, pyqtSignal, QString
-import os
-import time
+from PyQt4 import QtGui, QtCore
+from PyQt4.QtCore import QFileSystemWatcher as watcher
 import subprocess
 from subprocess import check_output, call
+import pickle
 
 
-class TimesyncMenu(QtGui.QMenu):
+class SdwdateTrayMenu(QtGui.QMenu):
 
     def __init__(self, parent=None):
         QtGui.QMenu.__init__(self, "File", parent)
@@ -17,10 +16,10 @@ class TimesyncMenu(QtGui.QMenu):
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
-        icon = QtGui.QIcon("/usr/share/icons/anon-icon-pack/timesync.ico")
-        action = QtGui.QAction(icon, "Restart fresh (set time from web date)", self)
-        action.triggered.connect(restart_fresh)
-        self.addAction(action)
+        #icon = QtGui.QIcon("/usr/share/icons/anon-icon-pack/timesync.ico")
+        #action = QtGui.QAction(icon, "Restart fresh (set time from web date)", self)
+        #action.triggered.connect(restart_fresh)
+        #self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme("application-exit")
         action = QtGui.QAction(icon, "&Exit", self)
@@ -28,58 +27,50 @@ class TimesyncMenu(QtGui.QMenu):
         self.addAction(action)
 
 
-class TimesyncTrayIcon(QtGui.QSystemTrayIcon):
+class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
     def __init__(self, parent=None):
         QtGui.QSystemTrayIcon.__init__(self, parent)
 
-        self.setIcon(QtGui.QIcon("/usr/share/icons/anon-icon-pack/timesync.ico"))
+        self.setIcon(QtGui.QIcon('/home/user/IconApproved.png'))
 
-        self.right_click_menu = TimesyncMenu()
+        self.right_click_menu = SdwdateTrayMenu()
         self.setContextMenu(self.right_click_menu)
         self.setToolTip('Secure Network Time Synchronisation')
 
-        self.read_status = self.ReadSdwdateOutput()
-        self.read_status.newStatus.connect(self.status_received)
-        self.read_status.start()
-
         self.check_bootclockrandomization()
         self.check_sdwdate()
+
+        self.path = '/var/run/sdwdate/status'
+
+        ## Read status when gui is loaded.
+        self.status_changed()
+
+        self.watcher = watcher([self.path])
+        self.watcher.fileChanged.connect(self.status_changed)
 
     def check_bootclockrandomization(self):
         try:
             status = check_output(['systemctl', 'status', 'bootclockrandomization'])
         except subprocess.CalledProcessError:
             message = 'bootclockrandomization failed.'
-            self.status_received(message)
+            print message
 
     def check_sdwdate(self):
         try:
             status = check_output(['systemctl', 'status', 'sdwdate'])
         except subprocess.CalledProcessError:
             message = 'sdwdate is not running.'
-            self.status_received(message)
+            print message
 
-    def status_received(self, arg):
-        #print(arg)
-        pass
-        #self.setIcon(QtGui.QIcon.fromTheme("media-skip-backward"))
+    def status_changed(self):
+        with open(self.path, 'rb') as f:
+            status = pickle.load(f)
 
+        self.setIcon(QtGui.QIcon(status['icon']))
 
-    class ReadSdwdateOutput(QThread):
-
-        newStatus = pyqtSignal(QString)
-
-        def run(self):
-            while True:
-                file_name = '/tmp/sdwdate/last_output'
-                if os.path.exists(file_name):
-                    f = open(file_name, 'r')
-                    output = f.read()
-                    f.close()
-                    os.remove(file_name)
-                    self.newStatus.emit(output)
-                time.sleep(0.5)
+        self.setToolTip('Secure Network Time Synchronisation\n' +
+                        status['message'])
 
 
 def restart_sdwdate():
@@ -89,9 +80,8 @@ def restart_fresh():
     pass
 
 def main():
-    a = 0
     app = QtGui.QApplication([])
-    timesync_icon = TimesyncTrayIcon()
+    timesync_icon = SdwdateTrayIcon()
     timesync_icon.show()
     app.exec_()
 
