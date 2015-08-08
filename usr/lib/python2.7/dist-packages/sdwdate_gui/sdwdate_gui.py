@@ -53,8 +53,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         else:
             self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
             self.setToolTip('sdwdate not running\n' +
-                            'Try to restart it: Right click -> Resatart sdwdate' +
-                            'If the icon stays red, please report this bug')
+                            'Try to restart it: Right click -> Restart sdwdate\n' +
+                            'If the icon stays red, please report this bug.')
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
