@@ -5,6 +5,7 @@ from PyQt4.QtCore import QFileSystemWatcher as watcher
 import subprocess
 from subprocess import check_output, call
 import pickle
+import os
 
 
 class SdwdateTrayMenu(QtGui.QMenu):
@@ -41,20 +42,21 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.check_bootclockrandomization()
 
-        if self.check_sdwdate():
-            self.path = '/var/run/sdwdate/status'
-            ## Read status when gui is loaded.
-            self.status_changed()
+        self.path = '/var/run/sdwdate'
+        self.status_path = '/var/run/sdwdate/status'
 
-            self.watcher = watcher([self.path])
+        if os.path.exists(self.status_path):
+            ## Read status when GUI is loaded.
+            self.status_changed()
+            self.watcher = watcher([self.status_path])
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
-            message = ('Time Synchronisation Monitor\n' +
-                       'sdwdate is not running.\n' +
-                       'Please check sdwdate status, then exit and\n' +
-                       'restart Time Synchronization Monitor.')
-            self.setToolTip(message)
+            self.setToolTip('sdwdate not running\n' +
+                            'Try to restart it: Right click -> Resatart sdwdate' +
+                            'If the icon stays red, please report this bug')
+            self.watcher_2 = watcher([self.path])
+            self.watcher_2.directoryChanged.connect(self.watch_folder)
 
     def check_bootclockrandomization(self):
         try:
@@ -63,21 +65,16 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             message = 'bootclockrandomization failed.'
             print message
 
-    def check_sdwdate(self):
-        try:
-            status = check_output(['systemctl', 'status', 'sdwdate'])
-            return True
-        except subprocess.CalledProcessError:
-            return False
-
     def status_changed(self):
-        with open(self.path, 'rb') as f:
+        with open(self.status_path, 'rb') as f:
             status = pickle.load(f)
+            self.setIcon(QtGui.QIcon(status['icon']))
+            self.setToolTip('Secure Network Time Synchronisation\n' +
+                            status['message'])
 
-        self.setIcon(QtGui.QIcon(status['icon']))
-
-        self.setToolTip('Secure Network Time Synchronisation\n' +
-                        status['message'])
+    def watch_folder(self):
+        self.watcher = watcher([self.status_path])
+        self.watcher.fileChanged.connect(self.status_changed)
 
 
 def restart_sdwdate():
