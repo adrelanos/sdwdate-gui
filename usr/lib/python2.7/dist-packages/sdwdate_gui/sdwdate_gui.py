@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QFileSystemWatcher as watcher
 import subprocess
@@ -39,15 +40,21 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.setToolTip('Secure Network Time Synchronisation')
 
         self.check_bootclockrandomization()
-        self.check_sdwdate()
 
-        self.path = '/var/run/sdwdate/status'
+        if self.check_sdwdate():
+            self.path = '/var/run/sdwdate/status'
+            ## Read status when gui is loaded.
+            self.status_changed()
 
-        ## Read status when gui is loaded.
-        self.status_changed()
-
-        self.watcher = watcher([self.path])
-        self.watcher.fileChanged.connect(self.status_changed)
+            self.watcher = watcher([self.path])
+            self.watcher.fileChanged.connect(self.status_changed)
+        else:
+            self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
+            message = ('Time Synchronisation Monitor\n' +
+                       'sdwdate is not running.\n' +
+                       'Please check sdwdate status, then exit and\n' +
+                       'restart Time Synchronization Monitor.')
+            self.setToolTip(message)
 
     def check_bootclockrandomization(self):
         try:
@@ -59,9 +66,9 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
     def check_sdwdate(self):
         try:
             status = check_output(['systemctl', 'status', 'sdwdate'])
+            return True
         except subprocess.CalledProcessError:
-            message = 'sdwdate is not running.'
-            print message
+            return False
 
     def status_changed(self):
         with open(self.path, 'rb') as f:
