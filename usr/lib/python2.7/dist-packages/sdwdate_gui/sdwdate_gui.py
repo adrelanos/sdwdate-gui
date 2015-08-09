@@ -69,7 +69,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         with open(self.status_path, 'rb') as f:
             status = pickle.load(f)
             self.setIcon(QtGui.QIcon(status['icon']))
-            self.setToolTip('Secure Network Time Synchronisation\n' +
+            self.setToolTip('Time Synchronisation Monitor\n' +
                             status['message'])
 
     def watch_folder(self):
