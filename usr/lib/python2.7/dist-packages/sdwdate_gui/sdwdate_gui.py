@@ -38,7 +38,6 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.right_click_menu = SdwdateTrayMenu()
         self.setContextMenu(self.right_click_menu)
-        self.setToolTip('Secure Network Time Synchronisation')
 
         self.check_bootclockrandomization()
 
@@ -85,8 +84,8 @@ def restart_fresh():
 
 def main():
     app = QtGui.QApplication([])
-    timesync_icon = SdwdateTrayIcon()
-    timesync_icon.show()
+    sdwdate_tray = SdwdateTrayIcon()
+    sdwdate_tray.show()
     app.exec_()
 
 if __name__ == "__main__":
