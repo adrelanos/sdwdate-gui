@@ -9,7 +9,7 @@ import os
 import time
 
 
-class SdwdateTrayMenu(QtGui.QMenu):
+class RightClickMenu(QtGui.QMenu):
 
     def __init__(self, parent=None):
         QtGui.QMenu.__init__(self, "File", parent)
@@ -37,7 +37,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.setIcon(QtGui.QIcon('/home/user/IconApproved.png'))
 
-        self.right_click_menu = SdwdateTrayMenu()
+        self.right_click_menu = RightClickMenu()
         self.setContextMenu(self.right_click_menu)
 
         self.check_bootclockrandomization()
@@ -58,6 +58,13 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
+        self.activated.connect(self.show_status)
+        self.message = ''
+
+    def show_status(self, value):
+        if value == self.Trigger: # left click
+            self.showMessage('sdwdate status', self.message)
+
     def check_bootclockrandomization(self):
         try:
             status = check_output(['systemctl', 'status', 'bootclockrandomization'])
@@ -72,6 +79,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.setIcon(QtGui.QIcon(status['icon']))
             self.setToolTip('Time Synchronisation Monitor\n' +
                             status['message'])
+            self.message = status['message']
 
     def watch_folder(self):
         self.watcher = watcher([self.status_path])
