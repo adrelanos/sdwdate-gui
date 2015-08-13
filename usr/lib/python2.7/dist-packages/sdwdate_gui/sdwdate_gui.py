@@ -6,6 +6,7 @@ import subprocess
 from subprocess import check_output, call
 import pickle
 import os
+import time
 
 
 class SdwdateTrayMenu(QtGui.QMenu):
@@ -65,6 +66,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             print message
 
     def status_changed(self):
+        time.sleep(0.01)
         with open(self.status_path, 'rb') as f:
             status = pickle.load(f)
             self.setIcon(QtGui.QIcon(status['icon']))
