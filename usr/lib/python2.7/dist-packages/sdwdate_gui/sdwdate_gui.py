@@ -14,15 +14,32 @@ class RightClickMenu(QtGui.QMenu):
     def __init__(self, parent=None):
         QtGui.QMenu.__init__(self, "File", parent)
 
+        #icon = QtGui.QIcon.fromTheme('dialog-information')
+        #action = QtGui.QAction(icon, "View status", self)
+        ##action.triggered.connect(restart_sdwdate)
+        #self.addAction(action)
+
+        icon = QtGui.QIcon.fromTheme('text-x-script')
+        action = QtGui.QAction(icon, "Open sdwdate's log", self)
+        #action.triggered.connect(restart_sdwdate)
+        self.addAction(action)
+
+        self.addSeparator()
+
         icon = QtGui.QIcon.fromTheme('system-reboot')
-        action = QtGui.QAction(icon, "Restart sdwdate", self)
+        action = QtGui.QAction(icon, "Restart sdwdate - Gradually adjust the time.", self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
-        #icon = QtGui.QIcon("/usr/share/icons/anon-icon-pack/timesync.ico")
-        #action = QtGui.QAction(icon, "Restart fresh (set time from web date)", self)
-        #action.triggered.connect(restart_fresh)
-        #self.addAction(action)
+        icon = QtGui.QIcon.fromTheme('system-reboot')
+        action = QtGui.QAction(icon, "Restart sdwdate - Clock jump.", self)
+        action.triggered.connect(restart_sdwdate)
+        self.addAction(action)
+
+        icon = QtGui.QIcon.fromTheme('system-shutdown')
+        action = QtGui.QAction(icon, "Stop sdwdate", self)
+        #action.triggered.connect(restart_sdwdate)
+        self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme("application-exit")
         action = QtGui.QAction(icon, "&Exit", self)
