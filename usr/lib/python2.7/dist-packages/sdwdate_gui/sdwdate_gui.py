@@ -61,6 +61,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.path = '/var/run/sdwdate'
         self.status_path = '/var/run/sdwdate/status'
+        self.message = ''
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -76,7 +77,6 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
         self.activated.connect(self.show_status)
-        self.message = ''
 
     def show_status(self, value):
         if value == self.Trigger: # left click
