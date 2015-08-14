@@ -27,12 +27,14 @@ class RightClickMenu(QtGui.QMenu):
         self.addSeparator()
 
         icon = QtGui.QIcon.fromTheme('system-reboot')
-        action = QtGui.QAction(icon, "Restart sdwdate - Gradually adjust the time.", self)
+        text = 'Restart sdwdate - Gradually adjust the time.'
+        action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme('system-reboot')
-        action = QtGui.QAction(icon, "Restart sdwdate - Clock jump.", self)
+        text = 'Restart sdwdate - Clock jump.'
+        action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
@@ -45,6 +47,11 @@ class RightClickMenu(QtGui.QMenu):
         action = QtGui.QAction(icon, "&Exit", self)
         action.triggered.connect(QtGui.qApp.quit)
         self.addAction(action)
+
+
+class Update(QtCore.QObject):
+
+    update_tip = QtCore.pyqtSignal()
 
 
 class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
@@ -63,16 +70,23 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.status_path = '/var/run/sdwdate/status'
         self.message = ''
 
+        self.update = Update(self)
+        self.update.update_tip.connect(self.update_tooltip)
+
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
             self.status_changed()
+            self.setToolTip(self.message)
             self.watcher = watcher([self.status_path])
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
-            self.setToolTip('sdwdate not running\n' +
-                            'Try to restart it: Right click -> Restart sdwdate\n' +
-                            'If the icon stays red, please report this bug.')
+            msg = ('Time Synchronisation Monitor\n' +
+                   'sdwdate not running\n' +
+                   'Try to restart it: Right click -> Restart sdwdate\n' +
+                   'If the icon stays red, please report this bug.')
+            self.message = msg
+            self.setToolTip(msg)
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
@@ -80,27 +94,35 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
     def show_status(self, value):
         if value == self.Trigger: # left click
-            self.showMessage('sdwdate status', self.message)
+            self.showMessage('Time Synchronisation Monitor', self.message)
 
-    def check_bootclockrandomization(self):
-        try:
-            status = check_output(['systemctl', 'status', 'bootclockrandomization'])
-        except subprocess.CalledProcessError:
-            message = 'bootclockrandomization failed.'
-            print message
+    def update_tooltip(self):
+        if self.geometry().contains(QtGui.QCursor.pos()):
+            QtGui.QToolTip.showText(QtGui.QCursor.pos(), self.message)
 
     def status_changed(self):
+        ## Prevent race condition.
         time.sleep(0.01)
         with open(self.status_path, 'rb') as f:
             status = pickle.load(f)
-            self.setIcon(QtGui.QIcon(status['icon']))
-            self.setToolTip('Time Synchronisation Monitor\n' +
-                            status['message'])
-            self.message = status['message']
+
+        self.setIcon(QtGui.QIcon(status['icon']))
+        self.message = 'Time Synchronisation Monitor\n' + status['message']
+        self.setToolTip(self.message)
+        self.update.update_tip.emit()
 
     def watch_folder(self):
         self.watcher = watcher([self.status_path])
         self.watcher.fileChanged.connect(self.status_changed)
+
+    def check_bootclockrandomization(self):
+        try:
+            status = check_output(['systemctl',
+                                   'status',
+                                   'bootclockrandomization'])
+        except subprocess.CalledProcessError:
+            message = 'bootclockrandomization failed.'
+            print message
 
 
 def restart_sdwdate():
