@@ -27,13 +27,13 @@ class RightClickMenu(QtGui.QMenu):
         self.addSeparator()
 
         icon = QtGui.QIcon.fromTheme('system-reboot')
-        text = 'Restart sdwdate - Gradually adjust the time.'
+        text = 'Restart sdwdate - Gradually adjust the time'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme('system-reboot')
-        text = 'Restart sdwdate - Clock jump.'
+        text = 'Restart sdwdate - Instantly adjust the time.'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
