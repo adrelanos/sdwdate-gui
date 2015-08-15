@@ -64,6 +64,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.right_click_menu = RightClickMenu()
         self.setContextMenu(self.right_click_menu)
 
+        self.check_timesanitycheck()
         self.check_bootclockrandomization()
 
         self.path = '/var/run/sdwdate'
@@ -115,13 +116,24 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.watcher = watcher([self.status_path])
         self.watcher.fileChanged.connect(self.status_changed)
 
+    def check_timesanitycheck(self):
+        try:
+            status = check_output(['dpkg-query',
+                                   '--show',
+                                   "--showformat='${db:Status-Abbrev}'",
+                                   "timesanitycheck"])
+        except subprocess.CalledProcessError as e:
+            message = 'timesanitycheck is not installed'
+            print message
+
     def check_bootclockrandomization(self):
         try:
-            status = check_output(['systemctl',
-                                   'status',
-                                   'bootclockrandomization'])
-        except subprocess.CalledProcessError:
-            message = 'bootclockrandomization failed.'
+            status = check_output(['dpkg-query',
+                                   '--show',
+                                   "--showformat='${db:Status-Abbrev}'",
+                                   "bootclockrandomization"])
+        except subprocess.CalledProcessError as e:
+            message = 'bootclockrandomization is not installed'
             print message
 
 
