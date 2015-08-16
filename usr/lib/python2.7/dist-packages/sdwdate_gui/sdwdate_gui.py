@@ -88,9 +88,9 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
-        self.activated.connect(self.show_status)
+        self.activated.connect(self.show_message)
 
-    def show_status(self, reason):
+    def show_message(self, reason):
         if reason == self.Trigger: # left click
             self.showMessage('Time Synchronisation Monitor', self.message)
 
