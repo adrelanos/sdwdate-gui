@@ -2,6 +2,7 @@
 
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QFileSystemWatcher as watcher
+from PyQt4.QtCore import QThread
 import subprocess
 from subprocess import check_output, call
 import pickle
@@ -50,8 +51,23 @@ class RightClickMenu(QtGui.QMenu):
 
 
 class Update(QtCore.QObject):
-
     update_tip = QtCore.pyqtSignal()
+
+
+## Started by left click action.
+## Set message_showing for the default time
+## the balloon is displayed (10 seconds).
+class MessageStatus(QThread):
+    message_status = QtCore.pyqtSignal(bool)
+    showing = False
+
+    def run(self):
+        self.showing = True
+        self.message_status.emit(True)
+        while self.showing:
+            time.sleep(10)
+            self.message_status.emit(False)
+            self.showing = False
 
 
 class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
@@ -69,7 +85,14 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.message = ''
 
         self.update = Update(self)
-        self.update.update_tip.connect(self.update_tooltip)
+        self.update.update_tip.connect(self.update_tip)
+
+        self.message_status = MessageStatus(self)
+        self.message_status.message_status.connect(self.update_message_status)
+        self.message_showing = False
+
+        self.activated.connect(self.show_message)
+        self.messageClicked.connect(self.message_clicked)
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -88,15 +111,28 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
-        self.activated.connect(self.show_message)
-
     def show_message(self, reason):
         if reason == self.Trigger: # left click
+            self.message_status.start()
             self.showMessage('Time Synchronisation Monitor', self.message)
 
-    def update_tooltip(self):
+    ## The balloon is closed on left click.
+    ## Forbid showing again.
+    def message_clicked(self):
+        self.message_status.quit()
+        self.message_showing = False
+
+    ## Signal generated in MessageStatus.
+    def update_message_status(self, is_showing):
+        self.message_showing = is_showing
+
+    def update_tip(self):
+        ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
             QtGui.QToolTip.showText(QtGui.QCursor.pos(), self.message)
+        ## Update balloon message if it's already shown.
+        if self.message_showing:
+            self.showMessage('Time Synchronisation Monitor', self.message)
 
     def status_changed(self):
         ## Prevent race condition.
