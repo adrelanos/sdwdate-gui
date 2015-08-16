@@ -90,8 +90,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.activated.connect(self.show_status)
 
-    def show_status(self, value):
-        if value == self.Trigger: # left click
+    def show_status(self, reason):
+        if reason == self.Trigger: # left click
             self.showMessage('Time Synchronisation Monitor', self.message)
 
     def update_tooltip(self):
