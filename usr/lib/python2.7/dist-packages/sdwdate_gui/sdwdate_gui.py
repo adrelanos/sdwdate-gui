@@ -75,6 +75,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
     def __init__(self, parent=None):
         QtGui.QSystemTrayIcon.__init__(self, parent)
 
+        self.title = 'Time Synchronisation Monitor'
+
         self.setIcon(QtGui.QIcon('/home/user/IconApproved.png'))
 
         self.right_click_menu = RightClickMenu()
@@ -97,12 +99,12 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
             self.status_changed()
-            self.setToolTip(self.message)
+            self.setToolTip('%s\n%s' %(self.title, self.message))
             self.watcher = watcher([self.status_path])
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
-            msg = ('Time Synchronisation Monitor\n' +
+            msg = ('%s\n' %(self.title) +
                    'sdwdate not running\n' +
                    'Try to restart it: Right click -> Restart sdwdate\n' +
                    'If the icon stays red, please report this bug.')
@@ -114,7 +116,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
     def show_message(self, reason):
         if reason == self.Trigger: # left click
             self.message_status.start()
-            self.showMessage('Time Synchronisation Monitor', self.message)
+            self.showMessage(self.title, self.message)
 
     ## The balloon is closed on left click.
     ## Forbid showing again.
@@ -129,10 +131,11 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
     def update_tip(self):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
-            QtGui.QToolTip.showText(QtGui.QCursor.pos(), self.message)
+            QtGui.QToolTip.showText(QtGui.QCursor.pos(),
+                                    '%s\n%s' %(self.title, self.message))
         ## Update balloon message if it's already shown.
         if self.message_showing:
-            self.showMessage('Time Synchronisation Monitor', self.message)
+            self.showMessage(self.title, self.message)
 
     def status_changed(self):
         ## Prevent race condition.
@@ -141,8 +144,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             status = pickle.load(f)
 
         self.setIcon(QtGui.QIcon(status['icon']))
-        self.message = 'Time Synchronisation Monitor\n' + status['message']
-        self.setToolTip(self.message)
+        self.message = status['message']
+        self.setToolTip('%s\n%s' %(self.title, self.message))
         self.update.update_tip.emit()
 
     def watch_folder(self):
