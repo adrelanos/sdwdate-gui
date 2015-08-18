@@ -36,12 +36,12 @@ class RightClickMenu(QtGui.QMenu):
         icon = QtGui.QIcon.fromTheme('system-reboot')
         text = 'Restart sdwdate - Instantly adjust the time.'
         action = QtGui.QAction(icon, text, self)
-        action.triggered.connect(restart_sdwdate)
+        action.triggered.connect(restart_fresh)
         self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme('system-shutdown')
         action = QtGui.QAction(icon, "Stop sdwdate", self)
-        #action.triggered.connect(restart_sdwdate)
+        action.triggered.connect(stop_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon.fromTheme("application-exit")
@@ -157,7 +157,11 @@ def restart_sdwdate():
     call('sudo systemctl restart sdwdate', shell=True)
 
 def restart_fresh():
-    pass
+    call('sudo rm /var/run/sdwdate/first_success', shell=True)
+    call('sudo systemctl restart sdwdate', shell=True)
+
+def stop_sdwdate():
+    call('sudo systemctl stop sdwdate', shell=True)
 
 def main():
     app = QtGui.QApplication([])
