@@ -154,14 +154,14 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
 
 def restart_sdwdate():
-    call('sudo systemctl restart sdwdate', shell=True)
+    call('sudo service sdwdate restart', shell=True)
 
 def restart_fresh():
     call('sudo rm /var/run/sdwdate/first_success', shell=True)
-    call('sudo systemctl restart sdwdate', shell=True)
+    call('sudo service sdwdate restart', shell=True)
 
 def stop_sdwdate():
-    call('sudo systemctl stop sdwdate', shell=True)
+    call('sudo service sdwdate stop', shell=True)
 
 def main():
     app = QtGui.QApplication([])

@@ -4,7 +4,4 @@
 
 
 ## Allow all users to restart sdwdate without password.
-ALL ALL=NOPASSWD: /bin/systemctl restart sdwdate *
-ALL ALL=NOPASSWD: /bin/systemctl stop sdwdate *
-## Required to set time with date. removing this file.
-sdwdate-gui ALL=NOPASSWD: /var/run/sdwdate/first_success
+ALL ALL=NOPASSWD: /usr/sbin/service sdwdate *
