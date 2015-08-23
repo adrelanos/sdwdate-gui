@@ -20,31 +20,31 @@ class RightClickMenu(QtGui.QMenu):
         ##action.triggered.connect(restart_sdwdate)
         #self.addAction(action)
 
-        icon = QtGui.QIcon.fromTheme('text-x-script')
+        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/mimetypes/text-x-script.png')
         action = QtGui.QAction(icon, "Open sdwdate's log", self)
         #action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
         self.addSeparator()
 
-        icon = QtGui.QIcon.fromTheme('system-reboot')
+        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-reboot.png')
         text = 'Restart sdwdate - Gradually adjust the time'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
-        icon = QtGui.QIcon.fromTheme('system-reboot')
+        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-reboot.png')
         text = 'Restart sdwdate - Instantly adjust the time.'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_fresh)
         self.addAction(action)
 
-        icon = QtGui.QIcon.fromTheme('system-shutdown')
+        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-shutdown.png')
         action = QtGui.QAction(icon, "Stop sdwdate", self)
         action.triggered.connect(stop_sdwdate)
         self.addAction(action)
 
-        icon = QtGui.QIcon.fromTheme("application-exit")
+        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/application-exit.png')
         action = QtGui.QAction(icon, "&Exit", self)
         action.triggered.connect(QtGui.qApp.quit)
         self.addAction(action)
@@ -157,7 +157,7 @@ def restart_sdwdate():
     call('sudo service sdwdate restart', shell=True)
 
 def restart_fresh():
-    call('sudo rm /var/run/sdwdate/first_success', shell=True)
+    call('sudo rm /var/run/sdwdate/success', shell=True)
     call('sudo service sdwdate restart', shell=True)
 
 def stop_sdwdate():
