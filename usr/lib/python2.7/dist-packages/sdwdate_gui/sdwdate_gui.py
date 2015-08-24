@@ -146,7 +146,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
 
 def show_log():
-    cmd = 'konsole --hold --hide-menubar -e "cat /var/log/sdwdate.log"'
+    cmd = ('konsole --hold --hide-menubar --hide-tabbar ' +
+           '-e "tail -f -n 100 /var/log/sdwdate.log"')
     call(cmd, shell=True)
 
 def restart_sdwdate():
