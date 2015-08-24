@@ -15,14 +15,9 @@ class RightClickMenu(QtGui.QMenu):
     def __init__(self, parent=None):
         QtGui.QMenu.__init__(self, "File", parent)
 
-        #icon = QtGui.QIcon.fromTheme('dialog-information')
-        #action = QtGui.QAction(icon, "View status", self)
-        ##action.triggered.connect(restart_sdwdate)
-        #self.addAction(action)
-
         icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/mimetypes/text-x-script.png')
         action = QtGui.QAction(icon, "Open sdwdate's log", self)
-        #action.triggered.connect(restart_sdwdate)
+        action.triggered.connect(show_log)
         self.addAction(action)
 
         self.addSeparator()
@@ -76,9 +71,6 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         QtGui.QSystemTrayIcon.__init__(self, parent)
 
         self.title = 'Time Synchronisation Monitor'
-
-        self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png'))
-
         self.right_click_menu = RightClickMenu()
         self.setContextMenu(self.right_click_menu)
 
@@ -152,6 +144,10 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.watcher = watcher([self.status_path])
         self.watcher.fileChanged.connect(self.status_changed)
 
+
+def show_log():
+    cmd = 'konsole --hold --hide-menubar -e "cat /var/log/sdwdate.log"'
+    call(cmd, shell=True)
 
 def restart_sdwdate():
     call('sudo service sdwdate restart', shell=True)
