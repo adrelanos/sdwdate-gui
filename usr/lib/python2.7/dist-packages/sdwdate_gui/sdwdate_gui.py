@@ -77,7 +77,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.title = 'Time Synchronisation Monitor'
 
-        self.setIcon(QtGui.QIcon('/home/user/IconApproved.png'))
+        self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png'))
 
         self.right_click_menu = RightClickMenu()
         self.setContextMenu(self.right_click_menu)
@@ -103,7 +103,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher = watcher([self.status_path])
             self.watcher.fileChanged.connect(self.status_changed)
         else:
-            self.setIcon(QtGui.QIcon.fromTheme('dialog-error'))
+            self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
             msg = ('%s\n' %(self.title) +
                    'sdwdate not running\n' +
                    'Try to restart it: Right click -> Restart sdwdate\n' +
