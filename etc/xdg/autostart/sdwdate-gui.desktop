@@ -5,4 +5,4 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-Exec=/usr/bin/sdwdate-gui
+Exec=xhost +local:root && sudo -u sdwdate /usr/bin/sdwdate-gui
