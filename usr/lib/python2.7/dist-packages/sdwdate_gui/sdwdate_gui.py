@@ -7,6 +7,7 @@ import subprocess
 from subprocess import check_output, call
 import pickle
 import os
+import signal
 import time
 
 
@@ -49,22 +50,6 @@ class Update(QtCore.QObject):
     update_tip = QtCore.pyqtSignal()
 
 
-## Started by left click action.
-## Set message_showing for the default time
-## the balloon is displayed (10 seconds).
-class MessageStatus(QThread):
-    message_status = QtCore.pyqtSignal(bool)
-    showing = False
-
-    def run(self):
-        self.showing = True
-        self.message_status.emit(True)
-        while self.showing:
-            time.sleep(10)
-            self.message_status.emit(False)
-            self.showing = False
-
-
 class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
     def __init__(self, parent=None):
@@ -76,17 +61,20 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.path = '/var/run/sdwdate'
         self.status_path = '/var/run/sdwdate/status'
+        self.popup_path = '/usr/lib/sdwdate-gui/show_message'
         self.message = ''
+        self.pop = ''
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
 
-        self.message_status = MessageStatus(self)
-        self.message_status.message_status.connect(self.update_message_status)
         self.message_showing = False
 
-        self.activated.connect(self.show_message)
-        self.messageClicked.connect(self.message_clicked)
+        self.activated.connect(self.mouse_event)
+
+        self.clicked_once = False
+        self.pos_x = 0
+        self.pos_y = 0
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -96,38 +84,46 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
-            msg = ('%s\n' %(self.title) +
-                   'sdwdate not running\n' +
-                   'Try to restart it: Right click -> Restart sdwdate\n' +
-                   'If the icon stays red, please report this bug.')
+            msg = '''sdwdate is not running.
+Try to restart it: Right click -> Restart sdwdate
+If the icon stays red, please report this bug.'''
             self.message = msg
             self.setToolTip(msg)
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
-    def show_message(self, reason):
-        if reason == self.Trigger: # left click
-            self.message_status.start()
-            self.showMessage(self.title, self.message)
+    def show_message(self):
+        ## Store own positon.
+        if not self.clicked_once:
+            self.pos_x = QtGui.QCursor.pos().x() - 50
+            self.pos_y = QtGui.QCursor.pos().y() - 50
+            self.clicked_once = True
 
-    ## The balloon is closed on left click.
-    ## Forbid showing again.
-    def message_clicked(self):
-        self.message_status.quit()
-        self.message_showing = False
+        try:
+            ## Terminate popup if showing.
+            is_popup_running = ['pgrep', '-f', self.popup_path]
+            popup_pid = check_output(is_popup_running)
+            os.kill(int(popup_pid), signal.SIGTERM)
+        except subprocess.CalledProcessError:
+            pass
+        ## Show popup.
+        run_popup = ('%s "%s" %s %s &'
+                    % (self.popup_path, self.message, self.pos_x, self.pos_y))
+        call(run_popup, shell=True)
 
-    ## Signal generated in MessageStatus.
-    def update_message_status(self, is_showing):
-        self.message_showing = is_showing
+    def mouse_event(self, reason):
+        ## Left click.
+        if reason == self.Trigger:
+            self.show_message()
 
     def update_tip(self):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
             QtGui.QToolTip.showText(QtGui.QCursor.pos(),
-                                    '%s\n%s' %(self.title, self.message))
-        ## Update balloon message if it's already shown.
-        if self.message_showing:
-            self.showMessage(self.title, self.message)
+                                   '%s\n%s' %(self.title, self.message))
+        ## Do not show message on loading.
+        if self.clicked_once:
+            self.show_message()
 
     def status_changed(self):
         ## Prevent race condition.
