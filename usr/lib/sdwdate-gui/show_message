@@ -15,7 +15,6 @@ class TitleBar(QtGui.QDialog):
         css = """
             QWidget
             {
-            Background:lightyellow;
             color:black;
             font:12px bold;
             font-weight:bold;
@@ -24,12 +23,10 @@ class TitleBar(QtGui.QDialog):
             }
             QToolButton
             {
-            Background:lightyellow;
             }
             QToolButton:hover
             {
             font:12px
-            Background:yellow;
             }
             """
         self.setStyleSheet(css)
@@ -55,7 +52,6 @@ class Frame(QtGui.QFrame):
         css = """
             QFrame
             {
-            Background:lightyellow;
             color:black;
             font:12px ;
             border-radius: 5px;
