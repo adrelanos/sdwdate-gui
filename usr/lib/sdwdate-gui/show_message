@@ -16,7 +16,7 @@ class TitleBar(QtGui.QDialog):
             QWidget
             {
             color:black;
-            font:12px bold;
+            font:12px;
             font-weight:bold;
             border-radius: 5px;
             height: 11px;
@@ -41,6 +41,9 @@ class TitleBar(QtGui.QDialog):
         title_layout = QtGui.QHBoxLayout(self);
         title_layout.addWidget(title);
         title_layout.addWidget(close);
+
+    def mousePressEvent(self,event):
+        self.close()
 
     def close(self):
         popup.close()
