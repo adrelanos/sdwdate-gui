@@ -35,7 +35,7 @@ class TitleBar(QtGui.QDialog):
         self.setStyleSheet(css)
 
         close=QtGui.QToolButton(self);
-        close.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/1441238560_close.png'))
+        close.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/button_cancel.png'))
         close.clicked.connect(self.close);
 
         title = QtGui.QLabel(self);
@@ -77,7 +77,7 @@ class Frame(QtGui.QFrame):
         return self.m_content
 
 def signal_handler(*args):
-    QtGui.qApplication.exit()
+    QtGui.QApplication.exit()
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
