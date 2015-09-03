@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import sys
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QFileSystemWatcher as watcher
 from PyQt4.QtCore import QThread
@@ -63,7 +64,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.status_path = '/var/run/sdwdate/status'
         self.popup_path = '/usr/lib/sdwdate-gui/show_message'
         self.message = ''
-        self.pop = ''
+        self.popup_pid = 0
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
@@ -75,6 +76,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.clicked_once = False
         self.pos_x = 0
         self.pos_y = 0
+
+        self.previous_message = ''
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -93,20 +96,16 @@ If the icon stays red, please report this bug.'''
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
     def show_message(self):
-        ## Store own positon.
+        ## Store own positon for message gui.
         if not self.clicked_once:
             self.pos_x = QtGui.QCursor.pos().x() - 50
             self.pos_y = QtGui.QCursor.pos().y() - 50
             self.clicked_once = True
 
-        try:
-            ## Terminate popup if showing.
-            is_popup_running = ['pgrep', '-f', self.popup_path]
-            popup_pid = check_output(is_popup_running)
-            os.kill(int(popup_pid), signal.SIGTERM)
-        except subprocess.CalledProcessError:
-            pass
-        ## Show popup.
+        if self.is_popup_running():
+            ## Kill message gui
+            os.kill(int(self.popup_pid), signal.SIGINT)
+        ## Show message gui.
         run_popup = ('%s "%s" %s %s &'
                     % (self.popup_path, self.message, self.pos_x, self.pos_y))
         call(run_popup, shell=True)
@@ -116,6 +115,15 @@ If the icon stays red, please report this bug.'''
         if reason == self.Trigger:
             self.show_message()
 
+    def is_popup_running(self):
+        try:
+            ## command exit code != 0 if path does not exists.
+            cmd = ['pgrep', '-f', self.popup_path]
+            self.popup_pid = check_output(cmd)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
     def update_tip(self):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
@@ -123,7 +131,9 @@ If the icon stays red, please report this bug.'''
                                    '%s\n%s' %(self.title, self.message))
         ## Do not show message on loading.
         if self.clicked_once:
-            self.show_message()
+            ## Update message only if already shown.
+            if self.is_popup_running():
+                self.show_message()
 
     def status_changed(self):
         ## Prevent race condition.
@@ -133,8 +143,13 @@ If the icon stays red, please report this bug.'''
 
         self.setIcon(QtGui.QIcon(status['icon']))
         self.message = status['message']
-        self.setToolTip('%s\n%s' %(self.title, self.message))
-        self.update.update_tip.emit()
+        ## QFileSystemWatcher may emit the fileChanged signal twice
+        ## or three times, randomly. Filter to allow enough time
+        ## between kill and restart popup in show_message().
+        if self.message != self.previous_message:
+            self.setToolTip('%s\n%s' %(self.title, self.message))
+            self.update.update_tip.emit()
+        self.previous_message = self.message
 
     def watch_folder(self):
         self.watcher = watcher([self.status_path])
