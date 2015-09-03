@@ -95,7 +95,12 @@ If the icon stays red, please report this bug.'''
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
-    def show_message(self):
+    def run_popup(self):
+        run_popup = ('%s "%s" %s %s &'
+                % (self.popup_path, self.message, self.pos_x, self.pos_y))
+        call(run_popup, shell=True)
+
+    def show_message(self, caller):
         ## Store own positon for message gui.
         if not self.clicked_once:
             self.pos_x = QtGui.QCursor.pos().x() - 50
@@ -105,15 +110,15 @@ If the icon stays red, please report this bug.'''
         if self.is_popup_running():
             ## Kill message gui
             os.kill(int(self.popup_pid), signal.SIGINT)
-        ## Show message gui.
-        run_popup = ('%s "%s" %s %s &'
-                    % (self.popup_path, self.message, self.pos_x, self.pos_y))
-        call(run_popup, shell=True)
+            if caller == 'update':
+                self.run_popup()
+        else:
+            self.run_popup()
 
     def mouse_event(self, reason):
         ## Left click.
         if reason == self.Trigger:
-            self.show_message()
+            self.show_message('user')
 
     def is_popup_running(self):
         try:
@@ -133,7 +138,7 @@ If the icon stays red, please report this bug.'''
         if self.clicked_once:
             ## Update message only if already shown.
             if self.is_popup_running():
-                self.show_message()
+                self.show_message('update')
 
     def status_changed(self):
         ## Prevent race condition.
