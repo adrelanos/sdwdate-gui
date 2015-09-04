@@ -7,78 +7,27 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import Qt
 
 
-class TitleBar(QtGui.QDialog):
-    def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setStyle(QtGui.QStyleFactory.create('CleanLooks'))
-        css = """
-            QWidget
-            {
-            color:black;
-            font:12px;
-            font-weight:bold;
-            border-radius: 5px;
-            height: 11px;
-            }
-            QToolButton
-            {
-            }
-            QToolButton:hover
-            {
-            font:12px
-            }
-            """
-        self.setStyleSheet(css)
-
-        close=QtGui.QToolButton(self);
-        close.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/button_cancel.png'))
-        close.clicked.connect(self.close);
-
-        title = QtGui.QLabel(self);
-        title.setText("Time Synchronisation Monitor    ");
-
-        title_layout = QtGui.QHBoxLayout(self);
-        title_layout.addWidget(title);
-        title_layout.addWidget(close);
-
-    def mousePressEvent(self,event):
-        self.close()
-
-    def close(self):
-        popup.close()
-
-
 class Frame(QtGui.QFrame):
     def __init__(self, parent=None):
         QtGui.QFrame.__init__(self, parent)
-        css = """
-            QFrame
-            {
-            color:black;
-            font:12px ;
-            border-radius: 5px;
-            }
-            """
-        self.setStyleSheet(css)
-        self.setWindowFlags(Qt.FramelessWindowHint);
-        self.m_content= QtGui.QWidget(self);
-        self.m_titleBar= TitleBar(self);
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.m_content = QtGui.QWidget(self)
 
-        frame_layout = QtGui.QVBoxLayout(self);
-        frame_layout.addWidget(self.m_titleBar);
-        frame_layout.addWidget(self.m_content);
-        frame_layout.setMargin(5);
+        frame_layout = QtGui.QVBoxLayout(self)
+        frame_layout.addWidget(self.m_content)
 
-    # Allows you to access the content area of the frame
-    # where widgets and layouts can be added
-    def contentWidget(self):
+    # Allows access to the content area of the frame
+    # where widgets and layouts can be added.
+    def widget_content(self):
         return self.m_content
 
-def signal_handler(*args):
-    QtGui.QApplication.exit()
+def signal_handler(signum, stack):
+    # SIGTERM or SIGINT
+    if signum == 15 or signum == 2:
+        QtGui.QApplication.exit()
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
     app = QtGui.QApplication(sys.argv);
@@ -87,15 +36,17 @@ if __name__ == '__main__':
     pos_y = int(sys.argv[3])
 
     popup = Frame()
-    content = QtGui.QVBoxLayout(popup.contentWidget());
+    frame_content = QtGui.QVBoxLayout(popup.widget_content())
 
     text = QtGui.QLabel()
-    text.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse |
-                                 QtCore.Qt.TextSelectableByMouse)
-    text.setText(msg)
-    content.addWidget(text)
+    text.setTextInteractionFlags(Qt.LinksAccessibleByMouse |
+                                 Qt.TextSelectableByMouse)
+    text.setTextFormat(Qt.RichText)
+    text.setText('<b>Time Synchronization Monitor</b><br> %s' % msg)
 
-    popup.move(pos_x, pos_y);
+    frame_content.addWidget(text)
+
+    popup.move(pos_x, pos_y)
     popup.show()
 
     ## Python cannot handle signals while the Qt event loop is running.

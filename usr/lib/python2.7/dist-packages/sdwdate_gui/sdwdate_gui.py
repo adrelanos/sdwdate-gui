@@ -10,6 +10,7 @@ import pickle
 import os
 import signal
 import time
+import re
 
 
 class RightClickMenu(QtGui.QMenu):
@@ -63,35 +64,34 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         self.path = '/var/run/sdwdate'
         self.status_path = '/var/run/sdwdate/status'
         self.popup_path = '/usr/lib/sdwdate-gui/show_message'
-        self.message = ''
         self.popup_pid = 0
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
 
-        self.message_showing = False
-
         self.activated.connect(self.mouse_event)
 
+        self.message_showing = False
         self.clicked_once = False
         self.pos_x = 0
         self.pos_y = 0
 
+        self.message = ''
         self.previous_message = ''
+        self.stripped_message = ''
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
             self.status_changed()
-            self.setToolTip('%s\n%s' %(self.title, self.message))
             self.watcher = watcher([self.status_path])
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
-            msg = '''sdwdate is not running.
-Try to restart it: Right click -> Restart sdwdate
-If the icon stays red, please report this bug.'''
-            self.message = msg
-            self.setToolTip(msg)
+            error_msg = '''sdwdate is not running.<br>
+                           Try to restart it: Right click -> Restart sdwdate<br>
+                           If the icon stays red, please report this bug.'''
+            self.message = error_msg
+            self.setToolTip(error_msg)
             self.watcher_2 = watcher([self.path])
             self.watcher_2.directoryChanged.connect(self.watch_folder)
 
@@ -109,7 +109,7 @@ If the icon stays red, please report this bug.'''
 
         if self.is_popup_running():
             ## Kill message gui
-            os.kill(int(self.popup_pid), signal.SIGINT)
+            os.kill(self.popup_pid, signal.SIGTERM)
             if caller == 'update':
                 self.run_popup()
         else:
@@ -124,7 +124,7 @@ If the icon stays red, please report this bug.'''
         try:
             ## command exit code != 0 if path does not exists.
             cmd = ['pgrep', '-f', self.popup_path]
-            self.popup_pid = check_output(cmd)
+            self.popup_pid = int(check_output(cmd))
             return True
         except subprocess.CalledProcessError:
             return False
@@ -133,7 +133,7 @@ If the icon stays red, please report this bug.'''
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
             QtGui.QToolTip.showText(QtGui.QCursor.pos(),
-                                   '%s\n%s' %(self.title, self.message))
+                                   '%s\n%s' %(self.title, self.stripped_message))
         ## Do not show message on loading.
         if self.clicked_once:
             ## Update message only if already shown.
@@ -142,17 +142,24 @@ If the icon stays red, please report this bug.'''
 
     def status_changed(self):
         ## Prevent race condition.
+        ## Likely due to the issue below.
         time.sleep(0.01)
+
         with open(self.status_path, 'rb') as f:
             status = pickle.load(f)
 
         self.setIcon(QtGui.QIcon(status['icon']))
         self.message = status['message']
+        ## Strip HTML for tootip.
+        self.stripped_message = re.sub('<br>', '\n', self.message)
+        print self.stripped_message
+
         ## QFileSystemWatcher may emit the fileChanged signal twice
         ## or three times, randomly. Filter to allow enough time
-        ## between kill and restart popup in show_message().
+        ## between kill and restart popup in show_message(), and
+        ## prevent os.kill to raise an error and leave a gui open.
         if self.message != self.previous_message:
-            self.setToolTip('%s\n%s' %(self.title, self.message))
+            self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
             self.update.update_tip.emit()
         self.previous_message = self.message
 
@@ -162,9 +169,9 @@ If the icon stays red, please report this bug.'''
 
 
 def show_log():
-    cmd = ('konsole --hold --hide-menubar --hide-tabbar ' +
+    show_konsloe = ('konsole --hold --hide-menubar --hide-tabbar ' +
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
-    call(cmd, shell=True)
+    call(show_konsole, shell=True)
 
 def restart_sdwdate():
     call('sudo service sdwdate restart', shell=True)
