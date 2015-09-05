@@ -18,31 +18,31 @@ class RightClickMenu(QtGui.QMenu):
     def __init__(self, parent=None):
         QtGui.QMenu.__init__(self, "File", parent)
 
-        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/mimetypes/text-x-script.png')
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
         action = QtGui.QAction(icon, "Open sdwdate's log", self)
         action.triggered.connect(show_log)
         self.addAction(action)
 
         self.addSeparator()
 
-        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-reboot.png')
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
         text = 'Restart sdwdate - Gradually adjust the time'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
-        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-reboot.png')
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
         text = 'Restart sdwdate - Instantly adjust the time.'
         action = QtGui.QAction(icon, text, self)
         action.triggered.connect(restart_fresh)
         self.addAction(action)
 
-        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/system-shutdown.png')
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
         action = QtGui.QAction(icon, "Stop sdwdate", self)
         action.triggered.connect(stop_sdwdate)
         self.addAction(action)
 
-        icon = QtGui.QIcon('/usr/share/icons/oxygen/16x16/actions/application-exit.png')
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
         action = QtGui.QAction(icon, "&Exit", self)
         action.triggered.connect(QtGui.qApp.quit)
         self.addAction(action)
@@ -169,7 +169,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
 
 def show_log():
-    show_konsloe = ('konsole --hold --hide-menubar --hide-tabbar ' +
+    show_konsole = ('konsole --hold --hide-menubar --hide-tabbar ' +
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
     call(show_konsole, shell=True)
 
