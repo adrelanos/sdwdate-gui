@@ -10,7 +10,8 @@ from PyQt4.QtCore import Qt
 class Frame(QtGui.QFrame):
     def __init__(self, parent=None):
         QtGui.QFrame.__init__(self, parent)
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowTitle('Time Synchronization Monitor')
+        self.setMinimumWidth(320)
         self.m_content = QtGui.QWidget(self)
 
         frame_layout = QtGui.QVBoxLayout(self)
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     text.setTextInteractionFlags(Qt.LinksAccessibleByMouse |
                                  Qt.TextSelectableByMouse)
     text.setTextFormat(Qt.RichText)
-    text.setText('<b>Time Synchronization Monitor</b><br> %s' % msg)
+    text.setText(msg)
 
     frame_content.addWidget(text)
 
