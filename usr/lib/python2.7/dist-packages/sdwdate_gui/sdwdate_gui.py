@@ -78,7 +78,6 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.message = ''
         self.previous_message = ''
-        self.stripped_message = ''
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -87,7 +86,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.watcher.fileChanged.connect(self.status_changed)
         else:
             self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
-            error_msg = '''sdwdate is not running.<br>
+            error_msg = '''<b>sdwdate is not running</b><br>
                            Try to restart it: Right click -> Restart sdwdate<br>
                            If the icon stays red, please report this bug.'''
             self.message = error_msg
@@ -150,16 +149,13 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.setIcon(QtGui.QIcon(status['icon']))
         self.message = status['message']
-        ## Strip HTML for tootip.
-        self.stripped_message = re.sub('<br>', '\n', self.message)
-        print self.stripped_message
 
         ## QFileSystemWatcher may emit the fileChanged signal twice
         ## or three times, randomly. Filter to allow enough time
         ## between kill and restart popup in show_message(), and
         ## prevent os.kill to raise an error and leave a gui open.
         if self.message != self.previous_message:
-            self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
+            self.setToolTip('%s\n%s' %(self.title, self.message))
             self.update.update_tip.emit()
         self.previous_message = self.message
 
