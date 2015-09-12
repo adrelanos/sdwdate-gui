@@ -132,7 +132,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
             QtGui.QToolTip.showText(QtGui.QCursor.pos(),
-                                   '%s\n%s' %(self.title, self.stripped_message))
+                                   '%s\n%s' %(self.title, self.message))
         ## Do not show message on loading.
         if self.clicked_once:
             ## Update message only if already shown.
