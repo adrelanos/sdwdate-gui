@@ -1,0 +1,293 @@
+commit 4a31ff9b90baeaab1501845fc7962d3d19e86b31
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Sep 15 14:41:25 2015 +0000
+
+    strip HTML in tooltip
+
+commit a7564910bd24611cbc5ca8b32ccfdd90e7f53ce3
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Sep 12 08:33:18 2015 +0000
+
+    stripped_message -> message
+
+commit 7fb05600b9b23cc33e67ecda1f1fd1d3fa43d7cc
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 10 08:01:32 2015 +0000
+
+    remove stripped_message, tooltip accepts HTML
+
+commit b911286b8de86b1390206d22295f3574497076c2
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Sep 9 18:50:15 2015 +0000
+
+    left click action shows a full GUI (title bar with standards buttons)
+
+commit 1b171cca6a1171e5c57574cf5408194598ab07f5
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Sep 9 18:47:46 2015 +0000
+
+    move sdwdate icons in usr/share/icons/sdwdate-gui #2
+
+commit 6ab648a9a203dfbb34ef89f8a56d626b454a978b
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Sep 5 21:50:54 2015 +0000
+
+    move sdwdate icons in usr/share/icons/sdwdate-gui
+
+commit bdfa7f027acf1d3a72fb79f8fc0acc3831a5fee6
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Sep 5 21:24:38 2015 +0000
+
+    move icons in usr/share/icons/sdwdate-gui
+
+commit bd62930a23e5e480428a1a64952a98ed631ef2ce
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Sep 4 22:17:59 2015 +0000
+
+    popup updated, remove title bar, show/hide on tray icon letf click, richtext (HTML)
+
+commit d7c33f9f10082a65332e5cd4432aa9c74a2cee90
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 3 21:11:11 2015 +0000
+
+    mouse action in the title bar closes the message
+
+commit e56c1d2d64f31490b01d15b07415d627b814d3e7
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 3 20:56:34 2015 +0000
+
+    change background from lightyellow to default gray
+
+commit 82e67d3622c6d03b99fb84ef230cf6b00d6d87d8
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 3 20:52:04 2015 +0000
+
+    toggle message visible on left click action in sdwdate-gui systray icon
+
+commit 1ceff40736dced142517095b3e3ad305dbcb34f5
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 3 20:18:30 2015 +0000
+
+    new icon in gui
+
+commit d3ab4ff47600c57e27f3612207b7069514a60d9d
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Sep 3 20:05:59 2015 +0000
+
+    popup gui: updated only if already shown
+
+commit d682e627d6aac2855da321cabcbf1879f4c17452
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Sep 2 19:45:30 2015 +0000
+
+    replace default show_message by a popup gui, samish appearance, closed by user, text copyable.
+
+commit 8118e5f8674efbf8c70037d4f84cd41df0fa5a8e
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Aug 24 19:16:24 2015 +0000
+
+    show_log -> tail -f -n 100
+
+commit cd38e741471da5c8c82aac751b413e5c1e3b4a86
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Aug 24 18:56:35 2015 +0000
+
+    Open sdwdate's log
+
+commit 10c601d3756ea756e879d1c3626f41d4bff2be01
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Aug 24 11:49:51 2015 +0000
+
+    icons
+
+commit db8086a2f6deed9c48086faa3397e48ebd7cc15b
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Aug 24 09:31:54 2015 +0000
+
+    debian/control Depends
+
+commit e17214b39bb338444c5a904b0150f31cc34c397e
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 23 21:31:04 2015 +0000
+
+    lintian warning predends - depends swdate
+
+commit f7189e2738db4a3d7995a4a5c4602bb2336387f5
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 23 21:09:13 2015 +0000
+
+    Pre-Depends: sdwdate
+
+commit 123c28fc147bd7568f8fbf66094e773e291ada3b
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 23 21:05:39 2015 +0000
+
+    remove tmpfiles.d
+
+commit 765fc3f7b9d35f559c4cc9ff5816dc8406cbdc7d
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 23 18:17:37 2015 +0000
+
+    run sdwdate-gui as sdwdate
+
+commit 3cf36079a13f631308f3e7f01ef97f1c2e33191e
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 23 18:05:58 2015 +0000
+
+    absolute path for icons, required with sudo -u
+
+commit 8ef803da3f8686293ec3ead47cc89148a629adca
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 21 18:48:44 2015 +0000
+
+    /usr/lib/tmpfiles.d
+
+commit 8894fa802815698e5bc9e4a307eba3ed96daee7c
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 21 18:23:43 2015 +0000
+
+    - "sudo sytemctl [restart/stop] sdwdate" + "sudo service sdwdate *"
+
+commit c2b41ac9e17e8d3db63d5aaada768fbb2236756c
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 21 18:17:59 2015 +0000
+
+    /usr/lib/tmpfies.d
+
+commit 1c796cbf68a8849c2488c434457741ddfae644e5
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Aug 18 20:23:34 2015 +0000
+
+    sudoers.d
+
+commit 78fca8fd0fa5bc1a5c21b6f930520819ff314743
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Aug 18 19:48:52 2015 +0000
+
+    restart_fresh, stop sdwdate
+
+commit f1914d44f7abdae598205bb49704cf437ddd1621
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Aug 17 19:46:15 2015 +0000
+
+    self,title, message formatting
+
+commit 558493fbab2ca619100aabdd07f58be69caf8f5a
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 16 19:30:24 2015 +0000
+
+    left click message updated on status change
+
+commit d70dd8f018f4ea28bd99b2ecc6e58dbc52ac25c4
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 16 15:06:06 2015 +0000
+
+    show_message <-> show_status
+
+commit e2f7f3648264b28e5517c4f7192311985c5f0d3f
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 16 08:07:35 2015 +0000
+
+    reason <-> value
+
+commit f938777bf47ceda47af59815b9e3a6c38a12f0ac
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 16 08:03:49 2015 +0000
+
+    remove bootclockrandomization timesanitycheck
+
+commit 30ceaa0af996bcf922048254f121b9dc644fdd91
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Aug 15 19:23:39 2015 +0000
+
+    timesanitycheck and bootclockrandomization check with dpkg-query
+
+commit 5179a0bb046c065dd32da69c75df4e8e102e10ce
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 14 19:57:07 2015 +0000
+
+    "Gradually adjust the time"
+
+commit 173289d31a6dd628a221fd310d91551bbf97f6fb
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 14 18:42:05 2015 +0000
+
+    update tooltip on status change
+
+commit 857e035342d76393d1023dcd0563bf5b3cf78135
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Aug 13 20:27:35 2015 +0000
+
+    message not showing at startup -> moved self.message = '' in init
+
+commit 08e1917b06e5a311ab1b24244c429bbe505f81a0
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Aug 13 17:36:53 2015 +0000
+
+    add items in right click menu
+
+commit 8bd113ede070c0dae5bfbbf988c1c2b2d1910089
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Aug 13 17:31:17 2015 +0000
+
+    status on left click
+
+commit e0bb4709c05b0fe228e4fe2afa2ddd6daeda2183
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Aug 13 16:06:40 2015 +0000
+
+    sleep in status_changed() to prevent race condition
+
+commit d8d3a8ec3887733c1101aaa3d8a7ee9bcf3beb86
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Aug 12 18:40:52 2015 +0000
+
+    icons
+
+commit 9a3df0a22245c6615153802bd0576546892d3467
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 9 18:13:52 2015 +0000
+
+    minor
+
+commit 452b97fa20939772e4a2aedbd3de8b7fdf1e828e
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Aug 9 16:26:24 2015 +0000
+
+    + timesync-monitor desktop, name "Time Synchronisation Monitor"
+
+commit 5d9c1363b2ce296dc42c97f7d159720a216fc7d9
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Aug 8 23:25:08 2015 +0000
+
+    typo in tool tip
+
+commit ef4127090528a09f824632740e1bd82b67c5fc22
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Aug 8 23:15:36 2015 +0000
+
+    check status file on loading
+
+commit 03f6c9de7a6fd1ab1b38bc42c161ba46f473278a
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Aug 8 18:57:01 2015 +0000
+
+    check_sdwdate()
+
+commit 1e251d82ffde089019f2f6ac84abede4e0b1746d
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 7 20:19:38 2015 +0000
+
+    QFileSystemWatcher
+
+commit 8b2de690a962121a09ddae825f35a39251325d12
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Aug 7 20:16:50 2015 +0000
+
+    debian/changelog
+
+commit 4d19cbd1083171da3d8e1313b07dd5fd117e0eb7
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Aug 5 19:47:01 2015 +0000
+
+    initial commit
