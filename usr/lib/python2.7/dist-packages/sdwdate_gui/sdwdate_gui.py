@@ -78,6 +78,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.message = ''
         self.previous_message = ''
+        self.stripped_message = ''
 
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
@@ -149,13 +150,14 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
 
         self.setIcon(QtGui.QIcon(status['icon']))
         self.message = status['message']
+        self.stripped_message = re.sub('<[^<]+?>', '', self.message)
 
         ## QFileSystemWatcher may emit the fileChanged signal twice
         ## or three times, randomly. Filter to allow enough time
         ## between kill and restart popup in show_message(), and
         ## prevent os.kill to raise an error and leave a gui open.
         if self.message != self.previous_message:
-            self.setToolTip('%s\n%s' %(self.title, self.message))
+            self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
             self.update.update_tip.emit()
         self.previous_message = self.message
 
@@ -173,7 +175,8 @@ def restart_sdwdate():
     call('sudo service sdwdate restart', shell=True)
 
 def restart_fresh():
-    call('sudo rm /var/run/sdwdate/success', shell=True)
+    if os.path.exists('/var/run/sdwdate/success'):
+        call('sudo rm /var/run/sdwdate/success', shell=True)
     call('sudo service sdwdate restart', shell=True)
 
 def stop_sdwdate():
