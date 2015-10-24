@@ -53,7 +53,7 @@ if __name__ == '__main__':
     ## Python cannot handle signals while the Qt event loop is running.
     ## The signal handler is called when a Python function is called
     timer = QtCore.QTimer()
-    timer.start(10)
+    timer.start(200)
     timer.timeout.connect(lambda: None)
 
     sys.exit(app.exec_())
