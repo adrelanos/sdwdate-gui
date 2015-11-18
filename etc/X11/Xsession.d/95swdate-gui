@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if [ -d /usr/share/qubes ]; then
+  sudo sdwdate-gui
+fi
