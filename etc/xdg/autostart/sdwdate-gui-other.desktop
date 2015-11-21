@@ -5,6 +5,6 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-Exec=xhost +local:root && sudo /usr/bin/sdwdate-gui
+Exec=xhost +local:root && sudo -u sdwdate /usr/bin/sdwdate-gui
 NotShowIn=QUBES;
 
