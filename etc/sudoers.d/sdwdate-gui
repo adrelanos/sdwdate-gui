@@ -3,10 +3,10 @@
 ## See the file COPYING for copying conditions.
 
 ## Allow running sdwdate-gui as sdwdate, without password.
-user ALL=(sdwdate) NOPASSWD: /usr/bin/sdwdate-gui
+ALL ALL=NOPASSWD: /usr/bin/sdwdate-gui
 
 ## Allow all users to restart sdwdate without password.
 ALL ALL=NOPASSWD: /usr/sbin/service sdwdate *
 
 ## Allow "sudo rm" for sdwdate without password.
-sdwdate ALL=NOPASSWD: /bin/rm
+ALL ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
