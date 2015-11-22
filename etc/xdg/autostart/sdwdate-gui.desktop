@@ -5,5 +5,5 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-#Exec=xhost +local:root && kdesudo /usr/bin/sdwdate-gui
-Exec=kdesudo /usr/bin/sdwdate-gui
+Exec=kdesudo -u sdwdate /usr/bin/sdwdate-gui
+OnlyShowIn=QUBES;
