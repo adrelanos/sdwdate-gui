@@ -149,7 +149,10 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             status = pickle.load(f)
 
         self.setIcon(QtGui.QIcon(status['icon']))
-        self.message = status['message']
+        ## Remove double quotes from message as they would be interpreted as
+        ## an argument separator in /usr/lib/sdwdate-gui/show_message (called
+        ## by run_popup).
+        self.message = status['message'].replace('\"', '')
         self.stripped_message = re.sub('<[^<]+?>', '', self.message)
 
         ## QFileSystemWatcher may emit the fileChanged signal twice
