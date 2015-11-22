@@ -6,4 +6,3 @@
 Type=Application
 Terminal=false
 Exec=/usr/bin/sdwdate-gui
-OnlyShowIn=QUBES;
