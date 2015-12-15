@@ -1,6 +1,8 @@
-# Sdwdate Monitor and User Interface #
+# Sdwdate Monitor #
 
-sdwdate-gui is a systray icon monitoring sdwdate: checks sdwdate's status and modify the tray icon accordingly.
+sdwdate-gui is a systray icon monitor for sdwdate: checks sdwdate's status
+and modify the tray icon accordingly. In addition, it allows the user to
+restart sdwdate and view the log.
 
 (This package description has been [automatically](https://github.com/Whonix/whonix-developer-meta-files/blob/master/debug-steps/packaging-helper-script) extracted and mirrored from `debian/control`.)
 
