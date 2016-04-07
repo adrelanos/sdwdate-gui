@@ -1,3 +1,134 @@
+commit 2a0f725ccb6e4135fd9bf280653d5f28f0a126a4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Dec 15 21:04:47 2015 +0000
+
+    updated README.md
+
+commit b96193caa530b77b052d5e504dbf44a4f057fcfc
+Merge: d55b9b3 d1af525
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Nov 22 20:06:38 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit d1af5251b09c9e49cf292baad3418d25f19fb087
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Nov 22 19:21:21 2015 +0000
+
+    sdwdate-gui: Remove double quotes from message
+    as they would be interpreted as an argument separator in
+    "/usr/lib/sdwdate-gui/show_message" (called by run_popup).
+
+commit d55b9b3213c771dff3aff71830e1dec3fee02161
+Merge: 1d04675 0cc3b36
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Nov 22 16:17:26 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit 0cc3b3679e18b5ccc401c4e9689764638db48d34
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Nov 22 12:45:26 2015 +0000
+
+    etc/xdg/autostart/sdwdate-gui.desktop -> remove OnlyShownIn=QUBES;
+
+commit ff485dba5641738ec6729956783dffed212f9cc3
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Nov 22 10:27:59 2015 +0000
+
+    run sdwdate-gui as user
+    etc/xdg/autostart/sdwdate-gui.desktop -> Exec=/usr/bin/sdwdate-gui
+    etc/sudoers.d/sdwdate-gui -> ALL ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
+
+commit 1d046753bdd7c0de9b9a371a872aade35a4a2e19
+Merge: 87bc38a 7c5c434
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Nov 22 00:26:53 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit 7c5c4343b9ccaa86f372de9518f1c49d840304cd
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Nov 21 22:45:52 2015 +0000
+
+    missing etc/xdg/autostart/sdwdate-gui.desktop
+
+commit edab5acbdfb75624d8b506b9c43d6574acdac4fb
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Nov 21 22:36:45 2015 +0000
+
+    Back to single sdwdate-gui.destop file -> Exec=kdesudo -u sdwdate /usr/bin/sdwdate-gui
+
+commit 506db0241d9b8a4f523554d226d14c120ef4352a
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Nov 21 19:30:40 2015 +0000
+
+    /etc/xdg/autostart/sdwdate-gui-other.desktop -> run sdwdate-gui as user sdwdate
+
+commit 41be5788cb84994386725245e601638109c6b068
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Nov 20 20:47:09 2015 +0000
+
+    Two different .desktop files in /etc/xdg/autostart.
+    
+    One for Qubes: run directly kdesudo (passwordless) + OnlyShowIn=QUBES;
+    One for other (KVM & VirtualBox): run xhost +local:root && sudo + NotShowIn=QUBES;
+    
+    Running kdesudo only in VirtualBox prompts the user to enter a password.
+    "xhost +local:root" prevents sdwdate-gui to show in Qubes.
+
+commit 87bc38a873323fcfeae846ccde7f94da88f3734a
+Merge: cb27b57 dd4236c
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Nov 20 17:17:16 2015 +0100
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit dd4236cac9952f21a4928d69c8723803578a7766
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Nov 19 22:26:46 2015 +0000
+
+    remove etc/X11/Xsession.d/95swdate-gui. update etc/xdg/autostart/sdwdate-gui.desktop with
+    "Exec=kdesudo /usr/bin/sdwdate-gui"
+
+commit e9f1049334ba240a60c3ced0fa415df806cdb98e
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Nov 18 07:43:39 2015 +0000
+
+    Whonix=Qubes doen not seem to honor /etc/xdgautostart -> add etc/X11/Xsession.d/95swdate-gui ti start sdwdate-gui.
+
+commit cb27b57177bb2e399a3a61fe735a7a2871e33b56
+Merge: 173d632 e3377da
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Oct 24 10:38:16 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit e3377daaf07c812b540ab29380210dabfbacecd2
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Oct 22 19:17:24 2015 +0000
+
+    increase timer period to reduce cpu usage
+
+commit 173d632ab43979260c265f186b865923cde027c3
+Merge: a06f044 54d820e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Sep 17 00:11:05 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
+
+commit 54d820ebfb346d583f0da35823760bd2aaff6a70
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Sep 16 18:53:00 2015 +0000
+
+    Depends sdwdate
+
+commit 3f0e9b34a2718b35e00e5e0581ce1a02b9c40a9e
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Sep 15 14:45:45 2015 +0000
+
+    changelog.upstream -> clear zero-byte-file-in-doc-directory lintian warning
+
 commit 4a31ff9b90baeaab1501845fc7962d3d19e86b31
 Author: troubadoour <trobador@riseup.net>
 Date:   Tue Sep 15 14:41:25 2015 +0000
@@ -9,6 +140,13 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Sat Sep 12 08:33:18 2015 +0000
 
     stripped_message -> message
+
+commit a06f044612ea0ecba886fc233e04523f817aadfd
+Merge: fa55027 7fb0560
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Sep 10 23:57:36 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
 
 commit 7fb05600b9b23cc33e67ecda1f1fd1d3fa43d7cc
 Author: troubadoour <trobador@riseup.net>
@@ -27,6 +165,13 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Wed Sep 9 18:47:46 2015 +0000
 
     move sdwdate icons in usr/share/icons/sdwdate-gui #2
+
+commit fa550275dc1da324d578b1f177bff53e47176053
+Merge: 752326f 6ab648a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Sep 7 22:20:28 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
 
 commit 6ab648a9a203dfbb34ef89f8a56d626b454a978b
 Author: troubadoour <trobador@riseup.net>
@@ -81,6 +226,13 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Wed Sep 2 19:45:30 2015 +0000
 
     replace default show_message by a popup gui, samish appearance, closed by user, text copyable.
+
+commit 752326f83807b628429c167a0a49e7677a73f33b
+Merge: 23f9c65 8118e5f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Aug 29 10:18:36 2015 +0000
+
+    Merge remote-tracking branch 'troubadour/master'
 
 commit 8118e5f8674efbf8c70037d4f84cd41df0fa5a8e
 Author: troubadoour <trobador@riseup.net>
@@ -243,6 +395,13 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Wed Aug 12 18:40:52 2015 +0000
 
     icons
+
+commit 23f9c652d5a1f6e584a4da5898a95abed1b4bf28
+Merge: 4d19cbd 452b97f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 12 18:08:33 2015 +0200
+
+    Merge remote-tracking branch 'troubadour/master'
 
 commit 9a3df0a22245c6615153802bd0576546892d3467
 Author: troubadoour <trobador@riseup.net>
