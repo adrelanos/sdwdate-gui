@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -x
+set -e
+
+counter=0
+
+while true ; do
+   for icon in /usr/share/icons/sdwdate-gui/* ; do
+      msg="$(cat /proc/sys/kernel/random/uuid)"
+
+      echo "(dp0
+S'message'
+p1
+S\"$msg\"
+p2
+sS'icon'
+p3
+S'$icon'
+p4
+s." > /var/run/sdwdate/status
+
+      counter=$(( counter + 1 ))
+      if [ "$counter" -ge 1000 ]; then
+         do_break=true
+      fi
+
+      #sleep 1
+   done
+   if [ "$do_break" = "true" ]; then
+      break
+   fi
+done

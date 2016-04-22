@@ -83,8 +83,7 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
         if os.path.exists(self.status_path):
             ## Read status when GUI is loaded.
             self.status_changed()
-            self.watcher = watcher([self.status_path])
-            self.watcher.fileChanged.connect(self.status_changed)
+            self.watch_file()
         else:
             self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
             error_msg = '''<b>sdwdate is not running</b><br>
@@ -141,12 +140,13 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
                 self.show_message('update')
 
     def status_changed(self):
-        ## Prevent race condition.
-        ## Likely due to the issue below.
-        time.sleep(0.01)
-
-        with open(self.status_path, 'rb') as f:
-            status = pickle.load(f)
+        ## When the file is quickly rewritten by another operation, reading
+        ## would fail. TOCTOU
+        try:
+            with open(self.status_path, 'rb') as f:
+                status = pickle.load(f)
+        except:
+            return
 
         self.setIcon(QtGui.QIcon(status['icon']))
         ## Remove double quotes from message as they would be interpreted as
@@ -164,9 +164,15 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.update.update_tip.emit()
         self.previous_message = self.message
 
-    def watch_folder(self):
+    def watch_file(self):
         self.watcher = watcher([self.status_path])
         self.watcher.fileChanged.connect(self.status_changed)
+
+    def watch_folder(self):
+        if os.path.exists(self.status_path):
+            self.watcher_2.removePath(self.path)
+            self.status_changed()
+            self.watch_file()
 
 
 def show_log():
