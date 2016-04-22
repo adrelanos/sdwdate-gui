@@ -85,10 +85,8 @@ class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
             self.status_changed()
             self.watch_file()
         else:
-            self.setIcon(QtGui.QIcon('/usr/share/icons/oxygen/16x16/status/dialog-error.png'))
-            error_msg = '''<b>sdwdate is not running</b><br>
-                           Try to restart it: Right click -> Restart sdwdate<br>
-                           If the icon stays red, please report this bug.'''
+            self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'))
+            error_msg = 'sdwdate will probably start in a few moments.'
             self.message = error_msg
             self.setToolTip(error_msg)
             self.watcher_2 = watcher([self.path])
