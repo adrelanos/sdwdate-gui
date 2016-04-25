@@ -1,3 +1,40 @@
+commit 31d81e012a548c06195e23a9f916fdbea151348d
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Apr 22 00:46:23 2016 +0000
+
+    better and less scary message when sdwdate is not yet running after boot
+
+commit c0a88e2abf5a9e2fe91a9a41b67bdc88a7cfa3df
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Apr 22 00:40:59 2016 +0000
+
+    fix not starting in Qubes
+
+commit 0046d2170000449c666fe5f80ec9440505867922
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Apr 22 00:02:16 2016 +0000
+
+    fixed stale status bug and better error handling
+    
+    solved duplicate event processing
+
+commit ddd3d806af0b957800c34449dfecad1933e79424
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Apr 20 04:36:48 2016 +0000
+
+    do not autostart sdwdate-gui in Qubes since it is not ready for Qubes
+    
+    it would result in one systray per VM
+    
+    i.e. two with a gateway and workstation setup and one more for each additional
+    workstation
+
+commit e76ca3f60bc5315fc739a5b221910d0ec4bc283b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 7 22:54:44 2016 +0000
+
+    bumped changelog version
+
 commit 2a0f725ccb6e4135fd9bf280653d5f28f0a126a4
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Dec 15 21:04:47 2015 +0000
