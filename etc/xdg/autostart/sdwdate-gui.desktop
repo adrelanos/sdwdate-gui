@@ -5,5 +5,5 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-Exec=/usr/bin/sdwdate-gui
-NotShowIn=QUBES;
+Exec=/usr/lib/sdwdate-gui/start-maybe
+#NotShowIn=QUBES;
