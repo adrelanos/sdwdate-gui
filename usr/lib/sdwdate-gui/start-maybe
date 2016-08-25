@@ -15,4 +15,12 @@ if [ -e /var/run/qubes-service/whonix-template ]; then
    exit 0
 fi
 
+if [ -d /usr/lib/qubes ]; then
+   ## Do not automatically start sdwdate-gui in Qubes due to various issues.
+   ## - https://github.com/QubesOS/qubes-issues/issues/2264
+   ## - https://github.com/QubesOS/qubes-issues/issues/2268
+   ## - https://phabricator.whonix.org/T534
+   exit 0
+fi
+
 sdwdate-gui
