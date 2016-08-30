@@ -179,15 +179,15 @@ def show_log():
     call(show_konsole, shell=True)
 
 def restart_sdwdate():
-    call('sudo service sdwdate restart', shell=True)
+    call('sudo --non-interactive service sdwdate restart', shell=True)
 
 def restart_fresh():
     if os.path.exists('/var/run/sdwdate/success'):
-        call('sudo rm /var/run/sdwdate/success', shell=True)
-    call('sudo service sdwdate restart', shell=True)
+        call('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
+    call('sudo --non-interactive service sdwdate restart', shell=True)
 
 def stop_sdwdate():
-    call('sudo service sdwdate stop', shell=True)
+    call('sudo --non-interactive service sdwdate stop', shell=True)
 
 def main():
     app = QtGui.QApplication([])
