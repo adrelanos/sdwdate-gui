@@ -1,3 +1,41 @@
+commit 4dd68b0f46f83ab8105c77697229f564abce69b9
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Nov 21 17:42:44 2016 +0000
+
+    readme
+
+commit 3a24b8e14c4efb0b7e47976bb85af2e726043de3
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Aug 30 21:13:53 2016 +0000
+
+    sudo --non-interactive
+    
+    https://phabricator.whonix.org/T549
+
+commit 3c59489d839da7837f06c911de2f30230ddd3853
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 25 20:33:37 2016 +0000
+
+    Do not automatically start sdwdate-gui in Qubes due to various issues.
+    
+    - https://github.com/QubesOS/qubes-issues/issues/2264
+    - https://github.com/QubesOS/qubes-issues/issues/2268
+    - https://phabricator.whonix.org/T534
+
+commit 9aeeb919caf2a8a9a53385e751f1ab81219db39d
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 25 18:58:03 2016 +0000
+
+    add startup wrapper to avoid starting sdwdate-gui in Qubes TemplateVM
+    
+    https://phabricator.whonix.org/T533
+
+commit 815b6f2557d35635bc66e0f4f6a3653f652008e0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 25 23:27:57 2016 +0000
+
+    bumped changelog version
+
 commit 31d81e012a548c06195e23a9f916fdbea151348d
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Apr 22 00:46:23 2016 +0000
