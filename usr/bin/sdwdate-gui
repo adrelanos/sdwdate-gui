@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+#!/usr/bin/python -u
+
 from sdwdate_gui import sdwdate_gui
 
 sdwdate_gui.main()
