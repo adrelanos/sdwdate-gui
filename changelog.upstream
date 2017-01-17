@@ -1,3 +1,15 @@
+commit 5b860c1b44fa5e38e56cfbf6f616d3844796ef7b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Jan 16 15:56:14 2017 +0100
+
+    add missing build dependency ruby-ronn
+
+commit e57f2256bd4dbdaf99a52510cdefa19cf32ea7b8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Jan 15 15:35:22 2017 +0000
+
+    bumped changelog version
+
 commit 28678dfbcb30f36ed68815a87279d19c5d8725f0
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sun Jan 15 08:35:40 2017 +0100
