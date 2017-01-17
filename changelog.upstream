@@ -33,7 +33,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Aug 30 21:13:53 2016 +0000
 
     sudo --non-interactive
-    
+
     https://phabricator.whonix.org/T549
 
 commit 3c59489d839da7837f06c911de2f30230ddd3853
@@ -41,7 +41,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 20:33:37 2016 +0000
 
     Do not automatically start sdwdate-gui in Qubes due to various issues.
-    
+
     - https://github.com/QubesOS/qubes-issues/issues/2264
     - https://github.com/QubesOS/qubes-issues/issues/2268
     - https://phabricator.whonix.org/T534
@@ -51,7 +51,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 18:58:03 2016 +0000
 
     add startup wrapper to avoid starting sdwdate-gui in Qubes TemplateVM
-    
+
     https://phabricator.whonix.org/T533
 
 commit 815b6f2557d35635bc66e0f4f6a3653f652008e0
@@ -77,7 +77,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Apr 22 00:02:16 2016 +0000
 
     fixed stale status bug and better error handling
-    
+
     solved duplicate event processing
 
 commit ddd3d806af0b957800c34449dfecad1933e79424
@@ -85,9 +85,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Apr 20 04:36:48 2016 +0000
 
     do not autostart sdwdate-gui in Qubes since it is not ready for Qubes
-    
+
     it would result in one systray per VM
-    
+
     i.e. two with a gateway and workstation setup and one more for each additional
     workstation
 
@@ -169,10 +169,10 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Fri Nov 20 20:47:09 2015 +0000
 
     Two different .desktop files in /etc/xdg/autostart.
-    
+
     One for Qubes: run directly kdesudo (passwordless) + OnlyShowIn=QUBES;
     One for other (KVM & VirtualBox): run xhost +local:root && sudo + NotShowIn=QUBES;
-    
+
     Running kdesudo only in VirtualBox prompts the user to enter a password.
     "xhost +local:root" prevents sdwdate-gui to show in Qubes.
 
