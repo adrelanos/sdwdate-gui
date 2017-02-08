@@ -1,10 +1,10 @@
-#!/usr/bin/python -u
+#!/usr/bin/python3 -u
 
 import sys
 import signal
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 
 
 class Frame(QtGui.QFrame):

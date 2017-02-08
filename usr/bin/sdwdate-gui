@@ -1,4 +1,4 @@
-#!/usr/bin/python -u
+#!/usr/bin/python3 -u
 
 from sdwdate_gui import sdwdate_gui
 import signal
