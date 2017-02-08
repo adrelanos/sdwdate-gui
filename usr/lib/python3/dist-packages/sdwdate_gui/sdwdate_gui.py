@@ -46,7 +46,7 @@ class RightClickMenu(QtWidgets.QMenu):
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
         action = QtWidgets.QAction(icon, "&Exit", self)
-        action.triggered.connect(QtWidgets.qApp.quit)
+        action.triggered.connect(sys.exit)
         self.addAction(action)
 
 
@@ -131,7 +131,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def update_tip(self):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
-            QtGui.QToolTip.showText(QtGui.QCursor.pos(),
+            QtWidgets.QToolTip.showText(QtGui.QCursor.pos(),
                                    '%s\n%s' %(self.title, self.stripped_message))
         ## Do not show message on loading.
         if self.clicked_once:
