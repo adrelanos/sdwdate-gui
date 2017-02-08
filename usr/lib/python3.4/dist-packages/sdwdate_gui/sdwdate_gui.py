@@ -1,9 +1,9 @@
-#! /usr/bin/env python
+#!/usr/bin/python3 -u
 
 import sys
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import QFileSystemWatcher as watcher
-from PyQt4.QtCore import QThread
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import QFileSystemWatcher as watcher
+from PyQt5.QtCore import QThread
 import subprocess
 from subprocess import check_output, call
 import pickle
@@ -12,14 +12,16 @@ import signal
 import time
 import re
 
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-class RightClickMenu(QtGui.QMenu):
+class RightClickMenu(QtWidgets.QMenu):
 
     def __init__(self, parent=None):
-        QtGui.QMenu.__init__(self, "File", parent)
+        QtWidgets.QMenu.__init__(self, "File", parent)
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
-        action = QtGui.QAction(icon, "Open sdwdate's log", self)
+        action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
         action.triggered.connect(show_log)
         self.addAction(action)
 
@@ -27,24 +29,24 @@ class RightClickMenu(QtGui.QMenu):
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
         text = 'Restart sdwdate - Gradually adjust the time'
-        action = QtGui.QAction(icon, text, self)
+        action = QtWidgets.QAction(icon, text, self)
         action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
         text = 'Restart sdwdate - Instantly adjust the time.'
-        action = QtGui.QAction(icon, text, self)
+        action = QtWidgets.QAction(icon, text, self)
         action.triggered.connect(restart_fresh)
         self.addAction(action)
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
-        action = QtGui.QAction(icon, "Stop sdwdate", self)
+        action = QtWidgets.QAction(icon, "Stop sdwdate", self)
         action.triggered.connect(stop_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
-        action = QtGui.QAction(icon, "&Exit", self)
-        action.triggered.connect(QtGui.qApp.quit)
+        action = QtWidgets.QAction(icon, "&Exit", self)
+        action.triggered.connect(QtWidgets.qApp.quit)
         self.addAction(action)
 
 
@@ -52,10 +54,10 @@ class Update(QtCore.QObject):
     update_tip = QtCore.pyqtSignal()
 
 
-class SdwdateTrayIcon(QtGui.QSystemTrayIcon):
+class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
     def __init__(self, parent=None):
-        QtGui.QSystemTrayIcon.__init__(self, parent)
+        QtWidgets.QSystemTrayIcon.__init__(self, parent)
 
         self.title = 'Time Synchronisation Monitor'
         self.right_click_menu = RightClickMenu()
@@ -190,7 +192,7 @@ def stop_sdwdate():
     call('sudo --non-interactive service sdwdate stop', shell=True)
 
 def main():
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     sdwdate_tray = SdwdateTrayIcon()
     sdwdate_tray.show()
     app.exec_()
