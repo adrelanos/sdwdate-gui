@@ -3,18 +3,18 @@
 import sys
 import signal
 from PyQt5 import QtGui
-from PyQt5 import QtCore
+from PyQt5 import QtCore,QtWidgets
 from PyQt5.QtCore import Qt
 
 
-class Frame(QtGui.QFrame):
+class Frame(QtWidgets.QFrame):
     def __init__(self, parent=None):
-        QtGui.QFrame.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self.setWindowTitle('Time Synchronization Monitor')
         self.setMinimumWidth(320)
-        self.m_content = QtGui.QWidget(self)
+        self.m_content = QtWidgets.QWidget(self)
 
-        frame_layout = QtGui.QVBoxLayout(self)
+        frame_layout = QtWidgets.QVBoxLayout(self)
         frame_layout.addWidget(self.m_content)
 
     # Allows access to the content area of the frame
@@ -25,21 +25,21 @@ class Frame(QtGui.QFrame):
 def signal_handler(signum, stack):
     # SIGTERM or SIGINT
     if signum == 15 or signum == 2:
-        QtGui.QApplication.exit()
+        QtWidgets.QApplication.exit()
 
 if __name__ == '__main__':
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    app = QtGui.QApplication(sys.argv);
+    app = QtWidgets.QApplication(sys.argv);
     msg = sys.argv[1]
     pos_x = int(sys.argv[2])
     pos_y = int(sys.argv[3])
 
     popup = Frame()
-    frame_content = QtGui.QVBoxLayout(popup.widget_content())
+    frame_content = QtWidgets.QVBoxLayout(popup.widget_content())
 
-    text = QtGui.QLabel()
+    text = QtWidgets.QLabel()
     text.setTextInteractionFlags(Qt.LinksAccessibleByMouse |
                                  Qt.TextSelectableByMouse)
     text.setTextFormat(Qt.RichText)
