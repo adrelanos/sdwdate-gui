@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QFileSystemWatcher as watcher
 from PyQt5.QtCore import QThread
 import subprocess
-from subprocess import check_output, call
+from subprocess import check_output, call, Popen
 import pickle
 import os
 import signal
@@ -178,18 +178,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 def show_log():
     show_konsole = ('konsole --hold --hide-menubar --hide-tabbar ' +
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
-    call(show_konsole, shell=True)
+    Popen(show_konsole, shell=True)
 
 def restart_sdwdate():
-    call('sudo --non-interactive service sdwdate restart', shell=True)
+    Popen('sudo --non-interactive service sdwdate restart', shell=True)
 
 def restart_fresh():
     if os.path.exists('/var/run/sdwdate/success'):
-        call('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
-    call('sudo --non-interactive service sdwdate restart', shell=True)
+        Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
+    Popen('sudo --non-interactive service sdwdate restart', shell=True)
 
 def stop_sdwdate():
-    call('sudo --non-interactive service sdwdate stop', shell=True)
+    Popen('sudo --non-interactive service sdwdate stop', shell=True)
 
 def main():
     app = QtWidgets.QApplication([])
