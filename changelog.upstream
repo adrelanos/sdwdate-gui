@@ -1,3 +1,117 @@
+commit 6620eb4870536187fede4bf0f8408b4be24980e4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Feb 17 14:07:59 2017 +0000
+
+    add signed commit
+
+commit 2df79d25add43515899ff876b99adf8f1fe591c5
+Merge: 40685fe 7e047fe
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 15 15:09:01 2017 +0100
+
+    Merge remote-tracking branch 'joysn/master'
+
+commit 7e047fe294138cc01abde44e287081eccdb240e2
+Author: Joy SN <joysn1980@yahoo.com>
+Date:   Wed Feb 15 10:30:07 2017 +0000
+
+    Fix right click menu freese issue
+    https://phabricator.whonix.org/T626
+
+commit 40685fea0bc14f8fd412474737018b6300cfdb46
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Feb 10 15:47:52 2017 +0000
+
+    remove faketime from Build-Depends:
+    
+    since no longer used for reproducible builds
+
+commit 515d1006c72e55c04816fe1bfd7e6a1e8d44c3f3
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Feb 10 15:35:25 2017 +0000
+
+    remove debian/gain-root-command workaround
+
+commit 40d64a05475eb4c026227b9aeb6711feccd3683c
+Merge: 28f6e58 f669c73
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 21:58:55 2017 +0000
+
+    Merge remote-tracking branch 'joysn/master'
+
+commit f669c73648ed848bef2f99d063281b5fe5dae321
+Author: joysn <joysn1980@yahoo.com>
+Date:   Wed Feb 8 16:18:30 2017 +0000
+
+    Fix segmentation fault while exit
+    Fix tooltip package
+    https://phabricator.whonix.org/T598
+
+commit 28f6e585ebbf0fbdca7a78ef444d4c17738d3070
+Merge: 2d2cf0a 2c5716b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 15:11:28 2017 +0000
+
+    Merge remote-tracking branch 'joysn/master'
+
+commit 2d2cf0a0c47ff5ec5ec0c2583f2057de1d3b1406
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 14:14:10 2017 +0000
+
+    usr/bin/sdwdate-gui: change shebang to python3;
+    usr/lib/sdwdate-gui/show_message: change shebang to python3;
+    
+    move files to fix lintian warnings:
+    usr/lib/python3.4/dist-packages/sdwdate_gui/__init__.py -> usr/lib/python3/dist-packages/sdwdate_gui/__init__.py
+    usr/lib/python3.4/dist-packages/sdwdate_gui/sdwdate_gui.py -> usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui.py
+
+commit 49a7698f358f33ff468b57b51b29d3a78437f817
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 13:49:46 2017 +0000
+
+    port dependencies to python3
+
+commit d835faf635e15c6cc38dbcc981bdffa4cd67e70f
+Merge: 2bfaf0f e56837e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 13:48:30 2017 +0000
+
+    Merge branch 'python3-merge-from-joy'
+
+commit e56837ed30aeb89c55bacb8546e3cd1280b0d923
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 13:46:07 2017 +0000
+
+    delete python 2.7 version
+
+commit 53a39cdf22c859e7947d2a85448538344771717b
+Merge: 2bfaf0f d6ef0d3
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Feb 8 13:45:27 2017 +0000
+
+    Merge remote-tracking branch 'joysn/master' into python3-merge-from-joy
+
+commit 2c5716bccd3fb75714f611d2af2a1400cac925f6
+Author: joysn <joysn1980@yahoo.com>
+Date:   Wed Feb 8 06:52:25 2017 +0000
+
+    port show_message to python3 and pyqt5
+    https://phabricator.whonix.org/T598
+
+commit d6ef0d39d1ee13da44458eec9dc827eb04acec7e
+Author: joysn <joysn1980@yahoo.com>
+Date:   Wed Feb 8 06:17:04 2017 +0000
+
+    Adding python3,pyqt5 version of sdwdate_gui.py version
+    https://phabricator.whonix.org/T598
+    https://phabricator.whonix.org/T624
+
+commit 2bfaf0f1d23b5e102dae0be9901ef6d94e55daf9
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jan 18 14:32:47 2017 +0000
+
+    bumped changelog version
+
 commit 8c1ea117d409d74d2a4bf464f5b25d55ccfc696d
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Jan 18 11:35:19 2017 +0000
@@ -88,7 +202,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Aug 30 21:13:53 2016 +0000
 
     sudo --non-interactive
-
+    
     https://phabricator.whonix.org/T549
 
 commit 3c59489d839da7837f06c911de2f30230ddd3853
@@ -96,7 +210,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 20:33:37 2016 +0000
 
     Do not automatically start sdwdate-gui in Qubes due to various issues.
-
+    
     - https://github.com/QubesOS/qubes-issues/issues/2264
     - https://github.com/QubesOS/qubes-issues/issues/2268
     - https://phabricator.whonix.org/T534
@@ -106,7 +220,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 18:58:03 2016 +0000
 
     add startup wrapper to avoid starting sdwdate-gui in Qubes TemplateVM
-
+    
     https://phabricator.whonix.org/T533
 
 commit 815b6f2557d35635bc66e0f4f6a3653f652008e0
@@ -132,7 +246,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Apr 22 00:02:16 2016 +0000
 
     fixed stale status bug and better error handling
-
+    
     solved duplicate event processing
 
 commit ddd3d806af0b957800c34449dfecad1933e79424
@@ -140,9 +254,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Apr 20 04:36:48 2016 +0000
 
     do not autostart sdwdate-gui in Qubes since it is not ready for Qubes
-
+    
     it would result in one systray per VM
-
+    
     i.e. two with a gateway and workstation setup and one more for each additional
     workstation
 
@@ -224,10 +338,10 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Fri Nov 20 20:47:09 2015 +0000
 
     Two different .desktop files in /etc/xdg/autostart.
-
+    
     One for Qubes: run directly kdesudo (passwordless) + OnlyShowIn=QUBES;
     One for other (KVM & VirtualBox): run xhost +local:root && sudo + NotShowIn=QUBES;
-
+    
     Running kdesudo only in VirtualBox prompts the user to enter a password.
     "xhost +local:root" prevents sdwdate-gui to show in Qubes.
 

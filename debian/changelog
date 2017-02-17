@@ -1,3 +1,9 @@
+sdwdate-gui (1:0.9-1) unstable; urgency=medium
+
+  * New upstream version (local package).
+
+ -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 17 Feb 2017 14:08:26 +0000
+
 sdwdate-gui (1:0.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
