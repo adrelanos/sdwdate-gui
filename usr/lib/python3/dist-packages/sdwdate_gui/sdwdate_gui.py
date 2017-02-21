@@ -181,15 +181,15 @@ def show_log():
     Popen(show_konsole, shell=True)
 
 def restart_sdwdate():
-    Popen('sudo --non-interactive service sdwdate restart', shell=True)
+    Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
 
 def restart_fresh():
     if os.path.exists('/var/run/sdwdate/success'):
         Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
-    Popen('sudo --non-interactive service sdwdate restart', shell=True)
+    Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
 
 def stop_sdwdate():
-    Popen('sudo --non-interactive service sdwdate stop', shell=True)
+    Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
 
 def main():
     app = QtWidgets.QApplication([])

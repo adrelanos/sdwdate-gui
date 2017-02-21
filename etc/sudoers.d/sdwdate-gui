@@ -6,7 +6,8 @@
 ALL ALL=NOPASSWD: /usr/bin/sdwdate-gui
 
 ## Allow all users to restart sdwdate without password.
-ALL ALL=NOPASSWD: /usr/sbin/service sdwdate *
+ALL ALL=NOPASSWD: /bin/systemctl --no-pager --no-block restart sdwdate
+ALL ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
 
 ## Allow "sudo rm" for sdwdate without password.
 ALL ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
