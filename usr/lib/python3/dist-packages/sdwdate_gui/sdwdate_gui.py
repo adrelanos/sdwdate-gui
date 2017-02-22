@@ -192,7 +192,7 @@ def stop_sdwdate():
     Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
 
 def main():
-    app = QtWidgets.QApplication([])
+    app = QtWidgets.QApplication(["Sdwdate"])
     sdwdate_tray = SdwdateTrayIcon()
     sdwdate_tray.show()
     app.exec_()
