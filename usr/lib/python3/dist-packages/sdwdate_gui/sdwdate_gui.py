@@ -176,7 +176,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
 
 def show_log():
-    show_konsole = ('konsole --hold --hide-menubar --hide-tabbar ' +
+    show_konsole = ('konsole --hold ' +
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
     Popen(show_konsole, shell=True)
 
