@@ -119,7 +119,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             cmd = ['pgrep', '-f', self.popup_path]
             self.popup_pid = int(check_output(cmd))
             return True
-        except subprocess.CalledProcessError:
+        except:
             return False
 
     def update_tip(self):
