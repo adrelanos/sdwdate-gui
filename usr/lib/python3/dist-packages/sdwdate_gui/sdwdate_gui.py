@@ -4,6 +4,7 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QProcess
 import subprocess
 from subprocess import check_output, call, Popen
 import pickle
@@ -59,8 +60,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.path = '/var/run/sdwdate'
         self.status_path = '/var/run/sdwdate/status'
-        self.popup_path = '/usr/lib/sdwdate-gui/show_message'
-        self.popup_pid = 0
+        self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
+        self.popup_process = None
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
@@ -77,9 +78,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.stripped_message = ''
 
         self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'))
-        error_msg = 'sdwdate will probably start in a few moments.'
-        self.message = error_msg
-        self.setToolTip(error_msg)
+        startup_msg = 'sdwdate will probably start in a few moments.'
+        self.message = startup_msg
+        self.setToolTip(startup_msg)
 
         self.status_changed()
 
@@ -87,9 +88,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.watcher_file.fileChanged.connect(self.status_changed)
 
     def run_popup(self):
-        run_popup = ('%s "%s" %s %s &'
-                % (self.popup_path, self.message, self.pos_x, self.pos_y))
-        call(run_popup, shell=True)
+        popup_process_cmd = ('%s "%s" %s %s &'
+                % (self.show_message_path, self.message, self.pos_x, self.pos_y))
+        self.popup_process = QProcess()
+        self.popup_process.start(popup_process_cmd)
 
     def show_message(self, caller):
         ## Store own position for message gui.
@@ -98,9 +100,16 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.pos_y = QtGui.QCursor.pos().y() - 50
             self.clicked_once = True
 
-        if self.is_popup_running():
-            ## Kill message gui.
-            os.kill(self.popup_pid, signal.SIGTERM)
+        if self.popup_process == None:
+            self.run_popup()
+            return
+
+        if self.popup_process.pid() > 0:
+            try:
+                  self.popup_process.kill()
+            except:
+                  pass
+            self.popup_process = None
             if caller == 'update':
                 self.run_popup()
         else:
@@ -111,25 +120,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if reason == self.Trigger:
             self.show_message('user')
 
-    def is_popup_running(self):
-        try:
-            ## command exit code != 0 if path does not exists.
-            cmd = ['pgrep', '-f', self.popup_path]
-            self.popup_pid = int(check_output(cmd))
-            return True
-        except:
-            return False
-
     def update_tip(self):
         ## Update tooltip if mouse on icon.
         if self.geometry().contains(QtGui.QCursor.pos()):
             QtWidgets.QToolTip.showText(QtGui.QCursor.pos(),
                                    '%s\n%s' %(self.title, self.stripped_message))
-        ## Do not show message on loading.
-        if self.clicked_once:
-            ## Update message only if already shown.
-            if self.is_popup_running():
-                self.show_message('update')
+
+        if self.popup_process == None:
+            return
+
+        ## Update message only if already shown.
+        if self.popup_process.pid() > 0:
+            self.show_message('update')
 
     def status_changed(self):
         ## When the file is quickly rewritten by another operation, reading
@@ -138,8 +140,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             with open(self.status_path, 'rb') as f:
                 status = pickle.load(f)
         except:
-            error = "Unexpected error: " + str(sys.exc_info()[0])
-            print(error)
+            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            print(error_msg)
             return
 
         self.setIcon(QtGui.QIcon(status['icon']))
