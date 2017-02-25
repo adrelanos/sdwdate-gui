@@ -28,13 +28,7 @@ class RightClickMenu(QtWidgets.QMenu):
         self.addSeparator()
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
-        text = 'Restart sdwdate - Gradually adjust the time'
-        action = QtWidgets.QAction(icon, text, self)
-        action.triggered.connect(restart_sdwdate)
-        self.addAction(action)
-
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
-        text = 'Restart sdwdate - Instantly adjust the time.'
+        text = 'Restart sdwdate'
         action = QtWidgets.QAction(icon, text, self)
         action.triggered.connect(restart_fresh)
         self.addAction(action)
@@ -179,9 +173,6 @@ def show_log():
     show_konsole = ('konsole --hold ' +
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
     Popen(show_konsole, shell=True)
-
-def restart_sdwdate():
-    Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
 
 def restart_fresh():
     if os.path.exists('/var/run/sdwdate/success'):
