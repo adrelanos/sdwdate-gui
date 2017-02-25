@@ -2,7 +2,7 @@
 
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import QFileSystemWatcher as watcher
+from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtCore import QThread
 import subprocess
 from subprocess import check_output, call, Popen
@@ -76,17 +76,15 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.previous_message = ''
         self.stripped_message = ''
 
-        if os.path.exists(self.status_path):
-            ## Read status when GUI is loaded.
-            self.status_changed()
-            self.watch_file()
-        else:
-            self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'))
-            error_msg = 'sdwdate will probably start in a few moments.'
-            self.message = error_msg
-            self.setToolTip(error_msg)
-            self.watcher_2 = watcher([self.path])
-            self.watcher_2.directoryChanged.connect(self.watch_folder)
+        self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'))
+        error_msg = 'sdwdate will probably start in a few moments.'
+        self.message = error_msg
+        self.setToolTip(error_msg)
+
+        self.status_changed()
+
+        self.watcher_file = QFileSystemWatcher([self.status_path])
+        self.watcher_file.fileChanged.connect(self.status_changed)
 
     def run_popup(self):
         run_popup = ('%s "%s" %s %s &'
@@ -140,6 +138,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             with open(self.status_path, 'rb') as f:
                 status = pickle.load(f)
         except:
+            error = "Unexpected error: " + str(sys.exc_info()[0])
+            print(error)
             return
 
         self.setIcon(QtGui.QIcon(status['icon']))
@@ -149,24 +149,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.message = status['message'].replace('\"', '')
         self.stripped_message = re.sub('<[^<]+?>', '', self.message)
 
-        ## QFileSystemWatcher may emit the fileChanged signal twice
-        ## or three times, randomly. Filter to allow enough time
-        ## between kill and restart popup in show_message(), and
-        ## prevent os.kill to raise an error and leave a gui open.
-        if self.message != self.previous_message:
-            self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
-            self.update.update_tip.emit()
-        self.previous_message = self.message
-
-    def watch_file(self):
-        self.watcher = watcher([self.status_path])
-        self.watcher.fileChanged.connect(self.status_changed)
-
-    def watch_folder(self):
-        if os.path.exists(self.status_path):
-            self.watcher_2.removePath(self.path)
-            self.status_changed()
-            self.watch_file()
+        self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
+        self.update.update_tip.emit()
 
 
 def show_log():
