@@ -101,7 +101,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.clicked_once = True
 
         if self.is_popup_running():
-            ## Kill message gui
+            ## Kill message gui.
             os.kill(self.popup_pid, signal.SIGTERM)
             if caller == 'update':
                 self.run_popup()
