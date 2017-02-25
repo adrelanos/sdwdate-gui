@@ -30,7 +30,7 @@ class RightClickMenu(QtWidgets.QMenu):
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
         text = 'Restart sdwdate'
         action = QtWidgets.QAction(icon, text, self)
-        action.triggered.connect(restart_fresh)
+        action.triggered.connect(restart_sdwdate)
         self.addAction(action)
 
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
@@ -174,7 +174,7 @@ def show_log():
            '-e "tail -f -n 100 /var/log/sdwdate.log"')
     Popen(show_konsole, shell=True)
 
-def restart_fresh():
+def restart_sdwdate():
     if os.path.exists('/var/run/sdwdate/success'):
         Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
     Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
