@@ -94,7 +94,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         call(run_popup, shell=True)
 
     def show_message(self, caller):
-        ## Store own positon for message gui.
+        ## Store own position for message gui.
         if not self.clicked_once:
             self.pos_x = QtGui.QCursor.pos().x() - 50
             self.pos_y = QtGui.QCursor.pos().y() - 50
