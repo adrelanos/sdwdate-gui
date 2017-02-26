@@ -134,8 +134,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.show_message('update')
 
     def status_changed(self):
-        ## When the file is quickly rewritten by another operation, reading
-        ## would fail. TOCTOU
+        ## pickle.load(f) could fail if self.status_path,
+        ## - is still empty (sdwdate has not been started yet)
+        ## - contains invalid contents (if sdwdate got killed the moment it was
+        ##   writing to that file.
         try:
             with open(self.status_path, 'rb') as f:
                 status = pickle.load(f)
