@@ -1,0 +1,4 @@
+if [ -z "$XDG_CONFIG_DIRS" ]; then
+   XDG_CONFIG_DIRS=/etc/xdg
+fi
+export XDG_CONFIG_DIRS=/usr/share/show-sdwdate-gui-systray/:$XDG_CONFIG_DIRS
