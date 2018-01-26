@@ -9,22 +9,18 @@ set -e
 counter=0
 
 while true ; do
-   for icon in /usr/share/icons/sdwdate-gui/* ; do
-      msg="$(cat /proc/sys/kernel/random/uuid)"
+   for icon in success busy error ; do
+      python3 -c "
+icon = bytes(\"$icon\", encoding = 'utf-8')
+with open(\"/var/run/sdwdate/status\", 'wb') as f:
+      f.write(icon)
+      f.close()"
 
-      echo "(dp0
-S'message'
-p1
-S\"$msg\"
-p2
-sS'icon'
-p3
-S'$icon'
-p4
-s." > /var/run/sdwdate/status
+      #msg="$(cat /proc/sys/kernel/random/uuid)"
+      echo "$icon" > /var/run/sdwdate/msg
 
       counter=$(( counter + 1 ))
-      if [ "$counter" -ge 1000 ]; then
+      if [ "$counter" -ge 10000 ]; then
          do_break=true
       fi
 

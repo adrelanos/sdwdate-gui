@@ -62,9 +62,14 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(self.right_click_menu)
 
         self.path = '/var/run/sdwdate'
-        self.status_path = '/var/run/sdwdate/status'
+        self.msg_path = '/var/run/sdwdate/msg'
+        self.icon_path = '/var/run/sdwdate/status'
         self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
         self.popup_process = None
+
+        self.success_icon = '/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png'
+        self.busy_icon = '/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'
+        self.error_icon = '/usr/share/icons/sdwdate-gui/212px-Timeblock.svg.png'
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
@@ -87,12 +92,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.status_changed()
 
-        self.watcher_file = QFileSystemWatcher([self.status_path])
+        self.watcher_file = QFileSystemWatcher([self.msg_path])
         self.watcher_file.fileChanged.connect(self.status_changed)
 
     def run_popup(self):
-        popup_process_cmd = ('%s "%s" %s %s &'
-                % (self.show_message_path, self.message, self.pos_x, self.pos_y))
+        popup_process_cmd = ('%s "%s" %s %s'
+                % (self.show_message_path, self.pos_x, self.pos_y, self.message))
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)
 
@@ -137,26 +142,39 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.show_message('update')
 
     def status_changed(self):
-        ## pickle.load(f) could fail if self.status_path,
+        ## could fail if self.msg_path,
         ## - is still empty (sdwdate has not been started yet)
         ## - contains invalid contents (if sdwdate got killed the moment it was
         ##   writing to that file.
         try:
-            with open(self.status_path, 'rb') as f:
-                status = pickle.load(f)
+            with open(self.msg_path, 'rb') as f:
+                msg = f.read()
         except:
-            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "Unexpected error msg_path read: " + str(sys.exc_info()[0])
+            print(error_msg)
+            return
+        try:
+            with open(self.icon_path, 'rb') as f:
+                icon_type = f.read()
+        except:
+            error_msg = "Unexpected error icon_path read: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
-        self.setIcon(QtGui.QIcon(status['icon']))
-        ## Remove double quotes from message as they would be interpreted as
-        ## an argument separator in /usr/lib/sdwdate-gui/show_message (called
-        ## by run_popup).
-        self.message = status['message'].replace('\"', '')
-        self.stripped_message = re.sub('<[^<]+?>', '', self.message)
+        if icon_type == bytes("error", encoding = 'utf-8'):
+            status = self.error_icon
+        elif icon_type == bytes("busy", encoding = 'utf-8'):
+            status = self.busy_icon
+        elif icon_type == bytes("success", encoding = 'utf-8'):
+            status = self.success_icon
+        else:
+            status = self.error_icon
+            print("ERROR: unknown icon_type: ", icon_type)
 
-        self.setToolTip('%s\n%s' %(self.title, self.stripped_message))
+        self.setIcon(QtGui.QIcon(status))
+        self.message = msg
+
+        self.setToolTip('%s\n%s' %(self.title, self.message))
         self.update.update_tip.emit()
 
 

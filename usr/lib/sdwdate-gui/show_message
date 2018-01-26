@@ -34,10 +34,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    app = QtWidgets.QApplication(sys.argv);
-    msg = sys.argv[1]
-    pos_x = int(sys.argv[2])
-    pos_y = int(sys.argv[3])
+    app = QtWidgets.QApplication([]);
+    pos_x = int(sys.argv[1])
+    pos_y = int(sys.argv[2])
+    msg = ' '.join(sys.argv[3:])
 
     popup = Frame()
     frame_content = QtWidgets.QVBoxLayout(popup.widget_content())
