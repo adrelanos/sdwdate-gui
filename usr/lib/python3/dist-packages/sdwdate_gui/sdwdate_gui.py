@@ -10,7 +10,7 @@ from PyQt5.QtCore import QThread
 from PyQt5.QtCore import QProcess
 import subprocess
 from subprocess import check_output, call, Popen
-import pickle
+import json
 import os
 import signal
 import time
@@ -62,14 +62,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.setContextMenu(self.right_click_menu)
 
         self.path = '/var/run/sdwdate'
-        self.msg_path = '/var/run/sdwdate/msg'
-        self.icon_path = '/var/run/sdwdate/status'
+        self.status_path = '/var/run/sdwdate/status'
         self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
         self.popup_process = None
-
-        self.success_icon = '/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png'
-        self.busy_icon = '/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'
-        self.error_icon = '/usr/share/icons/sdwdate-gui/212px-Timeblock.svg.png'
 
         self.update = Update(self)
         self.update.update_tip.connect(self.update_tip)
@@ -85,14 +80,20 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.previous_message = ''
         self.stripped_message = ''
 
-        self.setIcon(QtGui.QIcon('/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png'))
+        self.icon = ['/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png',
+                     '/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png',
+                     '/usr/share/icons/sdwdate-gui/212px-Timeblock.svg.png']
+
+        self.icons = ['success', 'busy', 'error']
+
+        self.setIcon(QtGui.QIcon(self.icon[self.icons.index('busy')]))
         startup_msg = 'sdwdate will probably start in a few moments.'
         self.message = startup_msg
         self.setToolTip(startup_msg)
 
         self.status_changed()
 
-        self.watcher_file = QFileSystemWatcher([self.msg_path])
+        self.watcher_file = QFileSystemWatcher([self.status_path])
         self.watcher_file.fileChanged.connect(self.status_changed)
 
     def run_popup(self):
@@ -142,37 +143,23 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.show_message('update')
 
     def status_changed(self):
-        ## could fail if self.msg_path,
+        ## json.load(f) could fail if self.status_path,
         ## - is still empty (sdwdate has not been started yet)
         ## - contains invalid contents (if sdwdate got killed the moment it was
         ##   writing to that file.
+        ## - status is None.
         try:
-            with open(self.msg_path, 'rb') as f:
-                msg = f.read()
+            with open(self.status_path, 'r') as f:
+                status = json.load(f)
+                f.close()
         except:
-            error_msg = "Unexpected error msg_path read: " + str(sys.exc_info()[0])
-            print(error_msg)
-            return
-        try:
-            with open(self.icon_path, 'rb') as f:
-                icon_type = f.read()
-        except:
-            error_msg = "Unexpected error icon_path read: " + str(sys.exc_info()[0])
+            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
-        if icon_type == bytes("error", encoding = 'utf-8'):
-            status = self.error_icon
-        elif icon_type == bytes("busy", encoding = 'utf-8'):
-            status = self.busy_icon
-        elif icon_type == bytes("success", encoding = 'utf-8'):
-            status = self.success_icon
-        else:
-            status = self.error_icon
-            print("ERROR: unknown icon_type: ", icon_type)
-
-        self.setIcon(QtGui.QIcon(status))
-        self.message = msg
+        icon = self.icon[self.icons.index(status['icon'])]
+        self.setIcon(QtGui.QIcon(icon))
+        self.message = status['message'].strip()
 
         self.setToolTip('%s\n%s' %(self.title, self.message))
         self.update.update_tip.emit()
