@@ -1,4 +1,5 @@
-#!/usr/bin/python3 -u
+#!/usr/bin/python3
+#-u
 
 ## Copyright (C) 2015 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
@@ -97,7 +98,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.watcher_file.fileChanged.connect(self.status_changed)
 
     def run_popup(self):
-        popup_process_cmd = ('%s "%s" %s %s'
+        popup_process_cmd = ('"%s" "%s" "%s" %s'
                 % (self.show_message_path, self.pos_x, self.pos_y, self.message))
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)

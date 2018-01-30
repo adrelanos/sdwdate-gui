@@ -16,7 +16,7 @@ while true ; do
 import json
 status = {'icon': '', 'message': ''}
 status['icon'] = '$icon'
-status['message'] = '$msg'
+status['message'] = '$msg $msg $msg'
 with open(\"/var/run/sdwdate/status\", 'w') as f:
     json.dump(status, f)
       "
