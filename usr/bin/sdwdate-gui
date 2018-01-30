@@ -1,10 +1,6 @@
-#!/usr/bin/python3 -u
+#!/bin/bash
 
-## Copyright (C) 2015 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
+## Copyright (C) 2018 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
-from sdwdate_gui import sdwdate_gui
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
-
-sdwdate_gui.main()
+sudo -u sdwdate /usr/lib/sdwdate-gui/sdwdate-gui
