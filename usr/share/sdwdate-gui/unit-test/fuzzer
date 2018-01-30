@@ -10,14 +10,16 @@ counter=0
 
 while true ; do
    for icon in success busy error ; do
-      python3 -c "
-icon = bytes(\"$icon\", encoding = 'utf-8')
-with open(\"/var/run/sdwdate/status\", 'wb') as f:
-      f.write(icon)
-      f.close()"
+      msg="$(cat /proc/sys/kernel/random/uuid)"
 
-      #msg="$(cat /proc/sys/kernel/random/uuid)"
-      echo "$icon" > /var/run/sdwdate/msg
+      sudo -u sdwdate python3 -u -c "
+import json
+status = {'icon': '', 'message': ''}
+status['icon'] = '$icon'
+status['message'] = '$msg'
+with open(\"/var/run/sdwdate/status\", 'w') as f:
+    json.dump(status, f)
+      "
 
       counter=$(( counter + 1 ))
       if [ "$counter" -ge 10000 ]; then
