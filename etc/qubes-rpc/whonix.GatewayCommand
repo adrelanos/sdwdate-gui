@@ -1,0 +1,16 @@
+#!/bin/bash
+case $1 in
+    "showlog")
+        konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"
+        ;;
+    "restart")
+        if [ -e "/var/run/sdwdate/success" ] ; then
+            sudo rm /var/run/sdwdate/success
+        fi
+        sudo --non-interactive systemctl --no-pager --no-block restart sdwdate
+        ;;
+    "stop")
+        sudo --non-interactive systemctl --no-pager --no-block stop sdwdate
+        ;;
+    *)
+esac
