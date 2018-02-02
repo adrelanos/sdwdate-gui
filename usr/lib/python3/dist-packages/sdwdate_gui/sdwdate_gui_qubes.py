@@ -78,7 +78,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         index = self.domain_list.index(vm)
         status = self.domain_message_list[index]
 
-        popup_process_cmd = ('%s "%s" %s %s &'
+        popup_process_cmd = ('%s "%s" %s %s'
                 % (self.show_message_path, self.pos_x, self.pos_y, 'Domain<b> %s</b><br>%s' % (vm, status)))
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)
