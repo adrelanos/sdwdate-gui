@@ -15,11 +15,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class SdwdateStatusWatch:
     def __init__(self, parent=None):
-        try:
-            self.name = check_output(['qubesdb-read', '/name']).decode().strip()
-        except:
-            print(str(sys.exc_info()[0]))
-            self.name = ''
+        self.name = check_output(['qubesdb-read', '/name']).decode().strip()
 
         self.status_path = '/var/run/sdwdate/status'
 
@@ -39,12 +35,8 @@ class SdwdateStatusWatch:
             print(error_msg)
             return
 
-        try:
-            ## in case qubes-qrexec-agent is not running.
-            command = 'qrexec-client-vm sys-whonix whonix.NewStatus+"%s"' % (self.name)
-            call(command, shell=True)
-        except:
-            pass
+        command = 'qrexec-client-vm sys-whonix whonix.NewStatus+"%s"' % (self.name)
+        call(command, shell=True)
 
 
 def main():
