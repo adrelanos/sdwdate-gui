@@ -1,3 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 NAME="$(/usr/bin/qubesdb-read /name)"
-/usr/bin/qrexec-client-vm sys-whonix whonix.NewStatus+$NAME" shutdown"
+
+if [ ! -z "$NAME" ]; then
+    /usr/bin/qrexec-client-vm sys-whonix whonix.NewStatus+$NAME" shutdown"
+fi

@@ -28,7 +28,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.title = 'Time Synchronisation Monitor'
 
-        self.name = check_output(['qubesdb-read', '/name']).decode().strip()
+        try:
+            self.name = check_output(['qubesdb-read', '/name']).decode().strip()
+        except:
+            print(str(sys.exc_info()[0]))
+            self.name = ''
 
         self.status_path = '/var/run/sdwdate/status'
         self.anon_status_path = '/var/run/sdwdate-gui/anon-status'
