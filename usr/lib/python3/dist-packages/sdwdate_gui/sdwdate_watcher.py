@@ -19,7 +19,7 @@ class SdwdateStatusWatch:
             self.name = check_output(['qubesdb-read', '/name']).decode().strip()
         except:
             print(str(sys.exc_info()[0]))
-            self.name = ''
+            self.name = 'name'
 
         self.status_path = '/var/run/sdwdate/status'
 
