@@ -132,7 +132,21 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
     def create_menu(self):
         def create_sub_menu(menu):
-            action = QtWidgets.QAction('Show status', self)
+            if menu.title() == self.name:
+                #sub = menu.addMenu('Tor control')
+                action = QtWidgets.QAction('Show Tor status', self)
+                #action.triggered.connect(lambda: self.show_message(menu.title()))
+                menu.addAction(action)
+                action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
+                action.triggered.connect(restart_tor)
+                menu.addAction(action)
+                action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
+                action.triggered.connect(run_acw)
+                menu.addAction(action)
+                menu.addSeparator()
+
+            icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
+            action = QtWidgets.QAction(icon, 'Show swdate status', self)
             action.triggered.connect(lambda: self.show_message(menu.title()))
             menu.addAction(action)
 
@@ -143,7 +157,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             action.triggered.connect(lambda: show_log(menu.title()))
             menu.addAction(action)
 
-            menu.addSeparator()
+            #menu.addSeparator()
 
             icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
             text = 'Restart sdwdate'
@@ -158,6 +172,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         menu = QMenu()
 
+        restart_icon = QtGui.QIcon('/usr/share/icons/anon-icon-pack/power_restart.ico')
+        advanced_icon = QtGui.QIcon('/usr/share/anon-connection-wizard/advancedsettings.ico')
+
         for vm in self.domain_list:
             icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
             menu_item = menu.addMenu(icon, vm)
@@ -165,12 +182,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 menu.addSeparator()
             create_sub_menu(menu_item)
 
-        #menu.addSeparator()
+        menu.addSeparator()
 
-        #icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
-        #action = QAction(icon, "&Exit", self)
-        #action.triggered.connect(sys.exit)
-        #menu.addAction(action)
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
+        action = QAction(icon, "&Exit", self)
+        action.triggered.connect(sys.exit)
+        menu.addAction(action)
 
         self.setContextMenu(menu)
 
@@ -254,6 +271,17 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             return
 
         self.parse_status(self.name, status['icon'], status['message'])
+
+
+def restart_tor():
+    print('fk;lfk')
+    restart_command = 'restart-tor-gui'
+    Popen(restart_command, shell=True)
+
+
+def run_acw():
+    acw_command = 'sudo anon-connection-wizard'
+    Popen(acw_command, shell=True)
 
 
 def show_log(vm):
