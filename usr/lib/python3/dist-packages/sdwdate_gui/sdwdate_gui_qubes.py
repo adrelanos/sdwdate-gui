@@ -10,6 +10,7 @@ from PyQt5.QtCore import QFileSystemWatcher
 from PyQt5.QtCore import QProcess
 import subprocess
 from subprocess import check_output, call, Popen, PIPE
+from distutils import spawn
 import json
 import os
 import re
@@ -74,7 +75,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.watcher_file = QFileSystemWatcher([self.status_path])
         self.watcher_file.fileChanged.connect(self.status_changed)
-
         self.create_menu()
 
 
@@ -133,16 +133,21 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def create_menu(self):
         def create_sub_menu(menu):
             if menu.title() == self.name:
-                #sub = menu.addMenu('Tor control')
+                ## have to put it there because we are in a nested function.
+                ## cannot be in __init__, no class wide scope. TODO
+                restart_tor_exists = not spawn.find_executable('restart-tor-gui') is None
+                acw_exists = not spawn.find_executable('anon-connection-wizard') is None
+
                 action = QtWidgets.QAction('Show Tor status', self)
-                #action.triggered.connect(lambda: self.show_message(menu.title()))
                 menu.addAction(action)
-                action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
-                action.triggered.connect(restart_tor)
-                menu.addAction(action)
-                action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
-                action.triggered.connect(run_acw)
-                menu.addAction(action)
+                if restart_tor_exists:
+                    action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
+                    action.triggered.connect(restart_tor)
+                    menu.addAction(action)
+                if acw_exists:
+                    action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
+                    action.triggered.connect(run_acw)
+                    menu.addAction(action)
                 menu.addSeparator()
 
             icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
