@@ -1,3 +1,15 @@
+commit 964fcb62d1961b52f4b126cc427d429cf2475ef4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Feb 5 13:56:12 2018 +0000
+
+    permission lockdown and fixes after running under user sdwdate-gui
+
+commit c78f298865bcf375dd51aa9641b6e031ce641ab4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Feb 1 15:17:55 2018 +0000
+
+    bumped changelog version
+
 commit beab8130acdd298112b20464142cf5129565a633
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Jan 30 13:19:51 2018 +0000
