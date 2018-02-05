@@ -1,3 +1,15 @@
+commit 225f64712018df3ccf81b6880a42fd0d45e31082
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Feb 5 16:06:46 2018 +0000
+
+    kdesudo
+
+commit a82967767ad29d39388f95ccd4a27fefb99532ed
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Feb 5 14:18:20 2018 +0000
+
+    bumped changelog version
+
 commit 964fcb62d1961b52f4b126cc427d429cf2475ef4
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Feb 5 13:56:12 2018 +0000
