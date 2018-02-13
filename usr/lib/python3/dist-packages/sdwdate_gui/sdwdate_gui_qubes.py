@@ -14,13 +14,16 @@ from distutils import spawn
 import json
 import os
 import re
+import glob
+
+from anon_connection_wizard import tor_status
 
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class Update(QtCore.QObject):
-    update_tip = QtCore.pyqtSignal()
+    update_tip = QtCore.pyqtSignal(str, str)
 
 
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
@@ -38,6 +41,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.status_path = '/var/run/sdwdate/status'
         self.anon_status_path = '/var/run/sdwdate-gui/anon-status'
         self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
+        self.tor_path = '/var/run/tor'
+        self.tor_running_path = '/var/run/tor/tor.pid'
+        self.torrc_path = '/usr/local/etc/torrc.d/'
+
+        self.restart_tor_exists = not spawn.find_executable('restart-tor-gui') is None
+        self.acw_exists = not spawn.find_executable('anon-connection-wizard') is None
+
         self.popup_process = None
 
         self.update = Update(self)
@@ -52,6 +62,20 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.domain_icon_list = []
         self.domain_message_list = []
         self.current_vm = ''
+
+        self.old_status = ''
+        self.old_icon = ''
+        self.old_message = ''
+
+        self.tor_icon = ['/usr/share/icons/oxygen/base/32x32/status/security-high.png',
+                         '/usr/share/icons/oxygen/base/32x32/actions/window-close.png',
+                         '/usr/share/icons/oxygen/base/32x32/actions/window-close.png']
+
+        self.tor_status_list = ['running', 'stopped', 'disabled']
+
+        self.tor_status = 'stopped'
+        self.tor_message =  ''
+        self.is_tor_message = False
 
         self.icon = ['/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png',
                      '/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png',
@@ -68,83 +92,30 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.setToolTip('Time Synchronisation Monitor \n Right-click for menu.')
 
-        self.status_changed()
+        self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
+        self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
+
+        self.watcher_file = QFileSystemWatcher([self.status_path])
+        self.watcher_file.fileChanged.connect(self.status_changed)
 
         self.anon_watcher_file = QFileSystemWatcher([self.anon_status_path])
         self.anon_watcher_file.fileChanged.connect(self.anon_vm_status_changed)
 
-        self.watcher_file = QFileSystemWatcher([self.status_path])
-        self.watcher_file.fileChanged.connect(self.status_changed)
-        self.create_menu()
-
-
-    def run_popup(self, vm):
-        index = self.domain_list.index(vm)
-        status = self.domain_message_list[index]
-
-        popup_process_cmd = ('%s "%s" %s %s'
-                % (self.show_message_path, self.pos_x, self.pos_y, 'Domain<b> %s</b><br>%s' % (vm, status)))
-        self.popup_process = QProcess()
-        self.popup_process.start(popup_process_cmd)
-
-
-    def show_message(self, vm):
-        self.set_current_vm(vm)
-        ## for sys-whonix
-        if self.current_vm == self.name:
-            vm = self.name
-
-        ## Store own position for message gui.
-        if not self.clicked_once:
-            self.pos_x = QtGui.QCursor.pos().x() - 50
-            self.pos_y = QtGui.QCursor.pos().y() - 50
-            self.clicked_once = True
-
-        if self.popup_process == None:
-            self.run_popup(vm)
-            return
-
-        if self.popup_process.pid() > 0:
-            try:
-                  self.popup_process.kill()
-            except:
-                  pass
-            self.popup_process = None
-            self.run_popup(vm)
-        else:
-            self.run_popup(vm)
-
-
-    def update_tip(self):
-        if self.popup_process == None:
-            return
-
-        ## Update message only if already shown.
-        if self.popup_process.pid() > 0:
-            self.show_message(self.current_vm)
-
-
-    def set_current_vm(self, vm):
-        ''' for use in update_tip,
-        '''
-        self.current_vm = vm
-
+        self.tor_status_changed()
+        self.status_changed()
 
     def create_menu(self):
-        def create_sub_menu(menu):
+        def create_sub_menu(self, menu):
             if menu.title() == self.name:
-                ## have to put it there because we are in a nested function.
-                ## cannot be in __init__, no class wide scope. TODO
-                restart_tor_exists = not spawn.find_executable('restart-tor-gui') is None
-                acw_exists = not spawn.find_executable('anon-connection-wizard') is None
-
-                action = QtWidgets.QAction('Show Tor status', self)
+                icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
+                action = QtWidgets.QAction(icon, 'Show Tor status', self)
+                action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
                 menu.addAction(action)
-                if restart_tor_exists:
+                if self.restart_tor_exists:
                     action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
                     action.triggered.connect(restart_tor)
                     menu.addAction(action)
-                if acw_exists:
+                if self.acw_exists:
                     action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
                     action.triggered.connect(run_acw)
                     menu.addAction(action)
@@ -152,7 +123,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
             icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
             action = QtWidgets.QAction(icon, 'Show swdate status', self)
-            action.triggered.connect(lambda: self.show_message(menu.title()))
+            action.triggered.connect(lambda: self.show_message(menu.title(), 'sdwdate'))
             menu.addAction(action)
 
             menu.addSeparator()
@@ -161,8 +132,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
             action.triggered.connect(lambda: show_log(menu.title()))
             menu.addAction(action)
-
-            #menu.addSeparator()
 
             icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
             text = 'Restart sdwdate'
@@ -181,11 +150,14 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         advanced_icon = QtGui.QIcon('/usr/share/anon-connection-wizard/advancedsettings.ico')
 
         for vm in self.domain_list:
-            icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
+            if vm == self.name and self.tor_status == 'stopped':
+                icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
+            else:
+                icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
             menu_item = menu.addMenu(icon, vm)
             if vm == self.name:
                 menu.addSeparator()
-            create_sub_menu(menu_item)
+            create_sub_menu(self, menu_item)
 
         menu.addSeparator()
 
@@ -196,6 +168,51 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.setContextMenu(menu)
 
+    def run_popup(self, vm, caller):
+        index = self.domain_list.index(vm)
+        status = self.domain_message_list[index]
+
+        if caller == 'tor':
+            popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
+                    'Tor status:<br><br>%s' % (self.tor_message)))
+        elif caller == 'sdwdate':
+            popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
+                    'Last message from<b> %s </b> sdwdate:<br><br>%s' % (vm, status)))
+
+        self.popup_process = QProcess()
+        self.popup_process.start(popup_process_cmd)
+
+    def show_message(self, vm, caller):
+        self.set_current_vm(vm)
+        ## Store own position for message gui.
+        if not self.clicked_once:
+            self.pos_x = QtGui.QCursor.pos().x() - 50
+            self.pos_y = QtGui.QCursor.pos().y() - 50
+            self.clicked_once = True
+
+        if self.popup_process == None:
+            self.run_popup(vm, caller)
+            return
+
+        if self.popup_process.pid() > 0:
+            self.popup_process.kill()
+            self.popup_process = None
+            self.run_popup(vm, caller)
+        else:
+            self.run_popup(vm, caller)
+
+    def update_tip(self, vm, caller):
+        if self.popup_process == None:
+            return
+
+        ## Update message only if already shown.
+        if self.popup_process.pid() > 0:
+            self.show_message(self.current_vm, caller)
+
+    def set_current_vm(self, vm):
+        ''' for update_tip,
+        '''
+        self.current_vm = vm
 
     def set_tray_icon(self):
         status_index = 0
@@ -204,8 +221,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             if self.status.index(status) > status_index:
                 status_index = self.status.index(status)
 
-        self.setIcon(QtGui.QIcon(self.icon[status_index]))
+        if self.tor_status == 'running':
+            self.setIcon(QtGui.QIcon(self.icon[status_index]))
 
+        elif self.tor_status == 'stopped' or self.tor_status == 'disabled':
+            self.setIcon(QtGui.QIcon(self.tor_icon[1]))
 
     def remove_vm(self, vm):
         name = vm.rsplit('_', 1)[0]
@@ -220,8 +240,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.create_menu()
             self.set_tray_icon()
 
-
-    def parse_status(self, vm, status, message):
+    def parse_sdwdate_status(self, vm, status, message):
         icon = self.icon[self.status.index(status)]
 
         if vm not in self.domain_list:
@@ -235,31 +254,59 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.domain_icon_list[index] = icon
             self.domain_message_list[index] = message
 
-        self.update.update_tip.emit()
+        self.update_tip(vm, 'sdwdate')
         self.create_menu()
         self.set_tray_icon()
 
+    def parse_tor_status(self):
+        if self.tor_status == '':
+            return
+
+        if self.tor_status == 'running':
+            self.tor_message = 'Tor is running.'
+
+        elif self.tor_status == 'disabled':
+            self.tor_message = '<b>Tor is disabled</b>. Therefore you most likely<br> \
+            can not connect to the internet. <br><br> \
+            Run <b>Anon Connection Wizard</b> from the menu'
+
+        elif self.tor_status == 'stopped':
+            self.tor_message = '<b>Tor is not running.</b> <br><br> \
+            You have to fix this error, before you can use Tor. <br> \
+            Please restart Tor after fixing this error. <br><br> \
+            dom0 -> Start Menu -> ServiceVM: sys-whonix -> Restart Tor <br> \
+            or in Terminal: <br> \
+            sudo service tor@default restart <br><br> \
+            Restart whonixcheck after fixing this error. <br> \
+            dom0 -> Start Menu -> ServiceVM: sys-whonix -> Whonix Check <br> \
+            or in Terminal: <br> \
+            whonixcheck '
+
+        self.update_tip(self.name, 'tor')
+        self.create_menu()
+        self.set_tray_icon()
 
     def anon_vm_status_changed(self):
         with open(self.anon_status_path, 'r') as f:
             vm_name = f.read().strip()
 
-        if not vm_name == '':
-            if  vm_name.endswith('shutdown'):
-                self.remove_vm(vm_name)
-            else:
-                try:
-                    command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
-                    p = Popen(command, stdout=PIPE, stderr=PIPE)
-                    stdout, stderr = p.communicate()
-                    status = json.loads(stdout.decode())
-                except:
-                    error_msg = "Unexpected error: " + str(sys.exc_info()[0])
-                    print(error_msg)
-                    return
+        if vm_name == '':
+            return
 
-                self.parse_status(vm_name, status['icon'], status['message'])
+        if  vm_name.endswith('shutdown'):
+            self.remove_vm(vm_name)
+        else:
+            try:
+                command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
+                p = Popen(command, stdout=PIPE, stderr=PIPE)
+                stdout, stderr = p.communicate()
+                status = json.loads(stdout.decode())
+            except:
+                error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+                print(error_msg)
+                return
 
+            self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
 
     def status_changed(self):
         ## json.load(f) could fail if self.status_path,
@@ -275,19 +322,29 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             print(error_msg)
             return
 
-        self.parse_status(self.name, status['icon'], status['message'])
+        self.parse_sdwdate_status(self.name, status['icon'], status['message'])
+
+    def tor_status_changed(self):
+        tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
+        tor_is_running = os.path.exists(self.tor_running_path)
+
+        if tor_is_enabled and tor_is_running:
+            self.tor_status = 'running'
+        elif not tor_is_enabled:
+            self.tor_status =  'disabled'
+        elif not tor_is_running:
+            self.tor_status =  'stopped'
+
+        self.parse_tor_status()
 
 
 def restart_tor():
-    print('fk;lfk')
     restart_command = 'restart-tor-gui'
     Popen(restart_command, shell=True)
-
 
 def run_acw():
     acw_command = 'sudo anon-connection-wizard'
     Popen(acw_command, shell=True)
-
 
 def show_log(vm):
     t = SdwdateTrayIcon()
@@ -298,26 +355,25 @@ def show_log(vm):
         command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
         call(command, shell=True)
 
-
 def restart_sdwdate(vm):
     t = SdwdateTrayIcon()
-    if vm == t.name:
-        if os.path.exists('/var/run/sdwdate/success'):
-            Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
-        Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
-    else:
-        command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
-        call(command, shell=True)
-
+    if t.tor_status == 'running':
+        if vm == t.name:
+            if os.path.exists('/var/run/sdwdate/success'):
+                Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
+            Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
+        else:
+            command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
+            call(command, shell=True)
 
 def stop_sdwdate(vm):
     t = SdwdateTrayIcon()
-    if vm == t.name:
-        Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
-    else:
-        command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
-        call(command, shell=True)
-
+    if t.tor_status == 'running':
+        if vm == t.name:
+            Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
+        else:
+            command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
+            call(command, shell=True)
 
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
