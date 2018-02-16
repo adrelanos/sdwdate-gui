@@ -22,10 +22,6 @@ import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
-class Update(QtCore.QObject):
-    update_tip = QtCore.pyqtSignal(str, str)
-
-
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent=None):
         QtWidgets.QSystemTrayIcon.__init__(self, parent)
@@ -50,9 +46,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.popup_process = None
 
-        self.update = Update(self)
-        self.update.update_tip.connect(self.update_tip)
-
         self.clicked_once = False
         self.pos_x = 0
         self.pos_y = 0
@@ -67,9 +60,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.old_icon = ''
         self.old_message = ''
 
-        self.tor_icon = ['/usr/share/icons/oxygen/base/32x32/status/security-high.png',
-                         '/usr/share/icons/oxygen/base/32x32/actions/window-close.png',
-                         '/usr/share/icons/oxygen/base/32x32/actions/window-close.png']
+        self.tor_icon = ['/usr/share/icons/oxygen/base/48x48/actions/dialog-ok-apply.png',
+                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png',
+                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png']
 
         self.tor_status_list = ['running', 'stopped', 'disabled']
 
@@ -77,9 +70,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_message =  ''
         self.is_tor_message = False
 
-        self.icon = ['/usr/share/icons/sdwdate-gui/Ambox_currentevent.svg.png',
-                     '/usr/share/icons/sdwdate-gui/620px-Ambox_outdated.svg.png',
-                     '/usr/share/icons/sdwdate-gui/212px-Timeblock.svg.png']
+        self.icon = ['/usr/share/icons/sdwdate-gui/sdwdate-success.png',
+                     '/usr/share/icons/sdwdate-gui/sdwdate-wait.png',
+                     '/usr/share/icons/sdwdate-gui/sdwdate-stopped.png']
 
         self.status = ['success', 'busy', 'error']
 
@@ -150,7 +143,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         advanced_icon = QtGui.QIcon('/usr/share/anon-connection-wizard/advancedsettings.ico')
 
         for vm in self.domain_list:
-            if vm == self.name and self.tor_status == 'stopped':
+            if vm == self.name and (self.tor_status == 'stopped' or self.tor_status == 'disabled'):
                 icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
             else:
                 icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
@@ -174,10 +167,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         if caller == 'tor':
             popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
-                    'Tor status:<br><br>%s' % (self.tor_message)))
+                    '"%s" "%s"' % (self.tor_message, self.tor_icon[self.tor_status_list.index(self.tor_status)])))
         elif caller == 'sdwdate':
             popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
-                    'Last message from<b> %s </b> sdwdate:<br><br>%s' % (vm, status)))
+                    '"Last message from<b> %s </b> sdwdate:<br><br>%s" "%s"' % (vm, status,
+                    self.domain_icon_list[self.domain_list.index(vm)])))
+            print(popup_process_cmd)
 
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)

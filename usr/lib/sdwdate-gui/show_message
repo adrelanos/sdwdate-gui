@@ -6,8 +6,9 @@
 import sys
 import signal
 from PyQt5 import QtGui
-from PyQt5 import QtCore,QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPixmap, QImage
 
 
 class Frame(QtWidgets.QFrame):
@@ -17,7 +18,7 @@ class Frame(QtWidgets.QFrame):
         self.setMinimumWidth(320)
         self.m_content = QtWidgets.QWidget(self)
 
-        frame_layout = QtWidgets.QVBoxLayout(self)
+        frame_layout = QtWidgets.QGridLayout(self)
         frame_layout.addWidget(self.m_content)
 
     # Allows access to the content area of the frame
@@ -37,18 +38,28 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication([]);
     pos_x = int(sys.argv[1])
     pos_y = int(sys.argv[2])
-    msg = ' '.join(sys.argv[3:])
+    msg = sys.argv[3]
+    icon_type = sys.argv[4]
 
     popup = Frame()
-    frame_content = QtWidgets.QVBoxLayout(popup.widget_content())
+
+    icon = QtWidgets.QLabel()
+    image = QtGui.QImage(icon_type)
+    icon.setAlignment(Qt.AlignLeft)
+    icon.setPixmap(QPixmap.fromImage(image))
 
     text = QtWidgets.QLabel()
     text.setTextInteractionFlags(Qt.LinksAccessibleByMouse |
                                  Qt.TextSelectableByMouse)
     text.setTextFormat(Qt.RichText)
+    text.setAlignment(QtCore.Qt.AlignTop)
     text.setText(msg)
 
-    frame_content.addWidget(text)
+
+    frame_content = QtWidgets.QGridLayout(popup.widget_content())
+    frame_content.addWidget(icon, 0, 0 , 1, 1)
+    frame_content.addWidget(text, 0, 1, 1, 2)
+
 
     popup.move(pos_x, pos_y)
     popup.show()
