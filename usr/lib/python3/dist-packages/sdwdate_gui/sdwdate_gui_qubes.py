@@ -62,9 +62,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.tor_icon = ['/usr/share/icons/oxygen/base/48x48/actions/dialog-ok-apply.png',
                          '/usr/share/icons/oxygen/base/48x48/actions/window-close.png',
-                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png']
+                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png',
+                         '/usr/share/icons/oxygen/base/48x48/status/dialog-warning']
 
-        self.tor_status_list = ['running', 'stopped', 'disabled']
+        self.tor_status_list = ['running', 'stopped', 'disabled', 'disabled-running']
 
         self.tor_status = 'stopped'
         self.tor_message =  ''
@@ -219,8 +220,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.icon[status_index]))
 
-        elif self.tor_status == 'stopped' or self.tor_status == 'disabled':
-            self.setIcon(QtGui.QIcon(self.tor_icon[1]))
+        elif not self.tor_status == 'running': # or self.tor_status == 'disabled':
+            self.setIcon(QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)]))
 
     def remove_vm(self, vm):
         name = vm.rsplit('_', 1)[0]
@@ -271,11 +272,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             Please restart Tor after fixing this error. <br><br> \
             dom0 -> Start Menu -> ServiceVM: sys-whonix -> Restart Tor <br> \
             or in Terminal: <br> \
-            sudo service tor@default restart <br><br> \
-            Restart whonixcheck after fixing this error. <br> \
-            dom0 -> Start Menu -> ServiceVM: sys-whonix -> Whonix Check <br> \
-            or in Terminal: <br> \
-            whonixcheck '
+            sudo service tor@default restart <br><br> '
+
+        elif self.tor_status == 'disabled-running':
+            self.tor_message = '<b>Tor is running but is disabled.</b><br><br> \
+            A line <i>DisableNetwork 1</i> exists in torrc <br> \
+            Run <b>Anon Connection Wizard</b> from the menu <br>\
+            to connect to or configure the Tor network.'
 
         self.update_tip(self.name, 'tor')
         self.create_menu()
@@ -326,7 +329,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if tor_is_enabled and tor_is_running:
             self.tor_status = 'running'
         elif not tor_is_enabled:
-            self.tor_status =  'disabled'
+            if tor_is_running:
+                self.tor_status =  'disabled-running'
+            elif not tor_is_running:
+                self.tor_status =  'disabled'
         elif not tor_is_running:
             self.tor_status =  'stopped'
 
