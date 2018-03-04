@@ -105,14 +105,17 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 action = QtWidgets.QAction(icon, 'Show Tor status', self)
                 action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
                 menu.addAction(action)
-                if self.restart_tor_exists:
-                    action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
-                    action.triggered.connect(restart_tor)
-                    menu.addAction(action)
-                if self.acw_exists:
-                    action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
-                    action.triggered.connect(run_acw)
-                    menu.addAction(action)
+                action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
+                action.triggered.connect(show_tor_status)
+                menu.addAction(action)
+                #if self.restart_tor_exists:
+                    #action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
+                    #action.triggered.connect(restart_tor)
+                    #menu.addAction(action)
+                #if self.acw_exists:
+                    #action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
+                    #action.triggered.connect(run_acw)
+                    #menu.addAction(action)
                 menu.addSeparator()
 
             icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
@@ -173,7 +176,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
                     '"Last message from<b> %s </b> sdwdate:<br><br>%s" "%s"' % (vm, status,
                     self.domain_icon_list[self.domain_list.index(vm)])))
-            print(popup_process_cmd)
 
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)
@@ -338,6 +340,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.parse_tor_status()
 
+
+def show_tor_status():
+    show_status_command = 'sudo tor-control-panel'
+    Popen(show_status_command, shell=True)
 
 def restart_tor():
     restart_command = 'restart-tor-gui'
