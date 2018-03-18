@@ -30,7 +30,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         # sdwdate-gui-qubes "Aborted" in some situations.
         # perhaps because of a permission to torrc in tor_status.
         # import tor_status from tor_control_panel
-        signal.signal(signal.SIGABRT, signal_handler)
+        signal.signal(signal.SIGSEGV, signal_handler)
 
         self.title = 'Time Synchronisation Monitor'
 
@@ -389,7 +389,7 @@ def stop_sdwdate(vm):
             call(command, shell=True)
 
 def signal_handler(signal, stack):
-    print('sdwdate-gui-qubes received signal SIGABRT\n %s' % stack)
+    print('sdwdate-gui-qubes received signal SIGSEGV\n %s' % stack)
 
 
 def main():
