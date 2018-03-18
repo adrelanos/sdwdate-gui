@@ -16,7 +16,8 @@ import os
 import re
 import glob
 
-from anon_connection_wizard import tor_status
+#from anon_connection_wizard import tor_status
+from tor_control_panel import tor_status
 
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -25,6 +26,11 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent=None):
         QtWidgets.QSystemTrayIcon.__init__(self, parent)
+
+        # sdwdate-gui-qubes "Aborted" in some situations.
+        # perhaps because of a permission to torrc in tor_status.
+        # import tor_status from tor_control_panel
+        signal.signal(signal.SIGABRT, signal_handler)
 
         self.title = 'Time Synchronisation Monitor'
 
@@ -381,6 +387,10 @@ def stop_sdwdate(vm):
         else:
             command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
             call(command, shell=True)
+
+def signal_handler(signal, stack):
+    print('sdwdate-gui-qubes received signal SIGABRT\n %s' % stack)
+
 
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
