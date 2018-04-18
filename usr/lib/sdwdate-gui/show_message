@@ -10,31 +10,26 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap, QImage
 
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-class Frame(QtWidgets.QFrame):
+class Frame(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        QtWidgets.QFrame.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setWindowTitle('Time Synchronization Monitor')
-        self.setMinimumWidth(320)
+        self.setMinimumWidth(200)
         self.m_content = QtWidgets.QWidget(self)
 
         frame_layout = QtWidgets.QGridLayout(self)
         frame_layout.addWidget(self.m_content)
 
-    # Allows access to the content area of the frame
-    # where widgets and layouts can be added.
     def widget_content(self):
         return self.m_content
 
-def signal_handler(signum, stack):
-    # SIGTERM or SIGINT
-    if signum == 15 or signum == 2:
-        QtWidgets.QApplication.exit()
+def close_popup():
+    popup.close()
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
-
     app = QtWidgets.QApplication([]);
     pos_x = int(sys.argv[1])
     pos_y = int(sys.argv[2])
@@ -55,19 +50,16 @@ if __name__ == '__main__':
     text.setAlignment(QtCore.Qt.AlignTop)
     text.setText(msg)
 
+    button = QtWidgets.QPushButton('Close')
+    button.setMaximumWidth(50)
+    button.clicked.connect(close_popup)
 
     frame_content = QtWidgets.QGridLayout(popup.widget_content())
     frame_content.addWidget(icon, 0, 0 , 1, 1)
     frame_content.addWidget(text, 0, 1, 1, 2)
-
+    frame_content.addWidget(button, 1, 1, 1, 2)
 
     popup.move(pos_x, pos_y)
     popup.show()
-
-    ## Python cannot handle signals while the Qt event loop is running.
-    ## The signal handler is called when a Python function is called
-    timer = QtCore.QTimer()
-    timer.start(200)
-    timer.timeout.connect(lambda: None)
 
     sys.exit(app.exec_())
