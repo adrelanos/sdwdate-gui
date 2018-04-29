@@ -16,21 +16,12 @@ import os
 import re
 import glob
 
-#from anon_connection_wizard import tor_status
 from tor_control_panel import tor_status
-
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, parent=None):
         QtWidgets.QSystemTrayIcon.__init__(self, parent)
-
-        # sdwdate-gui-qubes "Aborted" in some situations.
-        # perhaps because of a permission to torrc in tor_status.
-        # import tor_status from tor_control_panel
-        signal.signal(signal.SIGSEGV, signal_handler)
 
         self.title = 'Time Synchronisation Monitor'
 
@@ -46,9 +37,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_path = '/var/run/tor'
         self.tor_running_path = '/var/run/tor/tor.pid'
         self.torrc_path = '/usr/local/etc/torrc.d/'
-
-        self.restart_tor_exists = not spawn.find_executable('restart-tor-gui') is None
-        self.acw_exists = not spawn.find_executable('anon-connection-wizard') is None
 
         self.popup_process = None
 
@@ -114,14 +102,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
                 action.triggered.connect(show_tor_status)
                 menu.addAction(action)
-                #if self.restart_tor_exists:
-                    #action = QtWidgets.QAction(restart_icon, 'Restart Tor', self)
-                    #action.triggered.connect(restart_tor)
-                    #menu.addAction(action)
-                #if self.acw_exists:
-                    #action = QtWidgets.QAction(advanced_icon, 'Anon Connection Wizard', self)
-                    #action.triggered.connect(run_acw)
-                    #menu.addAction(action)
                 menu.addSeparator()
 
             icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
@@ -331,8 +311,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_sdwdate_status(self.name, status['icon'], status['message'])
 
     def tor_status_changed(self):
-        tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
-        tor_is_running = os.path.exists(self.tor_running_path)
+        try:
+            tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
+            tor_is_running = os.path.exists(self.tor_running_path)
+        except:
+            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            print(error_msg)
+            return
 
         if tor_is_enabled and tor_is_running:
             self.tor_status = 'running'
