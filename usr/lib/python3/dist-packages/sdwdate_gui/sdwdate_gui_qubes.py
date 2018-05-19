@@ -6,9 +6,7 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
-from PyQt5.QtCore import QFileSystemWatcher
-from PyQt5.QtCore import QProcess
-import subprocess
+from PyQt5.QtCore import QFileSystemWatcher, QTimer, QProcess
 from subprocess import check_output, call, Popen, PIPE
 from distutils import spawn
 import json
@@ -89,8 +87,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.anon_watcher_file = QFileSystemWatcher([self.anon_status_path])
         self.anon_watcher_file.fileChanged.connect(self.anon_vm_status_changed)
 
+        watch_timer = QTimer(self)
+        watch_timer.timeout.connect(self.watch_anon_vms)
+        watch_timer.start(1000)
+
         self.tor_status_changed()
         self.status_changed()
+
 
     def create_menu(self):
         def create_sub_menu(self, menu):
@@ -223,6 +226,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
             self.create_menu()
             self.set_tray_icon()
+
+    def watch_anon_vms(self):
+        for domain in self.domain_list:
+            try:
+                if not domain == self.name:
+                    qrexec_output = check_output(['qrexec-client-vm',
+                                                  'sys-whonix-14',
+                                                  'whonix.NewStatus+"%s"'
+                                                  % domain]).decode().strip()
+            except:
+                print('failesd')
+                return
 
     def parse_sdwdate_status(self, vm, status, message):
         icon = self.icon[self.status.index(status)]
