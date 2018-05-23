@@ -90,25 +90,25 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_status_changed()
         self.status_changed()
 
-        #watch_timer = QTimer(self)
-        #watch_timer.timeout.connect(self.watch_anon_vms)
-        #watch_timer.start(1000)
+        watch_timer = QTimer(self)
+        watch_timer.timeout.connect(self.watch_anon_vms)
+        watch_timer.start(1000)
 
 
-    #def watch_anon_vms(self):
-        ### set a timeout for qrexec-client-vm.
-        ### when a vm is killed, the command could wait forever.
-        #seconds = 0.2
-        #for domain in self.domain_list:
-            #try:
-                #if not domain == self.name:
-                    #command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
-                    #check_output(command, stderr=STDOUT, timeout=seconds)
-            #except:
+    def watch_anon_vms(self):
+        ## set a timeout for qrexec-client-vm.
+        ## when a vm is killed, the command could wait forever.
+        seconds = 0.2
+        for domain in self.domain_list:
+            try:
+                if not domain == self.name:
+                    command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
+                    check_output(command, stderr=STDOUT, timeout=seconds)
+            except:
                 #self.remove_vm(domain)
-                ### debugging
-                #error_msg = "Unexpected error: " + str(sys.exc_info()[0])
-                #print(error_msg)
+                ## debugging
+                error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+                print(domain + ' ' + error_msg)
                 #return
 
     def create_menu(self):
@@ -119,7 +119,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
                 menu.addAction(action)
                 action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
-                action.triggered.connect(show_tor_status)
+                action.triggered.connect(self.show_tor_status)
                 menu.addAction(action)
                 menu.addSeparator()
 
@@ -132,18 +132,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
             icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
             action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
-            action.triggered.connect(lambda: show_log(menu.title()))
+            action.triggered.connect(lambda: self.show_sdwdate_log(menu.title()))
             menu.addAction(action)
 
             icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
             text = 'Restart sdwdate'
             action = QtWidgets.QAction(icon, text, self)
-            action.triggered.connect(lambda: restart_sdwdate(menu.title()))
+            action.triggered.connect(lambda: self.restart_sdwdate(menu.title()))
             menu.addAction(action)
 
             icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
             action = QtWidgets.QAction(icon, "Stop sdwdate", self)
-            action.triggered.connect(lambda: stop_sdwdate(menu.title()))
+            action.triggered.connect(lambda: self.stop_sdwdate(menu.title()))
             menu.addAction(action)
 
         menu = QMenu()
@@ -350,51 +350,35 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.parse_tor_status()
 
+    def show_tor_status(self):
+        show_status_command = 'sudo tor-control-panel &'
+        Popen(show_status_command, shell=True)
 
-def show_tor_status():
-    show_status_command = 'sudo tor-control-panel'
-    Popen(show_status_command, shell=True)
-
-def restart_tor():
-    restart_command = 'restart-tor-gui'
-    Popen(restart_command, shell=True)
-
-def run_acw():
-    acw_command = 'sudo anon-connection-wizard'
-    Popen(acw_command, shell=True)
-
-def show_log(vm):
-    t = SdwdateTrayIcon()
-    if vm == t.name:
-        show_konsole = ('konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"')
-        Popen(show_konsole, shell=True)
-    else:
-        command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
-        call(command, shell=True)
-
-def restart_sdwdate(vm):
-    t = SdwdateTrayIcon()
-    if t.tor_status == 'running':
-        if vm == t.name:
-            if os.path.exists('/var/run/sdwdate/success'):
-                Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
-            Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
+    def show_sdwdate_log(self, vm):
+        if vm == self.name:
+            show_konsole = ('konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"')
+            Popen(show_konsole, shell=True)
         else:
-            command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
+            command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
             call(command, shell=True)
 
-def stop_sdwdate(vm):
-    t = SdwdateTrayIcon()
-    if t.tor_status == 'running':
-        if vm == t.name:
-            Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
-        else:
-            command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
-            call(command, shell=True)
+    def restart_sdwdate(self, vm):
+        if self.tor_status == 'running':
+            if vm == self.name:
+                if os.path.exists('/var/run/sdwdate/success'):
+                    Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
+                Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
+            else:
+                command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
+                call(command, shell=True)
 
-def signal_handler(signal, stack):
-    print('sdwdate-gui-qubes received signal SIGSEGV\n %s' % stack)
-
+    def stop_sdwdate(self, vm):
+        if self.tor_status == 'running':
+            if vm == self.name:
+                Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
+            else:
+                command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
+                call(command, shell=True)
 
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
