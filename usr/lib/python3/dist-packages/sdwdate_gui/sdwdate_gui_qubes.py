@@ -90,26 +90,26 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_status_changed()
         self.status_changed()
 
-        watch_timer = QTimer(self)
-        watch_timer.timeout.connect(self.watch_anon_vms)
-        watch_timer.start(1000)
+        #watch_timer = QTimer(self)
+        #watch_timer.timeout.connect(self.watch_anon_vms)
+        #watch_timer.start(1000)
 
 
-    def watch_anon_vms(self):
-        ## set a timeout for qrexec-client-vm.
-        ## when a vm is killed, the command could wait forever.
-        seconds = 0.2
-        for domain in self.domain_list:
-            try:
-                if not domain == self.name:
-                    command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
-                    check_output(command, stderr=STDOUT, timeout=seconds)
-            except:
-                #self.remove_vm(domain)
-                ## debugging
-                error_msg = "Unexpected error: " + str(sys.exc_info()[0])
-                print(domain + ' ' + error_msg)
-                #return
+    #def watch_anon_vms(self):
+        ### set a timeout for qrexec-client-vm.
+        ### when a vm is killed, the command could wait forever.
+        #seconds = 0.2
+        #for domain in self.domain_list:
+            #try:
+                #if not domain == self.name:
+                    #command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
+                    #check_output(command, stderr=STDOUT, timeout=seconds)
+            #except:
+                ##self.remove_vm(domain)
+                ### debugging
+                #error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+                #print(domain + ' ' + error_msg)
+                ##return
 
     def create_menu(self):
         def create_sub_menu(self, menu):
