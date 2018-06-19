@@ -1,3 +1,21 @@
+commit 2ab86349ee50e1ccf02c108a07b91e5018430a09
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Jun 19 23:56:20 2018 +0000
+
+    fix log viewer for Qubes R4
+
+commit 6f1a9182c737ff6521f18d0749baf3d08fd4afec
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Jun 19 23:19:51 2018 +0000
+
+    fix sudoers for logviewer
+
+commit 59cd768416c6da0d4cd451783538f292efba139a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Feb 5 18:02:22 2018 +0000
+
+    bumped changelog version
+
 commit 225f64712018df3ccf81b6880a42fd0d45e31082
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Feb 5 16:06:46 2018 +0000
