@@ -13,4 +13,4 @@ sdwdate-gui ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
 sdwdate-gui ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
 
 ## Allow sdwdate-gui to open sdwdate log (owned by sdwdate).
-sdwdate-gui ALL=(sdwdate) NOPASSWD: /usr/lib/sdwdate-gui/log-viewer
+sdwdate-gui ALL=NOPASSWD: /usr/lib/sdwdate-gui/log-viewer
