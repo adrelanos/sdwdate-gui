@@ -1,3 +1,15 @@
+commit f2fe3ed4ded405e1a65dcfc218a9d0c3ebe43310
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jun 20 00:00:45 2018 +0000
+
+    use pgrep rather than killall to fix lintian warning
+
+commit 1dfc7851e8626a70687ce02b4b68363fe746776f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Jun 19 23:57:35 2018 +0000
+
+    bumped changelog version
+
 commit 2ab86349ee50e1ccf02c108a07b91e5018430a09
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Jun 19 23:56:20 2018 +0000
