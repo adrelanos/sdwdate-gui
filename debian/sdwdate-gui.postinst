@@ -23,7 +23,8 @@ case "$1" in
        sdwdate_gui_home="$(getent passwd sdwdate-gui | cut -d: -f6)" || true
        if [ "$sdwdate_gui_home" = "/nonexistent" ]; then
          ## Need to kill sdwdate-gui, otherwise we cannot change user home.
-         kill -sigterm $(pgrep sdwdate-gui) 2>/dev/null || true
+         ## Making sure pgrep will not match this postinst script.
+         kill -sigterm $(pgrep -f /usr/lib/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
        fi
        ## Change user home of user sdwdate-gui to /var/run/sdwdate-gui.
        ## Legacy because previously was created using folder /nonexistent.
