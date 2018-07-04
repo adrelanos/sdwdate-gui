@@ -87,13 +87,17 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.anon_watcher_file = QFileSystemWatcher([self.anon_status_path])
         self.anon_watcher_file.fileChanged.connect(self.anon_vm_status_changed)
 
+        self.menu = QMenu()
+        self.menu_list = []
+        self.create_menu()
+        self.setContextMenu(self.menu)
+
         self.tor_status_changed()
         self.status_changed()
 
         #watch_timer = QTimer(self)
         #watch_timer.timeout.connect(self.watch_anon_vms)
         #watch_timer.start(1000)
-
 
     #def watch_anon_vms(self):
         ### set a timeout for qrexec-client-vm.
@@ -111,64 +115,84 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 #print(domain + ' ' + error_msg)
                 ##return
 
-    def create_menu(self):
-        def create_sub_menu(self, menu):
-            if menu.title() == self.name:
-                icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
-                action = QtWidgets.QAction(icon, 'Show Tor status', self)
-                action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
-                menu.addAction(action)
-                action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
-                action.triggered.connect(self.show_tor_status)
-                menu.addAction(action)
-                menu.addSeparator()
-
-            icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
-            action = QtWidgets.QAction(icon, 'Show swdate status', self)
-            action.triggered.connect(lambda: self.show_message(menu.title(), 'sdwdate'))
-            menu.addAction(action)
-
-            menu.addSeparator()
-
-            icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
-            action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
-            action.triggered.connect(lambda: self.show_sdwdate_log(menu.title()))
-            menu.addAction(action)
-
-            icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
-            text = 'Restart sdwdate'
-            action = QtWidgets.QAction(icon, text, self)
-            action.triggered.connect(lambda: self.restart_sdwdate(menu.title()))
-            menu.addAction(action)
-
-            icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
-            action = QtWidgets.QAction(icon, "Stop sdwdate", self)
-            action.triggered.connect(lambda: self.stop_sdwdate(menu.title()))
-            menu.addAction(action)
-
-        menu = QMenu()
-
+    def create_sub_menu(self, menu):
         restart_icon = QtGui.QIcon('/usr/share/icons/anon-icon-pack/power_restart.ico')
         advanced_icon = QtGui.QIcon('/usr/share/anon-connection-wizard/advancedsettings.ico')
 
+        if menu.title() == self.name:
+            icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
+            action = QtWidgets.QAction(icon, 'Show Tor status', self)
+            action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
+            menu.addAction(action)
+            action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
+            action.triggered.connect(self.show_tor_status)
+            menu.addAction(action)
+            menu.addSeparator()
+
+        icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
+        action = QtWidgets.QAction(icon, 'Show swdate status', self)
+        action.triggered.connect(lambda: self.show_message(menu.title(), 'sdwdate'))
+        menu.addAction(action)
+
+        menu.addSeparator()
+
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
+        action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
+        action.triggered.connect(lambda: self.show_sdwdate_log(menu.title()))
+        menu.addAction(action)
+
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
+        text = 'Restart sdwdate'
+        action = QtWidgets.QAction(icon, text, self)
+        action.triggered.connect(lambda: self.restart_sdwdate(menu.title()))
+        menu.addAction(action)
+
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
+        action = QtWidgets.QAction(icon, "Stop sdwdate", self)
+        action.triggered.connect(lambda: self.stop_sdwdate(menu.title()))
+        menu.addAction(action)
+
+    def create_menu(self):
         for vm in self.domain_list:
             if vm == self.name and (self.tor_status == 'stopped' or self.tor_status == 'disabled'):
                 icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
             else:
                 icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
-            menu_item = menu.addMenu(icon, vm)
+            menu_item = self.menu.addMenu(icon, vm)
+            self.menu_list.append(menu_item)
             if vm == self.name:
-                menu.addSeparator()
-            create_sub_menu(self, menu_item)
+                self.menu.addSeparator()
+            self.create_sub_menu(menu_item)
 
-        menu.addSeparator()
-
+        self.menu.addSeparator()
         icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
         action = QAction(icon, "&Exit", self)
         action.triggered.connect(sys.exit)
-        menu.addAction(action)
+        self.menu.addAction(action)
 
-        self.setContextMenu(menu)
+    def update_menu(self, vm, action):
+        ## remove _shutdown
+        vm = vm.rsplit('_', 1)[0]
+        icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
+
+        if action == 'update':
+            for item in self.menu_list:
+                if item.title() == vm:
+                    if vm == self.name and (self.tor_status == 'stopped' or self.tor_status == 'disabled'):
+                        icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
+                    item.setIcon(icon)
+                    item.actions()[0].setIcon(icon)
+
+        elif action == 'add':
+            menu_item = self.menu.addMenu(icon, vm)
+            self.menu_list.append(menu_item)
+            self.create_sub_menu(menu_item)
+
+        elif action == 'remove':
+            for item in self.menu_list:
+                if item.title() == vm:
+                    item.clear()
+                    item.deleteLater() # segmentation fault
 
     def run_popup(self, vm, caller):
         index = self.domain_list.index(vm)
@@ -233,14 +257,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def remove_vm(self, vm):
         name = vm.rsplit('_', 1)[0]
         if name in self.domain_list:
+            self.update_menu(vm, 'remove')
             index = self.domain_list.index(name)
-
             self.domain_list.pop(index)
             self.domain_status_list.pop(index)
             self.domain_icon_list.pop(index)
             self.domain_message_list.pop(index)
 
-            self.create_menu()
             self.set_tray_icon()
 
     def parse_sdwdate_status(self, vm, status, message):
@@ -251,14 +274,16 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.domain_status_list.append(status)
             self.domain_icon_list.append(icon)
             self.domain_message_list.append(message)
+            self.update_menu(vm, 'add')
         else:
             index = self.domain_list.index(vm)
             self.domain_status_list[index] = status
             self.domain_icon_list[index] = icon
             self.domain_message_list[index] = message
+            self.update_menu(vm, 'update')
 
         self.update_tip(vm, 'sdwdate')
-        self.create_menu()
+        #self.create_menu()
         self.set_tray_icon()
 
     def parse_tor_status(self):
@@ -288,7 +313,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             to connect to or configure the Tor network.'
 
         self.update_tip(self.name, 'tor')
-        self.create_menu()
+        self.update_menu(self.name, 'update')
         self.set_tray_icon()
 
     def anon_vm_status_changed(self):
