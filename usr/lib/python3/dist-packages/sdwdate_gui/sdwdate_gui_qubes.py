@@ -174,14 +174,23 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         ## remove _shutdown
         vm = vm.rsplit('_', 1)[0]
         icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
+        tor_icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
 
         if action == 'update':
             for item in self.menu_list:
                 if item.title() == vm:
-                    if vm == self.name and (self.tor_status == 'stopped' or self.tor_status == 'disabled'):
-                        icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
-                    item.setIcon(icon)
-                    item.actions()[0].setIcon(icon)
+                    if vm == self.name and self.tor_status == 'running':
+                        item.setIcon(icon)
+                        item.actions()[0].setIcon(tor_icon)
+                        item.actions()[3].setIcon(icon)
+                    elif vm == self.name and (self.tor_status == 'stopped' or
+                                              self.tor_status == 'disabled'):
+                        item.setIcon(tor_icon)
+                        item.actions()[0].setIcon(tor_icon)
+                        item.actions()[3].setIcon(icon)
+                    else:
+                        item.setIcon(icon)
+                        item.actions()[0].setIcon(icon)
 
         elif action == 'add':
             menu_item = self.menu.addMenu(icon, vm)
