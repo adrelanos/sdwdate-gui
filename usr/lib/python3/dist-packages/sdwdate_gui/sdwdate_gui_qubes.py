@@ -164,11 +164,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 self.menu.addSeparator()
             self.create_sub_menu(menu_item)
 
-        self.menu.addSeparator()
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
-        action = QAction(icon, "&Exit", self)
-        action.triggered.connect(sys.exit)
-        self.menu.addAction(action)
+        #self.menu.addSeparator()
+        #icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
+        #action = QAction(icon, "&Exit", self)
+        #action.triggered.connect(sys.exit)
+        #self.menu.addAction(action)
 
     def update_menu(self, vm, action):
         ## remove _shutdown
@@ -192,7 +192,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             for item in self.menu_list:
                 if item.title() == vm:
                     item.clear()
-                    item.deleteLater() # segmentation fault
+                    item.deleteLater()
 
     def run_popup(self, vm, caller):
         index = self.domain_list.index(vm)
@@ -256,6 +256,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
     def remove_vm(self, vm):
         name = vm.rsplit('_', 1)[0]
+
         if name in self.domain_list:
             self.update_menu(vm, 'remove')
             index = self.domain_list.index(name)
@@ -263,6 +264,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.domain_status_list.pop(index)
             self.domain_icon_list.pop(index)
             self.domain_message_list.pop(index)
+            self.menu_list.pop(index)
 
             self.set_tray_icon()
 
@@ -283,7 +285,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.update_menu(vm, 'update')
 
         self.update_tip(vm, 'sdwdate')
-        #self.create_menu()
         self.set_tray_icon()
 
     def parse_tor_status(self):
