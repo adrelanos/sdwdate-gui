@@ -173,27 +173,25 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def update_menu(self, vm, action):
         ## remove _shutdown
         vm = vm.rsplit('_', 1)[0]
-        icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
+        sdwdate_icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
         tor_icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
 
         if action == 'update':
             for item in self.menu_list:
                 if item.title() == vm:
-                    if vm == self.name and self.tor_status == 'running':
-                        item.setIcon(icon)
+                    if vm == self.name:
+                        if self.tor_status == 'running':
+                            item.setIcon(sdwdate_icon)
+                        elif not self.tor_status == 'running':
+                            item.setIcon(tor_icon)
                         item.actions()[0].setIcon(tor_icon)
-                        item.actions()[3].setIcon(icon)
-                    elif vm == self.name and (self.tor_status == 'stopped' or
-                                              self.tor_status == 'disabled'):
-                        item.setIcon(tor_icon)
-                        item.actions()[0].setIcon(tor_icon)
-                        item.actions()[3].setIcon(icon)
+                        item.actions()[3].setIcon(sdwdate_icon)
                     else:
-                        item.setIcon(icon)
-                        item.actions()[0].setIcon(icon)
+                        item.setIcon(sdwdate_icon)
+                        item.actions()[0].setIcon(sdwdate_icon)
 
         elif action == 'add':
-            menu_item = self.menu.addMenu(icon, vm)
+            menu_item = self.menu.addMenu(sdwdate_icon, vm)
             self.menu_list.append(menu_item)
             self.create_sub_menu(menu_item)
 
@@ -260,7 +258,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.icon[status_index]))
 
-        elif not self.tor_status == 'running': # or self.tor_status == 'disabled':
+        elif not self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)]))
 
     def remove_vm(self, vm):
