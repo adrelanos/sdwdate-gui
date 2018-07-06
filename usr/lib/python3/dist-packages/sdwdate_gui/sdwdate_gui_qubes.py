@@ -123,6 +123,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
             menu.addAction(action)
             action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
+            action.setEnabled(os.path.exists('/usr/bin/tor-control-panel'))
             action.triggered.connect(self.show_tor_status)
             menu.addAction(action)
             menu.addSeparator()
