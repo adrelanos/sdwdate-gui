@@ -48,14 +48,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.domain_message_list = []
         self.current_vm = ''
 
-        self.old_status = ''
-        self.old_icon = ''
-        self.old_message = ''
+        self.icon_path = '/usr/share/sdwdate-gui/icons/'
 
-        self.tor_icon = ['/usr/share/icons/oxygen/base/48x48/actions/dialog-ok-apply.png',
-                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png',
-                         '/usr/share/icons/oxygen/base/48x48/actions/window-close.png',
-                         '/usr/share/icons/oxygen/base/48x48/status/dialog-warning']
+        self.tor_icon = [self.icon_path + 'tor-ok.png',
+                         self.icon_path + 'tor-error.png',
+                         self.icon_path + 'tor-error.png',
+                         self.icon_path + 'tor-warning.png']
 
         self.tor_status_list = ['running', 'stopped', 'disabled', 'disabled-running']
 
@@ -63,9 +61,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_message =  ''
         self.is_tor_message = False
 
-        self.icon = ['/usr/share/icons/sdwdate-gui/sdwdate-success.png',
-                     '/usr/share/icons/sdwdate-gui/sdwdate-wait.png',
-                     '/usr/share/icons/sdwdate-gui/sdwdate-stopped.png']
+        self.icon = [self.icon_path + 'sdwdate-success.png',
+                     self.icon_path + 'sdwdate-wait.png',
+                     self.icon_path + 'sdwdate-stopped.png']
 
         self.status = ['success', 'busy', 'error']
 
@@ -116,8 +114,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 ##return
 
     def create_sub_menu(self, menu):
-        restart_icon = QtGui.QIcon('/usr/share/icons/anon-icon-pack/power_restart.ico')
-        advanced_icon = QtGui.QIcon('/usr/share/anon-connection-wizard/advancedsettings.ico')
+        #restart_icon = QtGui.QIcon('/usr/share/icons/anon-icon-pack/power_restart.ico')
+        advanced_icon = QtGui.QIcon(self.icon_path + 'advancedsettings.ico')
 
         if menu.title() == self.name:
             icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
@@ -136,18 +134,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         menu.addSeparator()
 
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/text-x-script.png')
+        icon = QtGui.QIcon(self.icon_path + 'sdwdate-log.png')
         action = QtWidgets.QAction(icon, "Open sdwdate's log", self)
         action.triggered.connect(lambda: self.show_sdwdate_log(menu.title()))
         menu.addAction(action)
 
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-reboot.png')
+        icon = QtGui.QIcon(self.icon_path + 'restart-sdwdate.png')
         text = 'Restart sdwdate'
         action = QtWidgets.QAction(icon, text, self)
         action.triggered.connect(lambda: self.restart_sdwdate(menu.title()))
         menu.addAction(action)
 
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/system-shutdown.png')
+        icon = QtGui.QIcon(self.icon_path + 'stop-sdwdate.png')
         action = QtWidgets.QAction(icon, "Stop sdwdate", self)
         action.triggered.connect(lambda: self.stop_sdwdate(menu.title()))
         menu.addAction(action)
