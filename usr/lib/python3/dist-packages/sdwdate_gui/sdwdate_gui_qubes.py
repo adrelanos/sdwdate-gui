@@ -6,15 +6,45 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
-from PyQt5.QtCore import QFileSystemWatcher, QTimer, QProcess
+from PyQt5.QtCore import *
 from subprocess import check_output, STDOUT, call, Popen, PIPE
-from distutils import spawn
 import json
 import os
 import re
 import glob
 
-from tor_control_panel import tor_status
+from anon_connection_wizard import tor_status
+
+
+class AnonVmWatcher(QThread):
+    signal = pyqtSignal(str)
+
+    def __init__(self, main, domains):
+        super(AnonVmWatcher, self).__init__(main)
+        self.domains = domains
+
+    def watch_anon_vms(self):
+        '''
+        Set a timeout in qrexec-client-vm command.
+        When a vm is killed, qrexec-client-vm is not respondind from any vm
+        for a period of time. The minimum timeout seems to be 5 seconds on
+        my machine.
+        Set a safe 8 seconds to prevent removing running vms.
+
+        The killed or crashed vm is restarted by the qrexec-client-vm command.
+        '''
+        seconds = 8
+        for domain in self.domains[1:]:  ## remove sys-whonix
+            try:
+                command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
+                check_output(command, stderr=STDOUT, timeout=seconds)
+            except:
+                error_msg = str(sys.exc_info()[0])
+                print(domain + ' ' + error_msg)
+                self.signal.emit(domain)
+
+    def run(self):
+        watch = self.watch_anon_vms()
 
 
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
@@ -79,11 +109,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
         self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
 
-        self.watcher_file = QFileSystemWatcher([self.status_path])
-        self.watcher_file.fileChanged.connect(self.status_changed)
+        self.sdwdate_watcher = QFileSystemWatcher([self.status_path])
+        self.sdwdate_watcher.fileChanged.connect(self.status_changed)
 
-        self.anon_watcher_file = QFileSystemWatcher([self.anon_status_path])
-        self.anon_watcher_file.fileChanged.connect(self.anon_vm_status_changed)
+        self.anon_sdwdate_watcher = QFileSystemWatcher([self.anon_status_path])
+        self.anon_sdwdate_watcher.fileChanged.connect(self.anon_vm_status_changed)
 
         self.menu = QMenu()
         self.menu_list = []
@@ -93,28 +123,17 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.tor_status_changed()
         self.status_changed()
 
-        #watch_timer = QTimer(self)
-        #watch_timer.timeout.connect(self.watch_anon_vms)
-        #watch_timer.start(1000)
+        self.anon_watch_thread = AnonVmWatcher(self, self.domain_list)
+        self.anon_watch_thread.signal.connect(self.remove_vm)
 
-    #def watch_anon_vms(self):
-        ### set a timeout for qrexec-client-vm.
-        ### when a vm is killed, the command could wait forever.
-        #seconds = 0.2
-        #for domain in self.domain_list:
-            #try:
-                #if not domain == self.name:
-                    #command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
-                    #check_output(command, stderr=STDOUT, timeout=seconds)
-            #except:
-                ##self.remove_vm(domain)
-                ### debugging
-                #error_msg = "Unexpected error: " + str(sys.exc_info()[0])
-                #print(domain + ' ' + error_msg)
-                ##return
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.watch_anon_vms)
+        self.timer.start(10000)
+
+    def watch_anon_vms(self):
+        self.anon_watch_thread.start()
 
     def create_sub_menu(self, menu):
-        #restart_icon = QtGui.QIcon('/usr/share/icons/anon-icon-pack/power_restart.ico')
         advanced_icon = QtGui.QIcon(self.icon_path + 'advancedsettings.ico')
 
         if menu.title() == self.name:
@@ -256,7 +275,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         if self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.icon[status_index]))
-
         elif not self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)]))
 
@@ -283,6 +301,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.domain_icon_list.append(icon)
             self.domain_message_list.append(message)
             self.update_menu(vm, 'add')
+
         else:
             index = self.domain_list.index(vm)
             self.domain_status_list[index] = status
@@ -346,11 +365,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
 
     def status_changed(self):
-        ## json.load(f) could fail if self.status_path,
-        ## - is still empty (sdwdate has not been started yet)
-        ## - contains invalid contents (if sdwdate got killed the moment it was
-        ##   writing to that file.
-        ## - status is None. Probably introduced by QFileSystemWatcher.
         try:
             with open(self.status_path, 'r') as f:
                 status = json.load(f)
