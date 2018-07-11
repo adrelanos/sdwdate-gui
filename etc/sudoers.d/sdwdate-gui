@@ -1,12 +1,16 @@
 ## Copyright (C) 2012 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
-## Allow running sdwdate-gui as sdwdate, without password.
-ALL ALL=NOPASSWD: /usr/bin/sdwdate-gui
+## Allow running sdwdate-gui under user sdwdate-gui, without password.
+## Required for autostarting sdwdate-gui.
+user ALL=(sdwdate-gui) NOPASSWD: /usr/lib/sdwdate-gui/sdwdate-gui
 
 ## Allow all users to restart sdwdate without password.
-ALL ALL=NOPASSWD: /bin/systemctl --no-pager --no-block restart sdwdate
-ALL ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
+sdwdate-gui ALL=NOPASSWD: /bin/systemctl --no-pager --no-block restart sdwdate
+sdwdate-gui ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
 
 ## Allow "sudo rm" for sdwdate without password.
-ALL ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
+sdwdate-gui ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
+
+## Allow sdwdate-gui to open sdwdate log (owned by sdwdate).
+sdwdate-gui ALL=NOPASSWD: /usr/lib/sdwdate-gui/log-viewer

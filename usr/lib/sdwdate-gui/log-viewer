@@ -3,4 +3,8 @@
 ## Copyright (C) 2018 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
-kdesudo -u sdwdate-gui /usr/lib/sdwdate-gui/sdwdate-gui
+set -x
+
+set -e
+
+/usr/bin/konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"
