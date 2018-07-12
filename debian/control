@@ -5,7 +5,8 @@ Source: sdwdate-gui
 Section: misc
 Priority: optional
 Maintainer: Patrick Schleizer <adrelanos@riseup.net>
-Build-Depends: debhelper (>= 9), genmkfile, ruby-ronn
+Build-Depends: debhelper (>= 9), genmkfile, ruby-ronn,
+ dh-systemd
 Homepage: https://www.whonix.org/wiki/Dev/TimeSync
 Vcs-Browser: https://github.com/Whonix/sdwdate-gui
 Vcs-Git: https://github.com/Whonix/sdwdate-gui.git
