@@ -13,7 +13,9 @@ import os
 import re
 import glob
 
-from anon_connection_wizard import tor_status
+tor_control_panel_installed = os.path.exists('/usr/bin/tor-control-panel')
+if tor_control_panel_installed:
+    from tor_control_panel import tor_status
 
 
 class AnonVmWatcher(QThread):
@@ -106,8 +108,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.setToolTip('Time Synchronisation Monitor \n Right-click for menu.')
 
-        self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
-        self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
+        if tor_control_panel_installed:
+            self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
+            self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
+        elif not tor_control_panel_installed:
+            self.tor_status = 'running'
 
         self.sdwdate_watcher = QFileSystemWatcher([self.status_path])
         self.sdwdate_watcher.fileChanged.connect(self.status_changed)
@@ -139,10 +144,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if menu.title() == self.name:
             icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
             action = QtWidgets.QAction(icon, 'Show Tor status', self)
+            action.setEnabled(tor_control_panel_installed)
             action.triggered.connect(lambda: self.show_message(menu.title(), 'tor'))
             menu.addAction(action)
             action = QtWidgets.QAction(advanced_icon, 'Tor control panel', self)
-            action.setEnabled(os.path.exists('/usr/bin/tor-control-panel'))
+            action.setEnabled(tor_control_panel_installed)
             action.triggered.connect(self.show_tor_status)
             menu.addAction(action)
             menu.addSeparator()
