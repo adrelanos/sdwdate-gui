@@ -93,6 +93,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.status_changed()
 
+        ## TODO: wait until file self.status_path is created
+
         self.watcher_file = QFileSystemWatcher([self.status_path])
         self.watcher_file.fileChanged.connect(self.status_changed)
 
