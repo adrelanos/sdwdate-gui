@@ -7,7 +7,7 @@ Type=oneshot
 #Required so that ExecStop runs only after the service is stopped.
 RemainAfterExit=yes
 #ExecStartPre=NAME="$(/usr/bin/qubesdb-read /name)"
-ExecStop=/usr/lib/qubes/notify-shutdown
+ExecStop=/usr/lib/sdwdate-gui/notify-shutdown
 
 [Install]
 WantedBy=multi-user.target
