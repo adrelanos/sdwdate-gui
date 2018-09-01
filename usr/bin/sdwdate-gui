@@ -3,4 +3,11 @@
 ## Copyright (C) 2018 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
+set -x
+set -e
+
+command -v kdesudo
+command -v /usr/lib/sdwdate-gui/sdwdate-gui
+id sdwdate-gui
+
 kdesudo -u sdwdate-gui /usr/lib/sdwdate-gui/sdwdate-gui
