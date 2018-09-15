@@ -36,13 +36,11 @@ class AnonVmWatcher(QThread):
         The killed or crashed vm is restarted by the qrexec-client-vm command.
         '''
         seconds = 8
-        for domain in self.domains[1:]:  ## remove sys-whonix
+        for domain in self.domains[1:]:  ## Do not check sys-whonix
             try:
                 command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
                 check_output(command, stderr=STDOUT, timeout=seconds)
             except:
-                error_msg = str(sys.exc_info()[0])
-                print(domain + ' ' + error_msg)
                 self.signal.emit(domain)
 
     def run(self):
@@ -61,12 +59,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             print(str(sys.exc_info()[0]))
             self.name = 'name'
 
-        self.status_path = '/var/run/sdwdate/status'
-        self.anon_status_path = '/var/run/sdwdate-gui/anon-status'
-        self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
-        self.tor_path = '/var/run/tor'
-        self.tor_running_path = '/var/run/tor/tor.pid'
-        self.torrc_path = '/usr/local/etc/torrc.d/'
+        self.status_path =          '/var/run/sdwdate/status'
+        self.anon_status_path =     '/var/run/sdwdate-gui/anon-status'
+        self.show_message_path =    '/usr/lib/sdwdate-gui/show_message'
+        self.tor_path =             '/var/run/tor'
+        self.tor_running_path =     '/var/run/tor/tor.pid'
+        self.torrc_path =           '/usr/local/etc/torrc.d/'
 
         self.popup_process = None
 
@@ -87,7 +85,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                          self.icon_path + 'tor-error.png',
                          self.icon_path + 'tor-warning.png']
 
-        self.tor_status_list = ['running', 'stopped', 'disabled', 'disabled-running']
+        self.tor_status_list = ['running',
+                                'stopped',
+                                'disabled',
+                                'disabled-running']
 
         self.tor_status = 'stopped'
         self.tor_message =  ''
@@ -111,7 +112,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if tor_control_panel_installed:
             self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
             self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
-        elif not tor_control_panel_installed:
+        else:
             self.tor_status = 'running'
 
         self.sdwdate_watcher = QFileSystemWatcher([self.status_path])
@@ -281,7 +282,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         if self.tor_status == 'running':
             self.setIcon(QtGui.QIcon(self.icon[status_index]))
-        elif not self.tor_status == 'running':
+        else:
             self.setIcon(QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)]))
 
     def remove_vm(self, vm):
