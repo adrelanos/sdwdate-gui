@@ -1,3 +1,117 @@
+commit fb25eb16537e3ece2998cdf34603b85a5f1a6d51
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:53:47 2018 +0000
+
+    output
+
+commit a1338b0bfca60ce28c8e9a0fbfb17e181c9ecec0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:45:09 2018 +0000
+
+    move to /usr/lib/sdwdate-gui/sdwdate-watcher so we don't need a man page
+    
+    to fix lintian warning
+
+commit f4ba6c2160d5f10a2b80821695b7cc5e690f69cb
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:44:10 2018 +0000
+
+    man
+
+commit 31264dbb9975c4e0c7053e8b2b7d7a9a729088a5
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:42:20 2018 +0000
+
+    Description
+
+commit f79e3c7c44391ed9a520522202304989efe1e4a7
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:41:30 2018 +0000
+
+    renamed lib/systemd/system/shutdown-notify.service -> lib/systemd/system/sdwdate-gui-shutdown-notify.service
+
+commit 6e777e802d13c12fc2f5fac8073b2cfc41645d9f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:40:13 2018 +0000
+
+    fix lintian warning
+
+commit ea216332e6f0b59f3afc6167d4de68e3537779a9
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 09:39:03 2018 +0000
+
+    man page
+
+commit 627698cd1b35b034023ad81b8c3d9e2d6d297bc0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 05:17:13 2018 -0400
+
+    typo
+
+commit d8524d69a07654b9be9e6f360f125bbf1c239b4f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 05:16:39 2018 -0400
+
+    kdesudo
+
+commit 63b9a0b1c7f979362ec114aebed5d62d2138f63f
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 05:04:51 2018 -0400
+
+    fix merge conflicts
+
+commit ea94bfc9990ef0d69796b1ad3f513b800085f309
+Merge: 985d5df a62d625
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 04:44:10 2018 -0400
+
+    Merge remote-tracking branch 'troubadoour/master' into sdwdate-gui-qubes
+
+commit 985d5dff7a583af7af0a775e759272b467068c58
+Merge: 6d4a8ed 4daa4c8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 04:39:01 2018 -0400
+
+    Merge branch 'master' into sdwdate-gui-qubes
+
+commit a62d625d2dcb000a0ffa034cca24f3c6fbe00fb7
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Sep 15 19:36:51 2018 +0000
+
+    code cleaning
+
+commit b8ba45d1be366bbadeece9b123b689505bd17986
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Sep 2 16:37:33 2018 +0200
+
+    comment exit menu action
+
+commit 0b7d851476ac5c9d352de537f0ddfea8f1095b34
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Sep 1 22:29:20 2018 +0200
+
+    sdwdate-gui (non-qubes) update
+
+commit 4daa4c85b721ad46f0937b6226c0bafc4da0e547
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Aug 27 16:49:08 2018 +0000
+
+    bumped changelog version
+
+commit 6d4a8edd90fe75504f2d3078763d133479ac8786
+Merge: 0741690 126a4b4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 23 06:22:14 2018 -0400
+
+    Merge remote-tracking branch 'troubadoour/master' into sdwdate-gui-qubes
+
+commit 126a4b443228e51780bf03514302a7c51dd9492f
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Aug 21 19:13:10 2018 +0000
+
+    move notify-shutdown to /usr/lib/sdwdate-gui
+    remove /usr/lib/qubes
+
 commit f592e42a54c405fd7d1c0fc13bf9c321c246fb32
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Aug 21 05:18:37 2018 +0800
@@ -39,6 +153,109 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 9 21:09:40 2018 +0000
 
     fix sdwdate restart
+
+commit 2f15a9aaf8b2fab63e442b9f1ccb142d4137ff42
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Jul 20 08:43:13 2018 +0000
+
+    Empty commit to trigger post_receive hooks after github message
+
+commit 074169059ab04e3fd52d1559f5059d7d3af6350a
+Merge: 4b8002e 2a11945
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Jul 17 13:46:22 2018 +0800
+
+    Merge remote-tracking branch 'troubadoour/master' into sdwdate-gui-qubes
+
+commit 2a1194510088018563b6709749024cae75737c96
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Jul 16 19:32:39 2018 +0000
+
+    debian/control recommends + tor-control-panel
+
+commit a7408345f1a6f89f29363694533036f06a260c5e
+Author: troubadoour <trobador@riseup.net>
+Date:   Mon Jul 16 17:49:42 2018 +0000
+
+    Check if tor-control-panel is installed.
+    If not, do not start tor watcher, set tor status "running", disable tor actions.
+
+commit 27814a9def88b5a0e2b0c0526981548ddfb1e807
+Merge: 61a142c 4b8002e
+Author: troubadour <trobador@riseup.net>
+Date:   Thu Jul 12 19:01:20 2018 +0000
+
+    Merge pull request #1 from adrelanos/sdwdate-gui-qubes
+    
+    fixes systemd and tmpfiles
+
+commit 4b8002e9c669138bfecece9418d6be34a451fab2
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Jul 12 07:16:03 2018 +0000
+
+    systemd
+
+commit 75b5d3235a88ecf8fee645875b30a493d6ed50d5
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Jul 12 07:00:25 2018 +0000
+
+    fix
+
+commit d260d0feec5da21d1a01ee1b52f7fce2619fa25d
+Merge: 9ca966c 61a142c
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Jul 12 14:51:48 2018 +0800
+
+    Merge remote-tracking branch 'troubadoour/master' into sdwdate-gui-qubes
+
+commit 61a142c053279853e62e7bed72585ac25ca047a3
+Merge: 89d378f 9ca966c
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Jul 11 11:45:11 2018 +0000
+
+    Merge remote-tracking branch 'whonix/master'
+
+commit 89d378fc8237af794b53d82efc587db02c7908eb
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Jul 10 20:28:08 2018 +0000
+
+    handle  killed or crashed anon vms
+
+commit ac9b40ef59f8edbe6c6da782958d32165a31e8b9
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Jul 6 20:00:31 2018 +0000
+
+    + os.path.exists tor controller
+
+commit 30265a36cf3bada2f01ec448b587cf505f81bcf3
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Jul 6 14:31:48 2018 +0000
+
+    sort out icons
+
+commit 30da11a8c427fa4523085bb7a7e4e8ad37d4e80a
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Jul 5 13:30:21 2018 +0000
+
+    code simplification in submenu
+
+commit a9f2eafa4c1f844a94ce924adff4f3bddd0ffcea
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Jul 5 12:55:54 2018 +0000
+
+    update icons in sys-whonix submenu
+
+commit 03443f473d7de5b5b9fb4dcf38a8655b27b9090c
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Jul 5 11:25:38 2018 +0000
+
+    context menu revamping step 2
+
+commit 1587160e4efe72a5c5cf7ce70ffa749c4595b049
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Jul 4 21:12:13 2018 +0000
+
+    context menu revamping step 1
 
 commit 9ca966c6021df629a12b908a1cb613407e28e253
 Author: Patrick Schleizer <adrelanos@riseup.net>
@@ -82,6 +299,85 @@ Date:   Tue Jun 19 23:19:51 2018 +0000
 
     fix sudoers for logviewer
 
+commit 0bef5367aa72b4674ceb52f2ad448e7fe40da9d0
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Jun 16 19:50:23 2018 +0000
+
+    comment out 'watch anon vms'
+
+commit d7e12123a2d3027c49a6c51b41ce70a26a8cad12
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed May 23 09:13:54 2018 +0000
+
+    move external functions inside class. detach tor-control-panel
+
+commit 4799b50e1fc4d89624379879e7533ff209a60b0d
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue May 22 19:47:17 2018 +0000
+
+    watch anon vms, provisional #2
+
+commit 42b3b2fbf0b3ee275c622f734b9be7a3c91663fd
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat May 19 21:11:41 2018 +0000
+
+    watch anon vms, provisional
+
+commit 6d7c68e3c6d02b141d88e59580f8302d0e51a9b1
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat May 5 18:17:15 2018 +0000
+
+    do not register disposable wms in sys-whonix sdwdate-gui
+
+commit 83e0663be9313eeabb050637f751ee224cb929d4
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Apr 29 20:41:10 2018 +0000
+
+    cleanup
+
+commit 8d12c006989a5f26a7b04fec96f85f3766c68236
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Apr 18 20:02:29 2018 +0000
+
+    add close button in show_message
+
+commit 1d9c872a280b43fc6afdbff0e8896e214a7a3cd0
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Mar 18 23:11:16 2018 +0000
+
+    chase segmentation fault
+
+commit c4f0d9eb43fd9fdb59ec2045d7add2e1c2b9b072
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Mar 18 21:27:03 2018 +0000
+
+    import tor_status from tor_control_panel
+
+commit c6fd0ec833220c0a0ee33c40373d820eea606770
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Mar 4 19:40:50 2018 +0000
+
+    add tor-control-panel command
+
+commit 9db0fe64134766c94c62211cb9fdcfc4d4e39701
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Feb 18 19:02:43 2018 +0000
+
+    add tor status "disabled and running"
+
+commit 3099d1b78d6bebceea4e9a46005bb5d224f3b219
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Feb 16 22:00:59 2018 +0000
+
+    icons in show_message
+    resized and renamed sdwdate icons
+
+commit 4ae6b88f616b5cdda3d4c638c37c109023dc22c8
+Author: troubadoour <trobador@riseup.net>
+Date:   Tue Feb 13 22:27:56 2018 +0000
+
+    add tor status and known commands
+
 commit 59cd768416c6da0d4cd451783538f292efba139a
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Feb 5 18:02:22 2018 +0000
@@ -105,6 +401,62 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Feb 5 13:56:12 2018 +0000
 
     permission lockdown and fixes after running under user sdwdate-gui
+
+commit e743d1617348e94e3d2e0dca1ed5db06e67416f9
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Feb 4 21:05:17 2018 +0000
+
+    check that executables exist for tor commands
+
+commit b33e360ec57906c8b6acf9b8a30986874909cd63
+Author: troubadoour <trobador@riseup.net>
+Date:   Sun Feb 4 19:43:26 2018 +0000
+
+    + tor control in sys-whonix submenu
+
+commit a8713a5191f741ad73c23f76f553fd36e5a0d2ea
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Feb 3 21:58:23 2018 +0000
+
+    empty self.name in exception
+
+commit a616360e2ff40f2809aa3e19dbcec1c3e9c7e288
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Feb 3 20:56:49 2018 +0000
+
+    defensive code against qubes-db and qubes-qrexec-agent
+
+commit 0e1579850b04c72402305cfa57b61ead0795553c
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Feb 3 19:44:54 2018 +0000
+
+    Revert "defensive code against qubes-db and qubes-qrexec-agent"
+    
+    This reverts commit b67d3995982cf0f18df37bd5e1c26d32d2a4c72b.
+
+commit b67d3995982cf0f18df37bd5e1c26d32d2a4c72b
+Author: troubadoour <trobador@riseup.net>
+Date:   Sat Feb 3 18:51:31 2018 +0000
+
+    defensive code against qubes-db and qubes-qrexec-agent
+
+commit 1989b97a888b19a1020df97b8601755c650a0277
+Author: troubadoour <trobador@riseup.net>
+Date:   Fri Feb 2 16:34:01 2018 +0000
+
+    typo
+
+commit 6a186e02928e73c18a58033d52d3c88e239371d1
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Feb 1 22:24:14 2018 +0000
+
+    chmod exec rpc scripts and notify-shutdown
+
+commit 0e4786a97e07d8995b96358e8f4a51d4aa28d4d1
+Author: troubadoour <trobador@riseup.net>
+Date:   Thu Feb 1 19:20:12 2018 +0000
+
+    new version including Qubes
 
 commit c78f298865bcf375dd51aa9641b6e031ce641ab4
 Author: Patrick Schleizer <adrelanos@riseup.net>
