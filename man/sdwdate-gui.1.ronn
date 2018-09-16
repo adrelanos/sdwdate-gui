@@ -21,7 +21,7 @@ sdwdate-gui(1) -- monitor and user interface for sdwdate
 Monitor and user interface for sdwdate.
 
 ## WWW
-https://www.whonix.org/wiki/Dev/TimeSync
+https://www.whonix.org/wiki/sdwdate-gui
 
 ## AUTHOR
 This man page has been written by Patrick Schleizer (adrelanos@riseup.net).
