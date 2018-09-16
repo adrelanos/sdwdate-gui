@@ -108,12 +108,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         action.triggered.connect(self.restart_sdwdate)
         self.menu.addAction(action)
 
-<<<<<<< HEAD
         ## TODO: wait until file self.status_path is created
 
         self.watcher_file = QFileSystemWatcher([self.status_path])
         self.watcher_file.fileChanged.connect(self.status_changed)
-=======
+
         icon = QtGui.QIcon(self.icon_path + 'stop-sdwdate.png')
         action = QtWidgets.QAction(icon, "Stop sdwdate", self)
         action.triggered.connect(self.stop_sdwdate)
@@ -132,7 +131,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         if tor_control_panel_installed:
             self.menu.actions()[0].setIcon(tor_icon)
             self.menu.actions()[3].setIcon(sdwdate_icon)
-        else:      
+        else:
             self.menu.actions()[0].setIcon(sdwdate_icon)
 
     def run_popup(self, caller):
@@ -143,7 +142,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             popup_process_cmd = ('%s %s %s %s' % (self.show_message_path, self.pos_x, self.pos_y,
                     '"Last message from sdwdate:<br><br>%s" "%s"' % (self.sdwdate_message,
                     self.icon[self.status_list.index(self.sdwdate_status)])))
->>>>>>> troubadoour/master
 
         self.popup_process = QProcess()
         self.popup_process.start(popup_process_cmd)
@@ -229,15 +227,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.parse_sdwdate_status(status['icon'], status['message'])
 
-<<<<<<< HEAD
-def show_log():
-    show_konsole = ('kdesudo /usr/lib/sdwdate-gui/log-viewer')
-    Popen(show_konsole, shell=True)
-
-def restart_sdwdate():
-    Popen('sudo --non-interactive /usr/lib/sdwdate/restart_fresh', shell=True)
-    Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
-=======
     def tor_status_changed(self):
         try:
             tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
@@ -246,7 +235,6 @@ def restart_sdwdate():
             error_msg = "Unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
->>>>>>> troubadoour/master
 
         if tor_is_enabled and tor_is_running:
             self.tor_status = 'running'
@@ -265,14 +253,12 @@ def restart_sdwdate():
         Popen(show_status_command, shell=True)
 
     def show_sdwdate_log(self):
-        show_konsole = ('konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"')
+        show_konsole = ('kdesudo /usr/lib/sdwdate-gui/log-viewer')
         Popen(show_konsole, shell=True)
 
     def restart_sdwdate(self):
-        if self.tor_status == 'running':
-            if os.path.exists('/var/run/sdwdate/success'):
-                Popen('sudo --non-interactive rm /var/run/sdwdate/success', shell=True)
-            Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
+        Popen('sudo --non-interactive /usr/lib/sdwdate/restart_fresh', shell=True)
+        Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
 
     def stop_sdwdate(self):
         if self.tor_status == 'running':

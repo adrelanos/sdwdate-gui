@@ -409,7 +409,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
     def show_sdwdate_log(self, vm):
         if vm == self.name:
-            show_konsole = ('konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"')
+            show_konsole = ('kdesudo /usr/lib/sdwdate-gui/log-viewer')
             Popen(show_konsole, shell=True)
         else:
             command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
