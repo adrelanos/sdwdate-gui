@@ -1,3 +1,22 @@
+commit 267b6963f5953d1666b79ef2d839b8d86abc2ebd
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 11:05:56 2018 +0000
+
+    disable debugging
+
+commit f200a348b5edb1d7e4dbd74dd84cd1bef61394f7
+Merge: 4daa4c8 f7d24c4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 11:04:40 2018 +0000
+
+    Merge branch 'sdwdate-gui-qubes'
+
+commit f7d24c487656ff456958aa49354f11205da0c211
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Sep 16 10:18:13 2018 +0000
+
+    bumped changelog version
+
 commit fb25eb16537e3ece2998cdf34603b85a5f1a6d51
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sun Sep 16 09:53:47 2018 +0000
