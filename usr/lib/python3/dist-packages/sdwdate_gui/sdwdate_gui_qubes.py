@@ -28,7 +28,7 @@ class AnonVmWatcher(QThread):
     def watch_anon_vms(self):
         '''
         Set a timeout in qrexec-client-vm command.
-        When a vm is killed, qrexec-client-vm is not respondind from any vm
+        When a vm is killed, qrexec-client-vm is not responding from any vm
         for a period of time. The minimum timeout seems to be 5 seconds on
         my machine.
         Set a safe 8 seconds to prevent removing running vms.
