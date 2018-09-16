@@ -1,3 +1,51 @@
+commit f592e42a54c405fd7d1c0fc13bf9c321c246fb32
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Aug 21 05:18:37 2018 +0800
+
+    readme
+
+commit 13bb0accac051a9bd03824fa3ce05e4891601d66
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Aug 17 19:12:16 2018 +0000
+
+    bumped changelog version
+
+commit 4a4f91f273d4db29d76c1f8221238bf9d71a6115
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Aug 14 19:55:17 2018 +0000
+
+    debugging
+
+commit fbb95a58a1fc4082948f8f002d971d7080796465
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Aug 14 16:31:41 2018 +0000
+
+    TODO
+
+commit a26782640f2006d5a47e7ba61de06eaf80b27754
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Aug 14 16:25:57 2018 +0000
+
+    renamed:    usr/share/applications/timesync-monitor.desktop -> usr/share/applications/sdwdate-gui.desktop
+
+commit 930f1e7c71d7a4cda1c5c0e0ef2d5c385c8bd10c
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 9 21:10:42 2018 +0000
+
+    bumped changelog version
+
+commit 76aca853280326e1e432ab758b269c5365d23fb7
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 9 21:09:40 2018 +0000
+
+    fix sdwdate restart
+
+commit 9ca966c6021df629a12b908a1cb613407e28e253
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Jun 21 03:17:29 2018 +0000
+
+    bumped changelog version
+
 commit 57d143129efd7c831eb80337545059177e1142e3
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Jun 21 03:16:33 2018 +0000
