@@ -365,7 +365,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 stdout, stderr = p.communicate()
                 status = json.loads(stdout.decode())
             except:
-                error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+                error_msg = "anon_vm_status_changed unexpected error: " + str(sys.exc_info()[0])
                 print(error_msg)
                 return
 
@@ -376,7 +376,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             with open(self.status_path, 'r') as f:
                 status = json.load(f)
         except:
-            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "status_changed unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
@@ -387,7 +387,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
             tor_is_running = os.path.exists(self.tor_running_path)
         except:
-            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "tor_status_changed unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
