@@ -1,5 +1,6 @@
 [Unit]
 Description=Notify shutdown to gateway.
+Documentation=https://www.whonix.org/wiki/sdwdate
 After=qubes-qrexec-agent.service
 
 [Service]
