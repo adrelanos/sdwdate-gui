@@ -1,3 +1,17 @@
+commit b0741aa52d77872ea83cb56b5d960c7ad9a88499
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Sep 17 17:15:46 2018 +0000
+
+    do not run sdwdate-gui-qubes by default in Qubes
+    
+    until https://github.com/QubesOS/updates-status/issues/666 reaches Qubes stable
+
+commit 949278fb806cbb3978dfc9405cce3e1b58ab5594
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Sep 17 15:39:26 2018 +0000
+
+    bumped changelog version
+
 commit 0821aaac05b13c91ec190d6624e700d7c28835eb
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Sep 17 11:30:50 2018 -0400
