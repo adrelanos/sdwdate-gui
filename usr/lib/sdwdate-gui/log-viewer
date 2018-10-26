@@ -7,4 +7,4 @@ set -x
 
 set -e
 
-/usr/bin/konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"
+/usr/lib/anon-shared-helper-scripts/terminal-wrapper "tail -f -n 100 /var/log/sdwdate.log"
