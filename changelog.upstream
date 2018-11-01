@@ -1,3 +1,17 @@
+commit f9a269b352eeb2965a352c91e0a033576c01f0e1
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Oct 26 06:16:20 2018 -0400
+
+    use /usr/lib/anon-shared-helper-scripts/terminal-wrapper rather than hardcoding Konsole
+    
+    http://forums.whonix.org/t/calling-1-package-from-whonix-repo-will-pull-all-the-packages/6182/7
+
+commit 5854da27c78c07a0edb7500268efb82cdcbc9070
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Oct 1 12:38:25 2018 +0000
+
+    bumped changelog version
+
 commit f59a7895780d04d237731abd08fa18581fd69604
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Oct 1 11:35:59 2018 +0000
