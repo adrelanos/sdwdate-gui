@@ -155,7 +155,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             menu.addSeparator()
 
         icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(menu.title())])
-        action = QtWidgets.QAction(icon, 'Show swdate status', self)
+        action = QtWidgets.QAction(icon, 'Show sdwdate status', self)
         action.triggered.connect(lambda: self.show_message(menu.title(), 'sdwdate'))
         menu.addAction(action)
 

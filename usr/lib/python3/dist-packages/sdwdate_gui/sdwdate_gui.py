@@ -91,7 +91,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.menu.addSeparator()
 
         icon = QtGui.QIcon(self.icon[self.status_list.index('busy')])
-        action = QtWidgets.QAction(icon, 'Show swdate status', self)
+        action = QtWidgets.QAction(icon, 'Show sdwdate status', self)
         action.triggered.connect(lambda: self.show_message('sdwdate'))
         self.menu.addAction(action)
 
