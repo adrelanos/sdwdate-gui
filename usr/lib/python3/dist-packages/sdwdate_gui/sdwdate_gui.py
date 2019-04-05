@@ -249,11 +249,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        show_status_command = 'kdesudo tor-control-panel &'
+        show_status_command = 'gksudo tor-control-panel &'
         Popen(show_status_command, shell=True)
 
     def show_sdwdate_log(self):
-        show_konsole = ('kdesudo /usr/lib/sdwdate-gui/log-viewer')
+        show_konsole = ('gksudo /usr/lib/sdwdate-gui/log-viewer')
         Popen(show_konsole, shell=True)
 
     def restart_sdwdate(self):

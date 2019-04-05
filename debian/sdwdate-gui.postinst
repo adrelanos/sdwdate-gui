@@ -17,7 +17,7 @@ true "
 
 case "$1" in
     configure)
-       ## 'kdesudo /usr/lib/sdwdate-gui/log-viewer' requires a home folder so we create /var/run/sdwdate-gui.
+       ## 'gksudo /usr/lib/sdwdate-gui/log-viewer' requires a home folder so we create /var/run/sdwdate-gui.
        adduser --home /var/run/sdwdate-gui --quiet --system --group sdwdate-gui || true
 
        sdwdate_gui_home="$(getent passwd sdwdate-gui | cut -d: -f6)" || true
