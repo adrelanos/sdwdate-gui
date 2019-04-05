@@ -24,7 +24,7 @@ case "$1" in
        if [ "$sdwdate_gui_home" = "/nonexistent" ]; then
          ## Need to kill sdwdate-gui, otherwise we cannot change user home.
          ## Making sure pgrep will not match this postinst script.
-         kill -sigterm $(pgrep -f /usr/lib/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
+         kill -s sigterm $(pgrep -f /usr/lib/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
        fi
        ## Change user home of user sdwdate-gui to /var/run/sdwdate-gui.
        ## Legacy because previously was created using folder /nonexistent.
