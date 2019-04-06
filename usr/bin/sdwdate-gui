@@ -3,4 +3,8 @@
 ## Copyright (C) 2018 - 2018 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
 ## See the file COPYING for copying conditions.
 
-sudo --set-home -u sdwdate-gui /usr/lib/sdwdate-gui/sdwdate-gui
+sudo \
+   --set-home \
+   --non-interactive \
+   -u sdwdate-gui \
+   /usr/lib/sdwdate-gui/sdwdate-gui
