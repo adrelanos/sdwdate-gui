@@ -1,3 +1,75 @@
+commit f87c28764cf06e30298cdd2eb1e71f4bb18357e4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 11:26:56 2019 +0000
+
+    sudo
+
+commit 1358b91e0a5954888bccd887975f4860129bb34a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 10:41:29 2019 +0000
+
+    sudo
+
+commit 6099fc0b66e236253790628925b57cca9d70af2e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 10:35:44 2019 +0000
+
+    sudo
+
+commit f86dd4de8cec6feac5beb18e7816f9cc97879302
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 10:34:39 2019 +0000
+
+    sudo
+
+commit 03509c0d8e2857932843dd9b0060f18113d3af5a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 09:53:23 2019 +0000
+
+    sudo
+
+commit f137319ad73f5dbeced0fc62a3f950dabefef4f0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Apr 5 17:02:21 2019 -0400
+
+    gksudo
+
+commit b8e57d6de7a9b5c24854f5b546559351ec347863
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Apr 5 14:06:55 2019 -0400
+
+    port to debian buster
+
+commit 3d2f522533642e927b63a1021dd82c6cf76a9fb6
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 4 11:13:44 2019 -0400
+
+    remove -R to fix lintian warning maintainer-script-should-not-use-recursive-chown-or-chmod
+
+commit 7c035122047e41d8f48e6548c9428819f742d6f4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 4 05:55:51 2019 -0400
+
+    port to debian buster
+
+commit bd0ac9a4a2c7cc35c4ab9e5d46f945ab50e04cf1
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 4 05:51:06 2019 -0400
+
+    port to debian buster
+
+commit 244b2db40c403fca51c47691d620735dcd6b34d8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Apr 3 18:05:56 2019 -0400
+
+    readme
+
+commit a6d50e9389dec46b347915e846adc5343411fe63
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Mar 29 10:02:16 2019 +0000
+
+    bumped changelog version
+
 commit 97c965fea2ce10f329f79ad35a3c22c56108463e
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Mar 29 09:03:18 2019 +0000
