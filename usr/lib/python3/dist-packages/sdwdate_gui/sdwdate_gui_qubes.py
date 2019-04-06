@@ -404,12 +404,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        show_status_command = 'sudo tor-control-panel &'
+        show_status_command = 'sudo --non-interactive --set-home tor-control-panel &'
         Popen(show_status_command, shell=True)
 
     def show_sdwdate_log(self, vm):
         if vm == self.name:
-            show_konsole = ('sudo --set-home /usr/lib/sdwdate-gui/log-viewer')
+            show_konsole = ('sudo --non-interactive --set-home /usr/lib/sdwdate-gui/log-viewer')
             Popen(show_konsole, shell=True)
         else:
             command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
