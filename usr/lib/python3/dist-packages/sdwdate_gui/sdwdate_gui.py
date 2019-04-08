@@ -202,7 +202,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.tor_message = '<b>Tor is not running.</b> <br><br> \
             You have to fix this error, before you can use Tor. <br> \
             Please restart Tor after fixing this error. <br><br> \
-            dom0 -> Start Menu -> ServiceVM: sys-whonix -> Restart Tor <br> \
+            Start Menu -> System -> Restart Tor GUI<br> \
             or in Terminal: <br> \
             sudo service tor@default restart <br><br> '
 
