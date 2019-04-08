@@ -418,9 +418,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def restart_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
-                if os.path.exists('/var/run/sdwdate/success'):
-                    Popen('sudo --non-interactive rm --force /var/run/sdwdate/success', shell=True)
-                Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
+                Popen('sudo --non-interactive /usr/lib/sdwdate/restart_fresh', shell=True)
             else:
                 command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
                 call(command, shell=True)
