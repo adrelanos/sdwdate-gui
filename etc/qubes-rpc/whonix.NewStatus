@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Copyright (C) 2018 - 2019 ENCRYPTED SUPPORT LP <adrelanos@riseup.net>
+## See the file COPYING for copying conditions
+
 sudo \
    -u sdwdate-gui \
    bash \
