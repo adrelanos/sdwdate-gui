@@ -253,7 +253,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         Popen(show_status_command, shell=True)
 
     def show_sdwdate_log(self):
-        show_konsole = ('/usr/lib/sdwdate-gui/log-viewer')
+        show_konsole = ('/usr/lib/sdwdate-gui/log-viewer &')
         Popen(show_konsole, shell=True)
 
     def restart_sdwdate(self):
