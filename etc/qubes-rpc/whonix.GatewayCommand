@@ -5,7 +5,7 @@
 
 case $1 in
     "showlog")
-        konsole --hold -e "tail -f -n 100 /var/log/sdwdate.log"
+        /usr/lib/sdwdate-gui/log-viewer
         ;;
     "restart")
         if [ -e "/var/run/sdwdate/success" ] ; then
