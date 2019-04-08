@@ -9,7 +9,7 @@ case $1 in
         ;;
     "restart")
         if [ -e "/var/run/sdwdate/success" ] ; then
-            sudo rm /var/run/sdwdate/success
+            sudo rm --force /var/run/sdwdate/success
         fi
         sudo --non-interactive systemctl --no-pager --no-block restart sdwdate
         ;;
