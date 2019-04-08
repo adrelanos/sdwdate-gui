@@ -1,2 +1,7 @@
 #!/bin/bash
-sudo bash -c 'echo "'$1'" > /var/run/sdwdate-gui/anon-status'
+
+sudo \
+   -u sdwdate-gui \
+   bash \
+     -c \
+     'echo "'$1'" | tee /var/run/sdwdate-gui/anon-status >/dev/null'
