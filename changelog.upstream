@@ -1,3 +1,89 @@
+commit a11b55372ea0d5a1fab2738e625d52c71f50e2a0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:36:07 2019 +0000
+
+    fix
+
+commit 03d27079685b5df9e2474b6f0c5d2452d2b98c69
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:30:44 2019 +0000
+
+    use /usr/lib/sdwdate/restart_fresh consistently
+
+commit 8295b787274cb765bf493bb2f575650434de4f2a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:25:41 2019 +0000
+
+    rm --force to avoid failing if file does not exist
+
+commit 7c454fc5a2aff1e38882598fe8140df8ab561f8e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:21:46 2019 +0000
+
+    use log viewer instead
+
+commit 0bd34260a328c67c8cfd452ca23932c6c8027304
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:19:05 2019 +0000
+
+    safer permissions
+
+commit e8136e573770033d36f2501a5a0ddef415177a09
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:16:39 2019 +0000
+
+    license
+
+commit aa78ef38ae6f6051716b5796916226ae623d60e8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 12:10:49 2019 +0000
+
+    safer /var/run/sdwdate-gui/anon-status permissions
+
+commit df73d27b59158f890789f9c7c8b556749f10a378
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 11:58:26 2019 +0000
+
+    fix
+
+commit 57db71c95450a8c8023d169bc2536fddbe237ed2
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 11:54:20 2019 +0000
+
+    fix
+
+commit 2267a8be464a2adcfae6d8317f6dfd7579cdcec4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 06:37:09 2019 -0400
+
+    launch into background
+    
+    consistent with above tor-control-panel
+
+commit af9207a3fe80c77418021b60443784149e7745f5
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 06:36:30 2019 -0400
+
+    root not required for log viewer since Debian buster
+
+commit c870392cb4583967fe8a95f9e852bb9406f511cc
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 06:35:35 2019 -0400
+
+    xhost +
+
+commit 31135c0d1a93d557bc173e839124bd692934b596
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Apr 8 06:29:22 2019 -0400
+
+    output
+
+commit e371bbf228ef7301262a3b56a3bf7140ef87050e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Apr 6 12:13:10 2019 +0000
+
+    bumped changelog version
+
 commit f87c28764cf06e30298cdd2eb1e71f4bb18357e4
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Apr 6 11:26:56 2019 +0000
