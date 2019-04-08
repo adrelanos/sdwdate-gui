@@ -258,7 +258,6 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
     def restart_sdwdate(self):
         Popen('sudo --non-interactive /usr/lib/sdwdate/restart_fresh', shell=True)
-        Popen('sudo --non-interactive systemctl --no-pager --no-block restart sdwdate', shell=True)
 
     def stop_sdwdate(self):
         if self.tor_status == 'running':
