@@ -216,7 +216,7 @@ commit f9a269b352eeb2965a352c91e0a033576c01f0e1
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Oct 26 06:16:20 2018 -0400
 
-    use /usr/lib/anon-shared-helper-scripts/terminal-wrapper rather than hardcoding Konsole
+    use /usr/lib/helper-scripts/terminal-wrapper rather than hardcoding Konsole
     
     http://forums.whonix.org/t/calling-1-package-from-whonix-repo-will-pull-all-the-packages/6182/7
 
