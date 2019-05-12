@@ -1,3 +1,21 @@
+commit 7041415f4e0083e06a2a870a6777d10d0f0b35bf
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun May 12 02:58:44 2019 -0400
+
+    update path to pre.bsh
+
+commit 8c3312746a752de228054663e27d71a27c8897e3
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun May 12 02:50:15 2019 -0400
+
+    anon-shared-helper-scripts -> helper-scripts
+
+commit 8f84a6ee040819443ba80bb8c1ebb0bccf79fa50
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri May 3 11:33:49 2019 +0000
+
+    bumped changelog version
+
 commit 171aa6da292939d0cbbebbfe69d1de3a032c43ef
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri May 3 10:56:56 2019 +0000
@@ -216,7 +234,7 @@ commit f9a269b352eeb2965a352c91e0a033576c01f0e1
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Oct 26 06:16:20 2018 -0400
 
-    use /usr/lib/helper-scripts/terminal-wrapper rather than hardcoding Konsole
+    use /usr/lib/anon-shared-helper-scripts/terminal-wrapper rather than hardcoding Konsole
     
     http://forums.whonix.org/t/calling-1-package-from-whonix-repo-will-pull-all-the-packages/6182/7
 
