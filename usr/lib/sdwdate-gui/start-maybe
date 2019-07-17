@@ -9,10 +9,10 @@ if [ -d /usr/lib/qubes ]; then
     VM_TYPE="$(/usr/bin/qubesdb-read /qubes-vm-type)"
 
     if [ "$VM_TYPE" == "AppVM" ]; then
-        #/usr/lib/sdwdate-gui/sdwdate-watcher
+        /usr/lib/sdwdate-gui/sdwdate-watcher
         true
     elif [ "$VM_TYPE"  == "ProxyVM" ]; then
-        #sdwdate-gui-qubes
+        sdwdate-gui-qubes
         true
     fi
 
