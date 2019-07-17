@@ -20,7 +20,8 @@ class SdwdateStatusWatch:
             #if self.name.startswith('disp'):
                 #sys.exit(0)
         except:
-            print(str(sys.exc_info()[0]))
+            error_msg = "Unexpected error during init: " + str(sys.exc_info()[0])
+            print(error_msg)
             self.name = 'name'
 
         self.status_path = '/var/run/sdwdate/status'
@@ -37,7 +38,7 @@ class SdwdateStatusWatch:
                 status = json.load(f)
                 f.close()
         except:
-            error_msg = "Unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "Unexpected error during status_changed: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
