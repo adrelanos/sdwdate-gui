@@ -1,3 +1,21 @@
+commit 657c63ae3bb85ac75c53d4bcefaa3096ea49a304
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 20:56:10 2019 +0000
+
+    debugging
+
+commit 32c87ff1ca9745ef5ac99bfd590f8c503f29fb0a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 20:54:23 2019 +0000
+
+    enable notify-shutdown
+
+commit 53f89ac8143a8dceda8979fd59f7523c5131e732
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 19:56:11 2019 +0000
+
+    bumped changelog version
+
 commit c8b9a82b46adc7c36914e93685140d919f17894e
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Jul 17 19:54:40 2019 +0000
