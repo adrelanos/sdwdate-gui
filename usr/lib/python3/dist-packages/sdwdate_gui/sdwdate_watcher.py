@@ -17,8 +17,8 @@ class SdwdateStatusWatch:
     def __init__(self, parent=None):
         try:
             self.name = check_output(['qubesdb-read', '/name']).decode().strip()
-            if self.name.startswith('disp'):
-                sys.exit(0)
+            #if self.name.startswith('disp'):
+                #sys.exit(0)
         except:
             print(str(sys.exc_info()[0]))
             self.name = 'name'
