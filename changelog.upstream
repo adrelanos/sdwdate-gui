@@ -1,3 +1,33 @@
+commit c8b9a82b46adc7c36914e93685140d919f17894e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 19:54:40 2019 +0000
+
+    debugging
+
+commit ee4f5ff8d97c09df2f4989c2c04074e4da32f1f4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 19:52:01 2019 +0000
+
+    start by default in Qubes
+
+commit f6f2214cbb6ab1425207773da2b4ba613375c58a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 19:51:24 2019 +0000
+
+    debugging
+
+commit dec8aa00c550d3c39c83898a2b46b33ebb6b90b4
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 19:49:51 2019 +0000
+
+    enable also for DispVMs
+
+commit 96c4432999a53de0c1ccb84f54f739d9366a1062
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Jun 30 08:23:19 2019 +0000
+
+    bumped changelog version
+
 commit cb0c903495deb12f3ede40be61ebe218779837ad
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Jun 29 13:45:40 2019 +0000
