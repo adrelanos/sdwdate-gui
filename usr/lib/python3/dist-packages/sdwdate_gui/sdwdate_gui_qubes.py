@@ -56,7 +56,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         try:
             self.name = check_output(['qubesdb-read', '/name']).decode().strip()
         except:
-            print(str(sys.exc_info()[0]))
+            error_msg = "__init__ unexpected error: " + str(sys.exc_info()[0])
+            print(error_msg)
             self.name = 'name'
 
         self.status_path =          '/var/run/sdwdate/status'
