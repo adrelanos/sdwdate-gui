@@ -1,3 +1,15 @@
+commit ca2735ee4b777d2ecdb70c8c3ef2c6f7c9f239f5
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 31 03:11:42 2019 -0400
+
+    /var/run -> /run
+
+commit e487ffa5e210cabf3b921098f67a1f03fc973600
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 17 21:07:49 2019 +0000
+
+    bumped changelog version
+
 commit 657c63ae3bb85ac75c53d4bcefaa3096ea49a304
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Jul 17 20:56:10 2019 +0000
@@ -164,7 +176,7 @@ commit aa78ef38ae6f6051716b5796916226ae623d60e8
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Apr 8 12:10:49 2019 +0000
 
-    safer /run/sdwdate-gui/anon-status permissions
+    safer /var/run/sdwdate-gui/anon-status permissions
 
 commit df73d27b59158f890789f9c7c8b556749f10a378
 Author: Patrick Schleizer <adrelanos@riseup.net>
@@ -968,7 +980,7 @@ commit d9afb1a0766d37d1807693d3ba1dadd5bdf5bc62
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Dec 22 13:46:24 2017 +0000
 
-    remove legacy /run/qubes/this-is-templatevm
+    remove legacy /var/run/qubes/this-is-templatevm
 
 commit bfc2be940bee42b816ea7f0d4ce0842a64936f0c
 Author: Patrick Schleizer <adrelanos@riseup.net>
@@ -1394,7 +1406,7 @@ Date:   Sun Nov 22 10:27:59 2015 +0000
 
     run sdwdate-gui as user
     etc/xdg/autostart/sdwdate-gui.desktop -> Exec=/usr/bin/sdwdate-gui
-    etc/sudoers.d/sdwdate-gui -> ALL ALL=NOPASSWD: /bin/rm /run/sdwdate/success
+    etc/sudoers.d/sdwdate-gui -> ALL ALL=NOPASSWD: /bin/rm /var/run/sdwdate/success
 
 commit 1d046753bdd7c0de9b9a371a872aade35a4a2e19
 Merge: 87bc38a 7c5c434
