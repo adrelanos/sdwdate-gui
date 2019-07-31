@@ -24,7 +24,7 @@ class SdwdateStatusWatch:
             print(error_msg)
             self.name = 'name'
 
-        self.status_path = '/var/run/sdwdate/status'
+        self.status_path = '/run/sdwdate/status'
 
         ## get status on loading.
         self.status_changed()

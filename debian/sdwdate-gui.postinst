@@ -17,8 +17,8 @@ true "
 
 case "$1" in
     configure)
-       ## '/usr/lib/sdwdate-gui/log-viewer' requires a home folder so we create /var/run/sdwdate-gui.
-       adduser --home /var/run/sdwdate-gui --quiet --system --group sdwdate-gui || true
+       ## '/usr/lib/sdwdate-gui/log-viewer' requires a home folder so we create /run/sdwdate-gui.
+       adduser --home /run/sdwdate-gui --quiet --system --group sdwdate-gui || true
 
        sdwdate_gui_home="$(getent passwd sdwdate-gui | cut -d: -f6)" || true
        if [ "$sdwdate_gui_home" = "/nonexistent" ]; then
@@ -26,12 +26,12 @@ case "$1" in
          ## Making sure pgrep will not match this postinst script.
          kill -s sigterm $(pgrep -f /usr/lib/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
        fi
-       ## Change user home of user sdwdate-gui to /var/run/sdwdate-gui.
+       ## Change user home of user sdwdate-gui to /run/sdwdate-gui.
        ## Legacy because previously was created using folder /nonexistent.
-       ## Folder /var/run/sdwdate-gui gets created by /usr/lib/tmpfiles.d/sdwdate-gui.conf.
-       usermod -m -d /var/run/sdwdate-gui sdwdate-gui || true
-       ## Fix bug since /var/run/sdwdate-gui may be owned by onion-grater.
-       chown sdwdate-gui:sdwdate-gui /var/run/sdwdate-gui || true
+       ## Folder /run/sdwdate-gui gets created by /usr/lib/tmpfiles.d/sdwdate-gui.conf.
+       usermod -m -d /run/sdwdate-gui sdwdate-gui || true
+       ## Fix bug since /run/sdwdate-gui may be owned by onion-grater.
+       chown sdwdate-gui:sdwdate-gui /run/sdwdate-gui || true
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

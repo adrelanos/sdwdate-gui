@@ -10,7 +10,7 @@ sdwdate-gui ALL=NOPASSWD: /bin/systemctl --no-pager --no-block restart sdwdate
 sdwdate-gui ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
 
 ## Allow "sudo rm" for sdwdate without password.
-sdwdate-gui ALL=NOPASSWD: /bin/rm --force /var/run/sdwdate/success
+sdwdate-gui ALL=NOPASSWD: /bin/rm --force /run/sdwdate/success
 
 ## Allow sdwdate-gui to run tor_control-panel without password.
 sdwdate-gui ALL=NOPASSWD: /usr/bin/tor-control-panel

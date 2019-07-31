@@ -7,4 +7,4 @@ sudo \
    -u sdwdate-gui \
    bash \
      -c \
-     'echo "'$1'" | tee /var/run/sdwdate-gui/anon-status >/dev/null'
+     'echo "'$1'" | tee /run/sdwdate-gui/anon-status >/dev/null'

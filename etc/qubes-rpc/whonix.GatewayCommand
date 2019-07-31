@@ -8,8 +8,8 @@ case $1 in
         /usr/lib/sdwdate-gui/log-viewer
         ;;
     "restart")
-        if [ -e "/var/run/sdwdate/success" ] ; then
-            sudo rm --force /var/run/sdwdate/success
+        if [ -e "/run/sdwdate/success" ] ; then
+            sudo rm --force /run/sdwdate/success
         fi
         sudo --non-interactive systemctl --no-pager --no-block restart sdwdate
         ;;
