@@ -122,6 +122,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.anon_sdwdate_watcher = QFileSystemWatcher([self.anon_status_path])
         self.anon_sdwdate_watcher.fileChanged.connect(self.anon_vm_status_changed)
 
+        exit_icon = QtGui.QIcon(self.icon_path + 'application-exit.png')
+        self.exit_action = QAction(exit_icon, "&Exit", self)
+        self.exit_action.triggered.connect(sys.exit)
+
         self.menu = QMenu()
         self.menu_list = []
         self.create_menu()
@@ -190,13 +194,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 self.menu.addSeparator()
             self.create_sub_menu(menu_item)
 
-        self.menu.addSeparator()
-        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
-        action = QAction(icon, "&Exit", self)
-        action.triggered.connect(sys.exit)
-        self.menu.addAction(action)
+        self.menu.addAction(self.exit_action)
 
     def update_menu(self, vm, action):
+        self.menu.removeAction(self.exit_action)
+
         ## remove _shutdown
         vm = vm.rsplit('_', 1)[0]
         sdwdate_icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
@@ -226,6 +228,8 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 if item.title() == vm:
                     item.clear()
                     item.deleteLater()
+
+        self.menu.addAction(self.exit_action)
 
     def run_popup(self, vm, caller):
         index = self.domain_list.index(vm)
