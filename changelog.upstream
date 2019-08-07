@@ -1,3 +1,32 @@
+commit d57c97978c77d74b92155bb19c360f723df42571
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 02:09:50 2019 -0400
+
+    cleanup
+
+commit e2eb9f84233e7580cc2ceb13990b90689bc39382
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 02:05:31 2019 -0400
+
+    support multiple Whonix-Gateways through configuration
+    
+    parse config files
+    
+    /etc/sdwdate-gui.d/*.conf
+    /usr/local/etc/sdwdate-gui.d/*.conf
+
+commit bc4370caca3d041a15c749d5ba758bc6048e1d42
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 01:18:48 2019 -0400
+
+    refactoring
+
+commit e2c700fdb04261e621eec2c46160b3a5652168a5
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 1 12:02:05 2019 +0000
+
+    bumped changelog version
+
 commit 379aea73917277a6b7807bb2f86d93686fd3022d
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 1 11:13:42 2019 +0000
