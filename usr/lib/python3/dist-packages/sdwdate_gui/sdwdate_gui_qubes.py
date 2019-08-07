@@ -190,11 +190,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 self.menu.addSeparator()
             self.create_sub_menu(menu_item)
 
-        #self.menu.addSeparator()
-        #icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
-        #action = QAction(icon, "&Exit", self)
-        #action.triggered.connect(sys.exit)
-        #self.menu.addAction(action)
+        self.menu.addSeparator()
+        icon = QtGui.QIcon('/usr/share/icons/sdwdate-gui/application-exit.png')
+        action = QAction(icon, "&Exit", self)
+        action.triggered.connect(sys.exit)
+        self.menu.addAction(action)
 
     def update_menu(self, vm, action):
         ## remove _shutdown
