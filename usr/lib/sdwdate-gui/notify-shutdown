@@ -7,6 +7,21 @@ set -x
 
 NAME="$(/usr/bin/qubesdb-read /name)"
 
+true "tb_settings_folder: $tb_settings_folder"
+shopt -s nullglob
+for i in \
+   /etc/sdwdate-gui.d/*.conf \
+   /usr/local/etc/sdwdate-gui.d/*.conf \
+   ; do
+      bash -n "$i"
+      source "$i"
+done
+
+## If gateway is not configured in config file, use default.
+if [ "$gateway" = "" ]; then
+   gateway=sys-whonix
+fi
+
 if [ ! -z "$NAME" ]; then
     /usr/bin/qrexec-client-vm sys-whonix whonix.NewStatus+$NAME" shutdown"
 fi

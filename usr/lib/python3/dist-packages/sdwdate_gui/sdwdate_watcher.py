@@ -8,6 +8,9 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QFileSystemWatcher
 from subprocess import call, check_output
 import json
+import glob
+import os
+import re
 
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -44,7 +47,29 @@ class SdwdateStatusWatch:
 
         try:
             ## in case qubes-qrexec-agent is not running.
-            command = 'qrexec-client-vm sys-whonix whonix.NewStatus+"%s"' % (self.name)
+
+            ## Fallback.
+            gateway = "sys-whonix"
+
+            if os.path.exists('/etc/sdwdate-gui.d/'):
+                  files = sorted(glob.glob('/etc/sdwdate-gui.d/*.conf'))
+                  for f in files:
+                     with open(f) as conf:
+                        lines = conf.readlines()
+                     for line in lines:
+                        if line.startswith('gateway'):
+                              gateway = re.search(r'=(.*)', line).group(1)
+
+            if os.path.exists('/usr/local/etc/sdwdate-gui.d/'):
+                  files = sorted(glob.glob('/usr/local/etc/sdwdate-gui.d/*.conf'))
+                  for f in files:
+                     with open(f) as conf:
+                        lines = conf.readlines()
+                     for line in lines:
+                        if line.startswith('gateway'):
+                              gateway = re.search(r'=(.*)', line).group(1)
+
+            command = 'qrexec-client-vm %s whonix.NewStatus+"%s"' % (gateway, self.name)
             call(command, shell=True)
         except:
             pass
