@@ -9,5 +9,6 @@ NAME="$(/usr/bin/qubesdb-read /name)"
 
 if [ ! -z "$NAME" ]; then
     /usr/bin/qrexec-client-vm sys-whonix whonix.NewStatus+$NAME" shutdown"
-    true
 fi
+
+true
