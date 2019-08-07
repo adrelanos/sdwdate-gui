@@ -1,3 +1,15 @@
+commit daf102c9bf1365e9a9d69139d2f6f688b15bef3b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 07:21:24 2019 +0000
+
+    enable exit button
+
+commit f4a93864b95203be1faf56f85d933a2a59855127
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 07:16:37 2019 +0000
+
+    bumped changelog version
+
 commit 960e315885bfc862da183ff4be9a6431a7309511
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Aug 7 07:15:13 2019 +0000
