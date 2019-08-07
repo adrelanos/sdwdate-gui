@@ -22,7 +22,7 @@ if [ "$gateway" = "" ]; then
 fi
 
 if [ ! -z "$NAME" ]; then
-    /usr/bin/qrexec-client-vm sys-whonix whonix.NewStatus+$NAME" shutdown"
+    /usr/bin/qrexec-client-vm "$gateway" whonix.NewStatus+$NAME" shutdown"
 fi
 
 true
