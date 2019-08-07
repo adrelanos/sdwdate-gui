@@ -5,6 +5,19 @@
 
 set -e
 
+shopt -s nullglob
+for i in \
+   /etc/sdwdate-gui.d/*.conf \
+   /usr/local/etc/sdwdate-gui.d/*.conf \
+   ; do
+      bash -n "$i"
+      source "$i"
+done
+
+if [ "$disable" = "true" ]; then
+   exit 0
+fi
+
 if [ -d /usr/lib/qubes ]; then
     VM_TYPE="$(/usr/bin/qubesdb-read /qubes-vm-type)"
 
