@@ -1,3 +1,27 @@
+commit 960e315885bfc862da183ff4be9a6431a7309511
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 07:15:13 2019 +0000
+
+    add default config file
+
+commit 1f32ec18257e9adf14b9a5a4aab7d2ed361d9d1a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 07:06:06 2019 +0000
+
+    add config setting to disable autostart
+
+commit 4e3848233c7a27be68001801b14ff1e248832dcc
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 06:52:56 2019 +0000
+
+    fix, actually use gateway variable
+
+commit ab7c989df17d75fdb8f4f305042ece223f43ef07
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 06:30:36 2019 +0000
+
+    bumped changelog version
+
 commit d57c97978c77d74b92155bb19c360f723df42571
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Aug 7 02:09:50 2019 -0400
