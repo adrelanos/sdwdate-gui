@@ -1,3 +1,22 @@
+commit 715b14e8da3fe4ca95747380fd854665afb47feb
+Merge: cd6d1e4 29403aa
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Aug 8 22:01:26 2019 -0400
+
+    Merge remote-tracking branch 'troubadoour/master'
+
+commit 29403aa3acd629748b218d78989df8d13d6e0441
+Author: troubadoour <trobador@riseup.net>
+Date:   Wed Aug 7 20:28:54 2019 +0000
+
+    add exit button to sdwdate-qubes
+
+commit cd6d1e48bbd5a3829bd71c9a1bc72ae96cadea82
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 7 07:22:10 2019 +0000
+
+    bumped changelog version
+
 commit daf102c9bf1365e9a9d69139d2f6f688b15bef3b
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Aug 7 07:21:24 2019 +0000
