@@ -1,3 +1,21 @@
+commit d1fb504338493fdcf5c16fb7fe79e800ba587d72
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Aug 31 08:44:42 2019 -0400
+
+    depend on adduser
+
+commit 5bc87189d8d863f8ece675a043a5bcf6345ddb62
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Aug 30 04:26:50 2019 -0400
+
+    disable legacy
+
+commit ba006c95201b9c5a96f57e45b58606803673d0a9
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Aug 28 12:47:55 2019 +0000
+
+    bumped changelog version
+
 commit 652c81d70ce2ae15280b0de518b85f16ac7fda5f
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Aug 28 11:35:26 2019 +0000
