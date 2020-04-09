@@ -14,3 +14,6 @@ sdwdate-gui ALL=NOPASSWD: /bin/rm --force /run/sdwdate/success
 
 ## Allow sdwdate-gui to run tor_control-panel without password.
 sdwdate-gui ALL=NOPASSWD: /usr/bin/tor-control-panel
+
+## log-viewer
+sdwdate-gui ALL=NOPASSWD: /bin/journalctl --output cat -n 100 -f _SYSTEMD_UNIT=sdwdate.service + _SYSTEMD_UNIT=whonix-firewall.service + SYSLOG_IDENTIFIER=suspend-pre + SYSLOG_IDENTIFIER=suspend-post
