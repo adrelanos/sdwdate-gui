@@ -15,7 +15,6 @@ Package: sdwdate-gui
 Architecture: all
 Depends: sudo, python3, python3-pyqt5, helper-scripts, sdwdate, adduser,
  ${misc:Depends}
-Recommends: vbox-disable-timesync
 Description: Sdwdate Monitor
  sdwdate-gui is a systray icon monitor for sdwdate: checks sdwdate's status
  and modify the tray icon accordingly. In addition, it allows the user to
