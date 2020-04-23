@@ -1,3 +1,15 @@
+commit 12b0fbf0cac0af9d71c6779bb8b7393c342d26fe
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 23 10:21:25 2020 -0400
+
+    mkdir -p /run/sdwdate-gui
+
+commit 241d07ec113cad20f078ba38a7a943ded07055e3
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 23 10:19:13 2020 -0400
+
+    bumped changelog version
+
 commit c6cfa3cd95899206ec559109be5f155eb3fc922c
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Apr 23 10:18:45 2020 -0400
