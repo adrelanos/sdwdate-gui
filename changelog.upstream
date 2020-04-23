@@ -1,3 +1,17 @@
+commit c6cfa3cd95899206ec559109be5f155eb3fc922c
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 23 10:18:45 2020 -0400
+
+    cleanup Recommends: vbox-disable-timesync
+    
+    because deprecated
+
+commit fe497c3e2c37f4e74cc3ceb5862d892061de0646
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 16 08:43:06 2020 -0400
+
+    bumped changelog version
+
 commit 5e72119c7de929bbe29151190f423138554e4973
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Apr 15 14:05:36 2020 -0400
