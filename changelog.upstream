@@ -1,3 +1,31 @@
+commit d0e946be4b2169c31bbbc3ec20c23ae0f4e30e5d
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed May 13 13:35:29 2020 -0400
+
+    add improved sdwdate-gui systray icons for status waiting and stopped
+    
+    Thanks to @ninavizz for contributing these new sdwdate-gui icons!
+    
+    https://phabricator.whonix.org/T991
+    
+    https://github.com/Whonix/sdwdate-gui/commit/0471ff0d93f337fe83c29705c7ac8618e3b122c6#commitcomment-39152183
+
+commit 0471ff0d93f337fe83c29705c7ac8618e3b122c6
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed May 13 09:35:45 2020 -0400
+
+    add improved sdwdate-gui systray icons for status success and stopped
+    
+    Thanks to @ninavizz for contributing these new sdwdate-gui icons!
+    
+    https://phabricator.whonix.org/T991
+
+commit e8a62ce289205561a488eaecd5e767f0bf391117
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Apr 23 10:21:46 2020 -0400
+
+    bumped changelog version
+
 commit 12b0fbf0cac0af9d71c6779bb8b7393c342d26fe
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Apr 23 10:21:25 2020 -0400
