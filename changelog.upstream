@@ -1,3 +1,21 @@
+commit 360f52e6cd9fa411b0cb7c9b50a3f3cbb7016b7d
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue May 19 07:57:57 2020 -0400
+
+    also open sdwdate-gui-qubes with left click
+    
+    previously was sdwdate-gui (Non-Qubes-Whonix) only
+    
+    emulate commit by @marmarta
+    
+    a1af62b5435cd54a32080f3ebb810f807ad4b555
+
+commit e7bbf02f2d3ab19ca4c22554e1fcb90948e47443
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue May 19 07:12:28 2020 -0400
+
+    bumped changelog version
+
 commit a72b9be51017a8be4d8a91db9cc8ba8008a7522f
 Merge: 99b9400 01e70f8
 Author: Patrick Schleizer <adrelanos@riseup.net>
