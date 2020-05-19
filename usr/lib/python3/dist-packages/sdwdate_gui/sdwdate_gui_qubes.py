@@ -108,7 +108,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.setIcon(QtGui.QIcon(self.icon[self.status.index('busy')]))
 
-        self.setToolTip('Time Synchronisation Monitor \n Right-click for menu.')
+        self.setToolTip('Time Synchronisation Monitor \n Click for menu.')
 
         if tor_control_panel_installed:
             self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
@@ -130,6 +130,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.menu_list = []
         self.create_menu()
         self.setContextMenu(self.menu)
+        self.activated.connect(self.show_menu)
 
         self.tor_status_changed()
         self.status_changed()
@@ -140,6 +141,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.timer = QTimer()
         self.timer.timeout.connect(self.watch_anon_vms)
         self.timer.start(10000)
+
+    def show_menu(self, event):
+        if event == self.Trigger:
+            self.menu.exec_(QtGui.QCursor.pos())
 
     def watch_anon_vms(self):
         self.anon_watch_thread.start()
