@@ -1,3 +1,31 @@
+commit a72b9be51017a8be4d8a91db9cc8ba8008a7522f
+Merge: 99b9400 01e70f8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue May 19 07:12:11 2020 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+commit 01e70f863f2091cc4652c90f6c3106e3caa6baa5
+Merge: 99b9400 a1af62b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue May 19 11:11:49 2020 +0000
+
+    Merge pull request #2 from marmarta/icons_from_nina
+    
+    Made the sdwdate-gui menu trigger on left click
+
+commit a1af62b5435cd54a32080f3ebb810f807ad4b555
+Author: Marta Marczykowska-Górecka <marta.maria.gorecka@gmail.com>
+Date:   Sun May 17 16:24:37 2020 +0200
+
+    Made the sdwdate-gui menu trigger on left click, too
+
+commit 99b9400df8d87139d7c40da790483a6e803c72bb
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu May 14 06:55:55 2020 -0400
+
+    bumped changelog version
+
 commit d0e946be4b2169c31bbbc3ec20c23ae0f4e30e5d
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed May 13 13:35:29 2020 -0400
