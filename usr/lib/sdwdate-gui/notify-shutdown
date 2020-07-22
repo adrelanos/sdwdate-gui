@@ -16,6 +16,10 @@ for i in \
       source "$i"
 done
 
+if [ "$disable" = "true" ]; then
+   exit 0
+fi
+
 ## If gateway is not configured in config file, use default.
 if [ "$gateway" = "" ]; then
    gateway=sys-whonix
