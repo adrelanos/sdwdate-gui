@@ -1,3 +1,15 @@
+commit d585273ccce59a093bd5cd01e95dd85490ce99a0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 22 10:59:34 2020 -0400
+
+    https://github.com/QubesOS/qubes-issues/issues/5930
+
+commit 31a4c7260adbb880f17a14e81007440844393edb
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue May 19 07:59:12 2020 -0400
+
+    bumped changelog version
+
 commit 360f52e6cd9fa411b0cb7c9b50a3f3cbb7016b7d
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue May 19 07:57:57 2020 -0400
