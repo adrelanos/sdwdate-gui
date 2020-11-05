@@ -25,6 +25,10 @@ if [ "$gateway" = "" ]; then
    gateway=sys-whonix
 fi
 
+if [ "$NAME" = "$gateway" ]; then
+   exit 0
+fi
+
 if [ ! -z "$NAME" ]; then
     /usr/bin/qrexec-client-vm "$gateway" whonix.NewStatus+$NAME" shutdown"
 fi
