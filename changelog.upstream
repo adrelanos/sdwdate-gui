@@ -1,3 +1,37 @@
+commit 0c4caa97a4af96b94ed5624115d5d898e17e308a
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Nov 6 10:17:25 2020 -0500
+
+    readme
+
+commit d2adb7b3260bed68c63101c0cfbdfd6475da3221
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Nov 5 07:01:57 2020 -0500
+
+    refactoring
+
+commit 4d4f505dc14681ce81bab505d562cf32b3e11eba
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Nov 5 06:59:21 2020 -0500
+
+    quoting
+
+commit 0f816ed91477eed9d0bab152ec45f7349adcfac9
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Nov 5 06:55:38 2020 -0500
+
+    fix, do not qrexec notify self on shutdown
+    
+    fixes https://github.com/Whonix/sdwdate-gui/pull/3
+    
+    Thanks to @icequbes1 for the bug report!
+
+commit 7b1e2a99d62f5d960783d576d7a75d560b12b040
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Wed Jul 22 11:10:32 2020 -0400
+
+    bumped changelog version
+
 commit d585273ccce59a093bd5cd01e95dd85490ce99a0
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Jul 22 10:59:34 2020 -0400
