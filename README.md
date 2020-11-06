@@ -5,7 +5,7 @@ and modify the tray icon accordingly. In addition, it allows the user to
 restart sdwdate and view the log.
 ## How to install `sdwdate-gui` using apt-get ##
 
-1\. Download [Whonix's Signing Key]().
+1\. Download Whonix's Signing Key.
 
 ```
 wget https://www.whonix.org/patrick.asc
