@@ -33,6 +33,6 @@ if [ "$NAME" = "" ]; then
    exit 0
 fi
 
-/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+$NAME" "shutdown"
+/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+$NAME shutdown"
 
 true
