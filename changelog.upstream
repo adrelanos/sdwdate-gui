@@ -1,3 +1,21 @@
+commit 50e2d0f211185c04a0641459ee9845265cce55f8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Nov 24 06:03:45 2020 -0500
+
+    fix unwanted automatic restart of Qubes-Whonix-Workstation in after shutdown
+    
+    quoting fix
+    
+    https://forums.whonix.org/t/impossible-to-shut-down-workstation-qubes-after-the-latest-update/10627
+    
+    Thanks to @singularity for the bug report!
+
+commit caa2f73a15e32943c825367586826533ee47d495
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Fri Nov 6 10:17:25 2020 -0500
+
+    bumped changelog version
+
 commit 0c4caa97a4af96b94ed5624115d5d898e17e308a
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Nov 6 10:17:25 2020 -0500
