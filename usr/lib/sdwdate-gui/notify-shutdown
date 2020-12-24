@@ -28,18 +28,18 @@ if [ "$gateway" = "" ]; then
    gateway=sys-whonix
 fi
 
-NAME="$(qubesdb-read /name)"
+name_of_this_vm="$(qubesdb-read /name)"
 
-if [ "$NAME" = "$gateway" ]; then
-   true "$0: INFO: NAME '$NAME' = gateway '$gateway'. No need to notify self. Exiting. Ok."
+if [ "$name_of_this_vm" = "$gateway" ]; then
+   true "$0: INFO: name_of_this_vm '$name_of_this_vm' = gateway '$gateway'. No need to notify self. Exiting. Ok."
    exit 0
 fi
 
-if [ "$NAME" = "" ]; then
-   true "$0: NOTICE: NAME is empty. Cannot notify that this machine is shutdown."
+if [ "$name_of_this_vm" = "" ]; then
+   true "$0: NOTICE: name_of_this_vm is empty. Cannot notify that this machine is shutdown."
    exit 0
 fi
 
-/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+$NAME shutdown"
+/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+$name_of_this_vm shutdown"
 
 true
