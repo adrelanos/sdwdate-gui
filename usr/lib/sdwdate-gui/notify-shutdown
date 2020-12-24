@@ -19,8 +19,6 @@ if ! test -f /usr/share/qubes/marker-vm ; then
    exit 0
 fi
 
-NAME="$(qubesdb-read /name)"
-
 if [ "$disable" = "true" ]; then
    exit 0
 fi
@@ -29,6 +27,8 @@ fi
 if [ "$gateway" = "" ]; then
    gateway=sys-whonix
 fi
+
+NAME="$(qubesdb-read /name)"
 
 if [ "$NAME" = "$gateway" ]; then
    exit 0
