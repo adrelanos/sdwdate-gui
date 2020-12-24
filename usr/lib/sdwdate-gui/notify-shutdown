@@ -14,7 +14,12 @@ for i in \
       source "$i"
 done
 
-NAME="$(/usr/bin/qubesdb-read /name)"
+if ! test -f /usr/share/qubes/marker-vm ; then
+   true "$0: INFO: Not implemented for Non-Qubes. Exiting. Ok."
+   exit 0
+fi
+
+NAME="$(qubesdb-read /name)"
 
 if [ "$disable" = "true" ]; then
    exit 0
