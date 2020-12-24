@@ -36,6 +36,7 @@ if [ "$NAME" = "$gateway" ]; then
 fi
 
 if [ "$NAME" = "" ]; then
+   true "$0: NOTICE: NAME is empty. Cannot notify that this machine is shutdown."
    exit 0
 fi
 
