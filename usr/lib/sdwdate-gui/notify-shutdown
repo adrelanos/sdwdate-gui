@@ -5,8 +5,6 @@
 
 set -x
 
-NAME="$(/usr/bin/qubesdb-read /name)"
-
 shopt -s nullglob
 for i in \
    /etc/sdwdate-gui.d/*.conf \
@@ -15,6 +13,8 @@ for i in \
       bash -n "$i"
       source "$i"
 done
+
+NAME="$(/usr/bin/qubesdb-read /name)"
 
 if [ "$disable" = "true" ]; then
    exit 0
