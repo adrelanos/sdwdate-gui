@@ -1,3 +1,51 @@
+commit d4d09c507d6ab6ae18df6312b08f49b5e6f5cd88
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:11:02 2020 -0500
+
+    refactoring
+
+commit 80b74aec1b81af8e92c9797aff0c85de1567cccd
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:09:15 2020 -0500
+
+    output
+
+commit 90be7720b8c62f34f8e647ecdcc8297504ede4c0
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:08:06 2020 -0500
+
+    output
+
+commit 9da92115c49fb1c7890e5803c35af014a5242a7d
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:07:44 2020 -0500
+
+    output
+
+commit a04887ae355a54b2e94c13297b36e93952c3e712
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:04:27 2020 -0500
+
+    refactoring
+
+commit d4af09044b0b89a117a1ef27a890531d6a689ee8
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 03:03:49 2020 -0500
+
+    run only in Qubes
+
+commit e9d82a59dffc85d37a1af6d9233aea810169b718
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 02:57:03 2020 -0500
+
+    refactoring
+
+commit 333238d1a34166017ab58e124157f7bc2bdbf695
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Nov 24 06:17:45 2020 -0500
+
+    bumped changelog version
+
 commit 50e2d0f211185c04a0641459ee9845265cce55f8
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Nov 24 06:03:45 2020 -0500
