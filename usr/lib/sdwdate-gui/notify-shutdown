@@ -31,6 +31,7 @@ fi
 NAME="$(qubesdb-read /name)"
 
 if [ "$NAME" = "$gateway" ]; then
+   true "$0: NAME '$NAME' = gateway '$gateway'. No need to notify self. Exiting. Ok."
    exit 0
 fi
 
