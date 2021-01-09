@@ -7,4 +7,4 @@ set -x
 
 set -e
 
-/usr/lib/helper-scripts/terminal-wrapper "sudo --non-interactive /bin/journalctl --output cat -n 100 -f _SYSTEMD_UNIT=sdwdate.service + _SYSTEMD_UNIT=whonix-firewall.service + SYSLOG_IDENTIFIER=suspend-pre + SYSLOG_IDENTIFIER=suspend-post"
+/usr/lib/helper-scripts/terminal-wrapper "sudo --non-interactive /bin/journalctl --boot --output cat -n 100 -f _SYSTEMD_UNIT=sdwdate.service + _SYSTEMD_UNIT=whonix-firewall.service + SYSLOG_IDENTIFIER=suspend-pre + SYSLOG_IDENTIFIER=suspend-post"
