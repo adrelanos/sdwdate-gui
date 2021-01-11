@@ -1,3 +1,15 @@
+commit cc8937a1a6d644138e444b57fa0b20c2b563d02c
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Mon Jan 11 00:50:23 2021 -0500
+
+    update path
+
+commit 0fa33c7cfc8f58a92ff5077204618002a6a81e5e
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sun Jan 10 23:18:29 2021 -0500
+
+    bumped changelog version
+
 commit ad8a7fd73a9c5795fb6ca257cc145df71fc492af
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Jan 9 09:52:27 2021 -0500
