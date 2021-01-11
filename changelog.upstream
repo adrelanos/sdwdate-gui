@@ -1,3 +1,23 @@
+commit ad8a7fd73a9c5795fb6ca257cc145df71fc492af
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Jan 9 09:52:27 2021 -0500
+
+    comment
+
+commit e909b146b4b3e2117d56f02c4ff3d6a105d36b10
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Sat Jan 9 09:51:36 2021 -0500
+
+    limit sdwdate-gui log viewer to current boot
+    
+    to avoid confusion showing log from previous Qubes TemplateVM boot
+
+commit 75c10dc28414684d6b41cb5dc421e465d3088d7b
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Thu Dec 24 11:39:58 2020 -0500
+
+    bumped changelog version
+
 commit d4d09c507d6ab6ae18df6312b08f49b5e6f5cd88
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Dec 24 03:11:02 2020 -0500
