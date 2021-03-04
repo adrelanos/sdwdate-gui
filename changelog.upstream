@@ -1,3 +1,21 @@
+commit a70f8309f07c63a2ad1ea88d0ff2db7db1cab303
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Mar 4 07:08:21 2021 -0500
+
+    readme
+
+commit 16c34719faf7342699734e86f26e20d8af1d2ae3
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Mar 4 06:33:06 2021 -0500
+
+    increase sdwdate log viewer scroll back size
+
+commit 20ea0af2468a0f611dd50c69853fb8def2f3bfef
+Author: Patrick Schleizer <adrelanos@riseup.net>
+Date:   Tue Jan 26 09:51:45 2021 -0500
+
+    bumped changelog version
+
 commit 34721d82feb1f02b76fc314a8e95cb8875f38105
 Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Jan 25 06:47:01 2021 -0500
