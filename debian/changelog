@@ -2,391 +2,391 @@ sdwdate-gui (1:6.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 04 Mar 2021 12:08:22 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 04 Mar 2021 12:08:22 +0000
 
 sdwdate-gui (1:6.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 26 Jan 2021 14:51:45 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 26 Jan 2021 14:51:45 +0000
 
 sdwdate-gui (1:6.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 11 Jan 2021 08:12:39 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 11 Jan 2021 08:12:39 +0000
 
 sdwdate-gui (1:6.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 11 Jan 2021 04:18:29 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 11 Jan 2021 04:18:29 +0000
 
 sdwdate-gui (1:6.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 24 Dec 2020 16:39:58 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 24 Dec 2020 16:39:58 +0000
 
 sdwdate-gui (1:6.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 24 Nov 2020 11:17:45 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 24 Nov 2020 11:17:45 +0000
 
 sdwdate-gui (1:6.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 06 Nov 2020 15:17:25 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 06 Nov 2020 15:17:25 +0000
 
 sdwdate-gui (1:5.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 22 Jul 2020 15:10:32 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 22 Jul 2020 15:10:32 +0000
 
 sdwdate-gui (1:5.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 19 May 2020 11:59:12 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 19 May 2020 11:59:12 +0000
 
 sdwdate-gui (1:5.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 19 May 2020 11:12:28 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 19 May 2020 11:12:28 +0000
 
 sdwdate-gui (1:5.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 14 May 2020 10:55:55 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 14 May 2020 10:55:55 +0000
 
 sdwdate-gui (1:5.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 23 Apr 2020 14:21:46 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 23 Apr 2020 14:21:46 +0000
 
 sdwdate-gui (1:5.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 23 Apr 2020 14:19:13 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 23 Apr 2020 14:19:13 +0000
 
 sdwdate-gui (1:5.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 16 Apr 2020 12:43:06 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 16 Apr 2020 12:43:06 +0000
 
 sdwdate-gui (1:5.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 09 Apr 2020 12:09:05 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 09 Apr 2020 12:09:05 +0000
 
 sdwdate-gui (1:5.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 02 Apr 2020 11:58:20 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 02 Apr 2020 11:58:20 +0000
 
 sdwdate-gui (1:5.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 01 Apr 2020 14:57:24 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 01 Apr 2020 14:57:24 +0000
 
 sdwdate-gui (1:4.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 19 Sep 2019 13:06:05 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 19 Sep 2019 13:06:05 +0000
 
 sdwdate-gui (1:4.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sat, 31 Aug 2019 13:44:00 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sat, 31 Aug 2019 13:44:00 +0000
 
 sdwdate-gui (1:4.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 28 Aug 2019 12:47:55 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 28 Aug 2019 12:47:55 +0000
 
 sdwdate-gui (1:4.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 09 Aug 2019 08:10:11 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 09 Aug 2019 08:10:11 +0000
 
 sdwdate-gui (1:4.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 07 Aug 2019 07:22:10 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 07 Aug 2019 07:22:10 +0000
 
 sdwdate-gui (1:4.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 07 Aug 2019 07:16:37 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 07 Aug 2019 07:16:37 +0000
 
 sdwdate-gui (1:4.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 07 Aug 2019 06:30:36 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 07 Aug 2019 06:30:36 +0000
 
 sdwdate-gui (1:4.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 01 Aug 2019 12:02:05 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 01 Aug 2019 12:02:05 +0000
 
 sdwdate-gui (1:4.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 31 Jul 2019 07:44:16 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 31 Jul 2019 07:44:16 +0000
 
 sdwdate-gui (1:4.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 17 Jul 2019 21:07:49 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 17 Jul 2019 21:07:49 +0000
 
 sdwdate-gui (1:3.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 17 Jul 2019 19:56:11 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 17 Jul 2019 19:56:11 +0000
 
 sdwdate-gui (1:3.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sun, 30 Jun 2019 08:23:19 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sun, 30 Jun 2019 08:23:19 +0000
 
 sdwdate-gui (1:3.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 27 Jun 2019 07:26:59 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 27 Jun 2019 07:26:59 +0000
 
 sdwdate-gui (1:3.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sat, 08 Jun 2019 11:31:40 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sat, 08 Jun 2019 11:31:40 +0000
 
 sdwdate-gui (1:3.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 24 May 2019 20:48:29 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 24 May 2019 20:48:29 +0000
 
 sdwdate-gui (1:3.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sun, 12 May 2019 10:47:50 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sun, 12 May 2019 10:47:50 +0000
 
 sdwdate-gui (1:3.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 03 May 2019 11:33:48 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 03 May 2019 11:33:48 +0000
 
 sdwdate-gui (1:3.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 08 Apr 2019 13:05:00 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 08 Apr 2019 13:05:00 +0000
 
 sdwdate-gui (1:3.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sat, 06 Apr 2019 12:13:10 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sat, 06 Apr 2019 12:13:10 +0000
 
 sdwdate-gui (1:3.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 29 Mar 2019 10:02:16 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 29 Mar 2019 10:02:16 +0000
 
 sdwdate-gui (1:2.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 12 Mar 2019 11:35:46 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 12 Mar 2019 11:35:46 +0000
 
 sdwdate-gui (1:2.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 01 Nov 2018 07:41:33 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 01 Nov 2018 07:41:33 +0000
 
 sdwdate-gui (1:2.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 01 Oct 2018 12:38:25 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 01 Oct 2018 12:38:25 +0000
 
 sdwdate-gui (1:2.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 17 Sep 2018 17:16:16 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 17 Sep 2018 17:16:16 +0000
 
 sdwdate-gui (1:2.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 17 Sep 2018 15:39:26 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 17 Sep 2018 15:39:26 +0000
 
 sdwdate-gui (1:2.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 17 Sep 2018 10:23:23 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 17 Sep 2018 10:23:23 +0000
 
 sdwdate-gui (1:2.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sun, 16 Sep 2018 11:22:57 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sun, 16 Sep 2018 11:22:57 +0000
 
 sdwdate-gui (1:2.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sun, 16 Sep 2018 10:18:13 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sun, 16 Sep 2018 10:18:13 +0000
 
 sdwdate-gui (1:2.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 27 Aug 2018 16:49:08 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 27 Aug 2018 16:49:08 +0000
 
 sdwdate-gui (1:2.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 17 Aug 2018 19:12:16 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 17 Aug 2018 19:12:16 +0000
 
 sdwdate-gui (1:1.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 09 Aug 2018 21:10:42 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 09 Aug 2018 21:10:42 +0000
 
 sdwdate-gui (1:1.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 21 Jun 2018 03:17:29 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 21 Jun 2018 03:17:29 +0000
 
 sdwdate-gui (1:1.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 20 Jun 2018 00:01:52 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 20 Jun 2018 00:01:52 +0000
 
 sdwdate-gui (1:1.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 19 Jun 2018 23:57:35 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 19 Jun 2018 23:57:35 +0000
 
 sdwdate-gui (1:1.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 05 Feb 2018 18:02:22 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 05 Feb 2018 18:02:22 +0000
 
 sdwdate-gui (1:1.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 05 Feb 2018 14:18:20 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 05 Feb 2018 14:18:20 +0000
 
 sdwdate-gui (1:1.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 01 Feb 2018 15:17:55 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 01 Feb 2018 15:17:55 +0000
 
 sdwdate-gui (1:1.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 27 Dec 2017 18:30:06 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 27 Dec 2017 18:30:06 +0000
 
 sdwdate-gui (1:1.1-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 26 Jul 2017 14:37:12 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 26 Jul 2017 14:37:12 +0000
 
 sdwdate-gui (1:1.0-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 27 Feb 2017 02:03:33 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 27 Feb 2017 02:03:33 +0000
 
 sdwdate-gui (1:0.9-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Fri, 17 Feb 2017 14:08:26 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Fri, 17 Feb 2017 14:08:26 +0000
 
 sdwdate-gui (1:0.8-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Wed, 18 Jan 2017 14:32:47 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Wed, 18 Jan 2017 14:32:47 +0000
 
 sdwdate-gui (1:0.7-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 17 Jan 2017 11:16:52 +0100
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 17 Jan 2017 11:16:52 +0100
 
 sdwdate-gui (1:0.6-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Tue, 17 Jan 2017 06:30:17 +0100
+ -- Patrick Schleizer <adrelanos@whonix.org>  Tue, 17 Jan 2017 06:30:17 +0100
 
 sdwdate-gui (1:0.5-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sun, 15 Jan 2017 15:35:22 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sun, 15 Jan 2017 15:35:22 +0000
 
 sdwdate-gui (1:0.4-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Sat, 10 Dec 2016 02:30:24 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Sat, 10 Dec 2016 02:30:24 +0000
 
 sdwdate-gui (1:0.3-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Mon, 25 Apr 2016 23:27:57 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Mon, 25 Apr 2016 23:27:57 +0000
 
 sdwdate-gui (1:0.2-1) unstable; urgency=medium
 
   * New upstream version (local package).
 
- -- Patrick Schleizer <adrelanos@riseup.net>  Thu, 07 Apr 2016 22:54:44 +0000
+ -- Patrick Schleizer <adrelanos@whonix.org>  Thu, 07 Apr 2016 22:54:44 +0000
 
 sdwdate-gui (1:0.1-1) unstable; urgency=medium
 
