@@ -1,3 +1,31 @@
+commit a8eb0e2a5ad818acb3c2faf137c0569899536d04
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Jun 7 10:14:09 2021 -0400
+
+    minor
+
+commit 747dcdbec10998db97ce3b88426c76a40b12f4ca
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Jun 7 10:12:50 2021 -0400
+
+    minor
+
+commit b0aef886b6eda84e9d787868f10b0f105402863b
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Jun 7 10:11:58 2021 -0400
+
+    port from tor-control-status tor_status to anon-connection-wizard
+    
+    fix minor confusing log output
+    
+    https://forums.whonix.org/t/full-system-apparmor-policy-testers-wanted/10381/83
+
+commit 9a17fb208fb5fe62191238b2a3f2c462c325daaf
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Mar 18 09:09:18 2021 -0400
+
+    bumped changelog version
+
 commit e08d5a0bf41a50e9d243f534b7fc0ae3234d3079
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Mar 18 08:57:22 2021 -0400
