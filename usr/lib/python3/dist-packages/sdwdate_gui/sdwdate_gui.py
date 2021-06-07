@@ -44,7 +44,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                          self.icon_path + 'tor-error.png',
                          self.icon_path + 'tor-warning.png']
 
-        self.tor_status_list = ['running', 'stopped', 'disabled', 'disabled-running']
+        self.tor_status_list = ['running',
+                                'stopped',
+                                'disabled',
+                                'disabled-running']
 
         self.tor_status = 'stopped'
         self.tor_message =  ''
