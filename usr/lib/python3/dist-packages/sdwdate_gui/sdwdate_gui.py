@@ -24,12 +24,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.title = 'Time Synchronisation Monitor'
 
-        self.status_path = '/run/sdwdate/status'
-        self.anon_status_path = '/run/sdwdate-gui/anon-status'
-        self.show_message_path = '/usr/lib/sdwdate-gui/show_message'
-        self.tor_path = '/run/tor'
-        self.tor_running_path = '/run/tor/tor.pid'
-        self.torrc_path = '/usr/local/etc/torrc.d/'
+        self.status_path =          '/run/sdwdate/status'
+        self.anon_status_path =     '/run/sdwdate-gui/anon-status'
+        self.show_message_path =    '/usr/lib/sdwdate-gui/show_message'
+        self.tor_path =             '/run/tor'
+        self.tor_running_path =     '/run/tor/tor.pid'
+        self.torrc_path =           '/usr/local/etc/torrc.d/'
 
         self.popup_process = None
 
