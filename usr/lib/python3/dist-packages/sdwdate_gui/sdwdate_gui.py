@@ -13,9 +13,9 @@ import os
 import re
 import glob
 
-tor_control_panel_installed = os.path.exists('/usr/bin/tor-control-panel')
-if tor_control_panel_installed:
-    from tor_control_panel import tor_status
+anon_connection_wizard_installed = os.path.exists('/usr/bin/anon-connection-wizard')
+if anon_connection_wizard_installed:
+    from anon_connection_wizard import tor_status
 
 
 class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
@@ -61,7 +61,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.setIcon(QtGui.QIcon(self.icon[self.status_list.index('busy')]))
         self.setToolTip('Time Synchronisation Monitor \n Click for menu.')
 
-        if tor_control_panel_installed:
+        if anon_connection_wizard_installed:
             self.tor_watcher = QFileSystemWatcher([self.tor_path, self.torrc_path])
             self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
         else:
@@ -85,7 +85,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def create_menu(self):
         advanced_icon = QtGui.QIcon(self.icon_path + 'advancedsettings.ico')
 
-        if tor_control_panel_installed:
+        if anon_connection_wizard_installed:
             icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
             action = QtWidgets.QAction(icon, 'Show Tor status', self)
             action.triggered.connect(lambda: self.show_message('tor'))
@@ -133,7 +133,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         sdwdate_icon = QtGui.QIcon(self.icon[self.status_list.index(self.sdwdate_status)])
         tor_icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
 
-        if tor_control_panel_installed:
+        if anon_connection_wizard_installed:
             self.menu.actions()[0].setIcon(tor_icon)
             self.menu.actions()[3].setIcon(sdwdate_icon)
         else:
@@ -233,6 +233,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_sdwdate_status(status['icon'], status['message'])
 
     def tor_status_changed(self):
+        if not anon_connection_wizard_installed:
+            ## tor_status() unavailable.
+            return
+
         try:
             tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
             tor_is_running = os.path.exists(self.tor_running_path)
