@@ -1,10 +1,10 @@
 sdwdate-gui(1) -- monitor and user interface for sdwdate
 =============================================
 
-<span class="comment">
+<!--
 # Copyright (C) 2012 - 2021 ENCRYPTED SUPPORT LP <adrelanos@whonix.org>
 # See the file COPYING for copying conditions.
-</span>
+-->
 
 ## SYNOPSIS
 `sdwdate-gui`
