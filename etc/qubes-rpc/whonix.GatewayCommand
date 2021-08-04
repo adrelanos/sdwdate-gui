@@ -5,7 +5,7 @@
 
 case $1 in
     "showlog")
-        /usr/lib/sdwdate-gui/log-viewer
+        /usr/libexec/sdwdate-gui/log-viewer
         ;;
     "restart")
         if [ -e "/run/sdwdate/success" ] ; then

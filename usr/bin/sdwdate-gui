@@ -11,4 +11,4 @@ sudo \
    --set-home \
    --non-interactive \
    -u sdwdate-gui \
-   /usr/lib/sdwdate-gui/sdwdate-gui
+   /usr/libexec/sdwdate-gui/sdwdate-gui

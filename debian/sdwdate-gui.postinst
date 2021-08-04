@@ -17,14 +17,14 @@ true "
 
 case "$1" in
     configure)
-       ## '/usr/lib/sdwdate-gui/log-viewer' requires a home folder so we create /run/sdwdate-gui.
+       ## '/usr/libexec/sdwdate-gui/log-viewer' requires a home folder so we create /run/sdwdate-gui.
        adduser --home /run/sdwdate-gui --quiet --system --group sdwdate-gui || true
 
        #sdwdate_gui_home="$(getent passwd sdwdate-gui | cut -d: -f6)" || true
        #if [ "$sdwdate_gui_home" = "/nonexistent" ]; then
          ## Need to kill sdwdate-gui, otherwise we cannot change user home.
          ## Making sure pgrep will not match this postinst script.
-         #kill -s sigterm $(pgrep -f /usr/lib/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
+         #kill -s sigterm $(pgrep -f /usr/libexec/sdwdate-gui/sdwdate-gui) 2>/dev/null || true
        #fi
 
        ## Change user home of user sdwdate-gui to /run/sdwdate-gui.
