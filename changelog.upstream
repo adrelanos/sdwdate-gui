@@ -1,3 +1,59 @@
+commit 6c39efa7802d6805a1fed857488d62b96fc4a3e9
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Aug 4 12:31:15 2021 -0400
+
+    chmod -x usr/lib/python3/dist-packages/sdwdate_gui/*
+    
+    lintian FHS
+
+commit 818f8d10ff5a857ec8ecc736e256d187da159f0d
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Aug 4 06:47:24 2021 -0400
+
+    move /usr/lib/sdwdate-gui to /usr/libexec/sdwdate-gui as per lintian FHS
+
+commit 72afb8a6b103f07e532069f9535a5320a33509a4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Aug 4 06:45:46 2021 -0400
+
+    move /usr/lib/sdwdate-gui to /usr/libexec/sdwdate-gui as per lintian FHS
+
+commit ec462dcadbd21eabe3f6c98c8c5bb4addfd0a2de
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 3 12:48:56 2021 -0400
+
+    move /usr/lib/helper-scripts and /usr/lib/curl-scripts to /usr/libexec/helper-scripts as per lintian FHS
+
+commit 5a7ec23792457848611ccb7d9048013529d0a311
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 3 11:47:34 2021 -0400
+
+    re-generate man pages (generated using "genmkfile manpages")
+
+commit 4f2e31e9287194255f6fd22a7b53001b01fc69f0
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 3 11:43:52 2021 -0400
+
+    man page
+
+commit cf4ca6aab368b5c8a190074a6f0343c63240f030
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 3 05:48:25 2021 -0400
+
+    bullseye
+
+commit 16b8d7f5299c9aa47bdfb300bb4dbe2d89bae485
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Aug 1 16:24:40 2021 -0400
+
+    readme
+
+commit 37a1229ba457afb44d42f8406742f819a7b976da
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Jun 7 12:12:19 2021 -0400
+
+    bumped changelog version
+
 commit a8eb0e2a5ad818acb3c2faf137c0569899536d04
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Mon Jun 7 10:14:09 2021 -0400
