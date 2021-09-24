@@ -7,6 +7,4 @@ set -x
 
 set -e
 
-## Use '--boot' to avoid confusion from showing previous boot inside Qubes TemplateVM.
-
-/usr/libexec/helper-scripts/terminal-wrapper "sudo --non-interactive /bin/journalctl --boot --output cat -n 10000 -f _SYSTEMD_UNIT=sdwdate.service + _SYSTEMD_UNIT=whonix-firewall.service + SYSLOG_IDENTIFIER=suspend-pre + SYSLOG_IDENTIFIER=suspend-post"
+/usr/libexec/helper-scripts/terminal-wrapper "sudo --non-interactive /usr/bin/sdwdate-log-viewer"

@@ -16,4 +16,4 @@ sdwdate-gui ALL=NOPASSWD: /bin/rm --force /run/sdwdate/success
 sdwdate-gui ALL=NOPASSWD: /usr/bin/tor-control-panel
 
 ## log-viewer
-sdwdate-gui ALL=NOPASSWD: /bin/journalctl --boot --output cat -n 10000 -f _SYSTEMD_UNIT=sdwdate.service + _SYSTEMD_UNIT=whonix-firewall.service + SYSLOG_IDENTIFIER=suspend-pre + SYSLOG_IDENTIFIER=suspend-post
+sdwdate-gui ALL=NOPASSWD: /usr/bin/sdwdate-log-viewer
