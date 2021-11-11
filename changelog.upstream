@@ -1,3 +1,42 @@
+commit 5d844f993af7bc69c30140d35de8b8cf72331780
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Nov 11 15:48:14 2021 -0500
+
+    Fix harmless but nuisance warnings in Qubes R4.1.
+    
+    "Denied: whonix.NewStatus Denied whonix.NewStatus+whonix-gw-16_shutdown from whonix-gw-16 to sys-whonix"
+    "Denied: whonix.NewStatus Denied whonix.NewStatus+whonix-ws-16_shutdown from whonix-ws-16 to sys-whonix"
+    
+    By preventing `sdwdate-gui-shutdown-notify.service` from running inside Template.
+    
+    Thanks to @zellchristensen for the bug report and @marmarek for the bug diagnosis!
+    
+    https://github.com/QubesOS/qubes-issues/issues/6983
+
+commit bc70b1302dc3508ef411c74467e3442545682082
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Nov 11 15:47:43 2021 -0500
+
+    minor
+
+commit 5f5876d433403842d7ce5e189b29bef7816b25f7
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Nov 11 15:46:09 2021 -0500
+
+    comment
+
+commit ece7f62d18c99c67d7d6fe98b391deeb21546e22
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Nov 9 14:32:33 2021 -0500
+
+    readme
+
+commit 01a7d2203335a17d8f8b44f7490652e1976198b6
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Sep 24 11:59:35 2021 -0400
+
+    bumped changelog version
+
 commit 50d0ea4060dda8b3d6d4ee529b198ee711d2d2b0
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Fri Sep 24 11:52:14 2021 -0400
