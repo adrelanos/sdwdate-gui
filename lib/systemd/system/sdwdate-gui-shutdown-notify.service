@@ -3,7 +3,7 @@
 
 [Unit]
 Description=Notify sdwdate-gui on gateway about shutdown.
-Documentation=https://www.whonix.org/wiki/sdwdate
+Documentation=https://www.whonix.org/wiki/sdwdate-gui
 After=qubes-qrexec-agent.service
 
 [Service]
