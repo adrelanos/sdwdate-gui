@@ -4,6 +4,7 @@
 [Unit]
 Description=Notify sdwdate-gui on gateway about shutdown.
 Documentation=https://www.whonix.org/wiki/sdwdate-gui
+ConditionPathExists=!/run/qubes/this-is-templatevm
 
 After=qubes-qrexec-agent.service
 
