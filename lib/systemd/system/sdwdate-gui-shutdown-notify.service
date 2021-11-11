@@ -4,11 +4,12 @@
 [Unit]
 Description=Notify sdwdate-gui on gateway about shutdown.
 Documentation=https://www.whonix.org/wiki/sdwdate-gui
+
 After=qubes-qrexec-agent.service
 
 [Service]
 Type=oneshot
-#Required so that ExecStop runs only after the service is stopped.
+## Required so that ExecStop runs only after the service is stopped.
 RemainAfterExit=yes
 #ExecStartPre=NAME="$(/usr/bin/qubesdb-read /name)"
 ExecStop=/usr/libexec/sdwdate-gui/notify-shutdown
