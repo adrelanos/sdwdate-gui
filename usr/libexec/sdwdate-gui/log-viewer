@@ -7,4 +7,7 @@ set -x
 
 set -e
 
+terminal_emulator_window_title="sdwdate Log Viewer"
+export terminal_emulator_window_title
+
 /usr/libexec/helper-scripts/terminal-wrapper "sudo --non-interactive /usr/bin/sdwdate-log-viewer"
