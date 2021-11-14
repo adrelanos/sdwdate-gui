@@ -1,3 +1,15 @@
+commit 933883ec710eb0a5a43a276e0c6789b7744d42a3
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 14 09:35:45 2021 -0500
+
+    sdwdate-gui log viewer: set window title
+
+commit 6d0861c630a85f98d9d1134e0be3d57b1718b65c
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Nov 11 15:52:17 2021 -0500
+
+    bumped changelog version
+
 commit 5d844f993af7bc69c30140d35de8b8cf72331780
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Nov 11 15:48:14 2021 -0500
