@@ -1,3 +1,23 @@
+commit d4f963b6e5aa434dfc38229faaf2a7eef932dde4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Nov 24 15:04:30 2021 -0500
+
+    `sdwdate-gui-shutdown-notify.service`: `Before=shutdown.target umount.target final.target`
+
+commit 5141ec63cd230ec825e7f15ff5d74e81605b174f
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Nov 24 15:01:25 2021 -0500
+
+    avoid start/restart of sdwdate-gui notify shutdown service during package install/upgrade
+    
+    dh_installsystemd --no-start --no-stop-on-upgrade
+
+commit 02632d8e92742b4a7183810667c76de1a7ca94b4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 14 10:03:43 2021 -0500
+
+    bumped changelog version
+
 commit 933883ec710eb0a5a43a276e0c6789b7744d42a3
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Nov 14 09:35:45 2021 -0500
