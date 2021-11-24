@@ -7,6 +7,7 @@ Documentation=https://www.whonix.org/wiki/sdwdate-gui
 ConditionPathExists=!/run/qubes/this-is-templatevm
 
 After=qubes-qrexec-agent.service
+Before=shutdown.target umount.target final.target
 
 [Service]
 Type=oneshot
