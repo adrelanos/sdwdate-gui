@@ -19,6 +19,12 @@ if ! test -f /usr/share/qubes/marker-vm ; then
    exit 0
 fi
 
+## https://forums.whonix.org/t/qubes-os-4-1-denied-whonix-newstatus-dom0-permission/12954
+if test -e /usr/share/anon-gw-base-files/gateway ; then
+   true "$0: INFO: Gateway detected. No need to notify self. Exiting. Ok."
+   exit 0
+fi
+
 if [ "$disable" = "true" ]; then
    exit 0
 fi
@@ -29,11 +35,6 @@ if [ "$gateway" = "" ]; then
 fi
 
 name_of_this_vm="$(qubesdb-read /name)"
-
-if [ "$name_of_this_vm" = "$gateway" ]; then
-   true "$0: INFO: name_of_this_vm '$name_of_this_vm' = gateway '$gateway'. No need to notify self. Exiting. Ok."
-   exit 0
-fi
 
 if [ "$name_of_this_vm" = "" ]; then
    true "$0: NOTICE: name_of_this_vm is empty. Cannot notify that this machine is shutdown."
