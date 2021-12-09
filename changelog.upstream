@@ -1,3 +1,19 @@
+commit e371e234a15cbaf89181798a204192d2a92df089
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Dec 9 03:37:10 2021 -0500
+
+    fix "Denied: whonix.NewStatus" dom0 permission when shutting down Whonix-Gateway [Qubes OS 4.1]
+    
+    Thanks to @unknown for the bug report!
+    
+    https://forums.whonix.org/t/qubes-os-4-1-denied-whonix-newstatus-dom0-permission/12954
+
+commit 19e6b6287229577647fc7556aefd92e1c15db4ea
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Nov 24 15:06:51 2021 -0500
+
+    bumped changelog version
+
 commit d4f963b6e5aa434dfc38229faaf2a7eef932dde4
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Wed Nov 24 15:04:30 2021 -0500
