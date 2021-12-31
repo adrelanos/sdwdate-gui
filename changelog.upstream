@@ -1,3 +1,17 @@
+commit 21d35022ab47dde44eacbef75c5d6c2260125521
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Dec 31 10:31:24 2021 -0500
+
+    port to QREXEC_REMOTE_DOMAIN
+    
+    part of https://phabricator.whonix.org/T930
+
+commit c45f0e38c116cf45cb198a67f8eaf7f819c1eb57
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Dec 9 03:39:51 2021 -0500
+
+    bumped changelog version
+
 commit e371e234a15cbaf89181798a204192d2a92df089
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Dec 9 03:37:10 2021 -0500
