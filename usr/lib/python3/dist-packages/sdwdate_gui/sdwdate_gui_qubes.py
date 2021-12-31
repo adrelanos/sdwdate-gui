@@ -62,6 +62,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         self.status_path =          '/run/sdwdate/status'
         self.anon_status_path =     '/run/sdwdate-gui/anon-status'
+        ## /run/sdwdate-gui/anon-status content example:
+        ## anon-whonix
+        ## /run/sdwdate-gui/anon-status content example:
+        ## anon-whonix shutdown
         self.show_message_path =    '/usr/libexec/sdwdate-gui/show_message'
         self.tor_path =             '/run/tor'
         self.tor_running_path =     '/run/tor/tor.pid'
@@ -364,9 +368,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             vm_name = f.read().strip()
 
         if vm_name == '':
+            error_msg = "anon_vm_status_changed unexpected error: vm_name is empty"
+            print(error_msg)
             return
 
-        if  vm_name.endswith('shutdown'):
+        if vm_name.endswith('shutdown'):
             self.remove_vm(vm_name)
         else:
             try:

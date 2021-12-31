@@ -18,15 +18,6 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class SdwdateStatusWatch:
     def __init__(self, parent=None):
-        try:
-            self.name = check_output(['qubesdb-read', '/name']).decode().strip()
-            #if self.name.startswith('disp'):
-                #sys.exit(0)
-        except:
-            error_msg = "Unexpected error during init: " + str(sys.exc_info()[0])
-            print(error_msg)
-            self.name = 'name'
-
         self.status_path = '/run/sdwdate/status'
 
         ## get status on loading.
@@ -46,9 +37,16 @@ class SdwdateStatusWatch:
             return
 
         try:
-            ## in case qubes-qrexec-agent is not running.
+            ## In case qubes-qrexec-agent is not running.
 
             ## Fallback.
+            ## If gateway is not configured in config file, use default.
+            ## Non-ideal.
+            ## qrexec feature request: send this over qrexec to the NetVM I am connected to / sys-whonix hardcoded / sys-whonix unexpected autostart #5253
+            ## https://github.com/QubesOS/qubes-issues/issues/5253
+            ## Networks VMs are restarting themselves without valid reason #5930
+            ## https://github.com/QubesOS/qubes-issues/issues/5930
+            ## HARDCODED!
             gateway = "sys-whonix"
 
             if os.path.exists('/etc/sdwdate-gui.d/'):
@@ -69,7 +67,7 @@ class SdwdateStatusWatch:
                         if line.startswith('gateway'):
                               gateway = re.search(r'=(.*)', line).group(1)
 
-            command = 'qrexec-client-vm %s whonix.NewStatus+"%s"' % (gateway, self.name)
+            command = 'qrexec-client-vm %s whonix.NewStatus+status' % (gateway)
             call(command, shell=True)
         except:
             pass

@@ -29,18 +29,18 @@ if [ "$disable" = "true" ]; then
    exit 0
 fi
 
-## If gateway is not configured in config file, use default.
 if [ "$gateway" = "" ]; then
+   ## Fallback.
+   ## If gateway is not configured in config file, use default.
+   ## Non-ideal.
+   ## qrexec feature request: send this over qrexec to the NetVM I am connected to / sys-whonix hardcoded / sys-whonix unexpected autostart #5253
+   ## https://github.com/QubesOS/qubes-issues/issues/5253
+   ## Networks VMs are restarting themselves without valid reason #5930
+   ## https://github.com/QubesOS/qubes-issues/issues/5930
+   ## HARDCODED!
    gateway=sys-whonix
 fi
 
-name_of_this_vm="$(qubesdb-read /name)"
-
-if [ "$name_of_this_vm" = "" ]; then
-   true "$0: NOTICE: name_of_this_vm is empty. Cannot notify that this machine is shutdown."
-   exit 0
-fi
-
-/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+$name_of_this_vm shutdown"
+/usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+shutdown"
 
 true
