@@ -364,28 +364,48 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.set_tray_icon()
 
     def anon_vm_status_changed(self):
+        ## Fallbacks.
+        vm_name = ''
+        keyword = ''
+
         with open(self.anon_status_path, 'r') as f:
-            vm_name = f.read().strip()
+            file_content = f.read()
+            print(str(file_content))
+            file_content = file_content.strip()
+            print(str(file_content))
+            file_content = file_content.split(' ')
+            print(str(file_content))
+            try:
+               vm_name = file_content[0]
+            except:
+               error_msg = "anon_vm_status_changed could not set vm_name variable: " + str(sys.exc_info()[0])
+               print(error_msg)
+            try:
+               keyword = file_content[1]
+            except:
+               error_msg = "anon_vm_status_changed could not set keyword variable: " + str(sys.exc_info()[0])
+               print(error_msg)
 
         if vm_name == '':
             error_msg = "anon_vm_status_changed unexpected error: vm_name is empty"
             print(error_msg)
             return
 
-        if vm_name.endswith('shutdown'):
+        if keyword == 'shutdown':
             self.remove_vm(vm_name)
-        else:
-            try:
-                command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
-                p = Popen(command, stdout=PIPE, stderr=PIPE)
-                stdout, stderr = p.communicate()
-                status = json.loads(stdout.decode())
-            except:
-                error_msg = "anon_vm_status_changed unexpected error: " + str(sys.exc_info()[0])
-                print(error_msg)
-                return
+            return
 
-            self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
+        try:
+            command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
+            p = Popen(command, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+            status = json.loads(stdout.decode())
+        except:
+            error_msg = "anon_vm_status_changed unexpected error: " + str(sys.exc_info()[0])
+            print(error_msg)
+            return
+
+        self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
 
     def status_changed(self):
         try:
@@ -415,11 +435,11 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.tor_status = 'running'
         elif not tor_is_enabled:
             if tor_is_running:
-                self.tor_status =  'disabled-running'
+                self.tor_status = 'disabled-running'
             elif not tor_is_running:
-                self.tor_status =  'disabled'
+                self.tor_status = 'disabled'
         elif not tor_is_running:
-            self.tor_status =  'stopped'
+            self.tor_status = 'stopped'
 
         self.parse_tor_status()
 
