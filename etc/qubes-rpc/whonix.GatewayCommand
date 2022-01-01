@@ -8,10 +8,7 @@ case $1 in
         /usr/libexec/sdwdate-gui/log-viewer
         ;;
     "restart")
-        if [ -e "/run/sdwdate/success" ] ; then
-            sudo rm --force /run/sdwdate/success
-        fi
-        sudo --non-interactive systemctl --no-pager --no-block restart sdwdate
+        sudo --non-interactive /usr/sbin/sdwdate-clock-jump
         ;;
     "stop")
         sudo --non-interactive systemctl --no-pager --no-block stop sdwdate
