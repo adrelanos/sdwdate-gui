@@ -36,7 +36,7 @@ class AnonVmWatcher(QThread):
         The killed or crashed vm is restarted by the qrexec-client-vm command.
         '''
         seconds = 8
-        for domain in self.domains[1:]:  ## Do not check sys-whonix
+        for domain in self.domains[1:]: ## Do not check sys-whonix
             try:
                 command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
                 check_output(command, stderr=STDOUT, timeout=seconds)
