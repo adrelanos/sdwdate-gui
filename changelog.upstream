@@ -1,3 +1,29 @@
+commit a60a996ce2228830607aa7afdde8aec9d512daa0
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Jan 1 06:20:27 2022 -0500
+
+    restart action: use `sdwdate-clock-jump`
+    
+    instead of restarting sdwdate manually
+
+commit d2ff50f489b4459761633316fe25edb7a34c1ceb
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Jan 1 06:01:14 2022 -0500
+
+    minor
+
+commit ccbeb868b20dc55b6c7723374dc7b1a16c1181bd
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Jan 1 05:53:56 2022 -0500
+
+    fix
+
+commit 064a86ff73dd55fc03da446092452864a28f90df
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Dec 31 10:32:40 2021 -0500
+
+    bumped changelog version
+
 commit 21d35022ab47dde44eacbef75c5d6c2260125521
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Fri Dec 31 10:31:24 2021 -0500
