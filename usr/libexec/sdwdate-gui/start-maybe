@@ -14,6 +14,11 @@ for i in \
       source "$i"
 done
 
+if test -f /run/qubes-service/no-sdwdate ; then
+   true "INFO: /run/qubes-service/no-sdwdate exists, exiting, ok."
+   exit 0
+fi
+
 if [ "$disable" = "true" ]; then
    exit 0
 fi
