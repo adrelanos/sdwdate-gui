@@ -1,3 +1,15 @@
+commit c694998f22e36ff142213ff177e789acec3f2dce
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Jan 2 09:02:38 2022 -0500
+
+    do no autostart if file /run/qubes-service/no-sdwdate exists
+
+commit fb705bbb36697e8e034288deb35602a7620af70d
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Jan 2 08:28:11 2022 -0500
+
+    bumped changelog version
+
 commit 7d9b5044a35d19e44454e0fbdf34efa055b30ef5
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Jan 2 08:18:54 2022 -0500
