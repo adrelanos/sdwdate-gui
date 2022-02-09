@@ -29,6 +29,11 @@ if [ "$disable" = "true" ]; then
    exit 0
 fi
 
+if systemctl is-active --quiet sdwdate.service ; then
+   true "$0: INFO: sdwdate not running. No need notify shutdown. Exiting. Ok."
+   exit 0
+fi
+
 if [ "$gateway" = "" ]; then
    ## Fallback.
    ## If gateway is not configured in config file, use default.
