@@ -26,6 +26,7 @@ if test -e /usr/share/anon-gw-base-files/gateway ; then
 fi
 
 if [ "$disable" = "true" ]; then
+   true "$0: INFO: setting disable=true. Exiting. Ok."
    exit 0
 fi
 
