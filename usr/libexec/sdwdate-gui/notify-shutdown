@@ -5,6 +5,8 @@
 
 set -x
 
+true "$0: START."
+
 shopt -s nullglob
 for i in \
    /etc/sdwdate-gui.d/*.conf \
@@ -49,4 +51,4 @@ fi
 
 /usr/bin/qrexec-client-vm "$gateway" "whonix.NewStatus+shutdown"
 
-true
+true "$0: END."
