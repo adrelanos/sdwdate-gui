@@ -1,3 +1,33 @@
+commit f14b3bf09809bc9762bd9d298e729c58b48361f4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Feb 9 07:37:31 2022 -0500
+
+    output
+
+commit bea23fa689b30a4e6cfa6c6d45d8257dcb4bc53f
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Feb 9 07:35:26 2022 -0500
+
+    output
+
+commit 0a47bdc5c0c274dd24e66244fc7d841fa5fd8eb8
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Feb 9 07:34:50 2022 -0500
+
+    fix
+
+commit 374bc31c8bd97de6e2f4f578e120daf70527e9eb
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Feb 9 07:34:02 2022 -0500
+
+    notify-shutdown: skip notify shutdown if sdwdate is not running
+
+commit 531ddf5f43363ff4a19cead2c5a1456feb651d64
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Jan 6 15:14:18 2022 -0500
+
+    bumped changelog version
+
 commit c694998f22e36ff142213ff177e789acec3f2dce
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Jan 2 09:02:38 2022 -0500
