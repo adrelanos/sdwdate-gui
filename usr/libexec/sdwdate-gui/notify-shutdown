@@ -29,7 +29,7 @@ if [ "$disable" = "true" ]; then
    exit 0
 fi
 
-if systemctl is-active --quiet sdwdate.service ; then
+if ! systemctl is-active --quiet sdwdate.service ; then
    true "$0: INFO: sdwdate not running. No need notify shutdown. Exiting. Ok."
    exit 0
 fi
