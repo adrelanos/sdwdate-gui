@@ -8,5 +8,5 @@ Name=sdwdate-gui
 GenericName=Time Synchronization Monitor
 Comment=Time Synchronization Monitor
 Categories=System
-Icon=/usr/share/icons/anon-icon-pack/timesync.ico
+Icon=/usr/share/icons/icon-pack-dist/timesync.ico
 Keywords=system;time;synchronization
