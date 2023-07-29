@@ -7,6 +7,23 @@ set -x
 
 set -e
 
+if ! sudo --list /usr/bin/sdwdate-log-viewer >/dev/null ; then
+  title="sdwdate-gui error"
+  question=""
+  button="ok"
+  msg="\
+<p>command:
+<br/><code>sudo --non-interactive /usr/bin/sdwdate-log-viewer</code>
+<br/>cannot be run due to insufficient sudo privileges.
+<br/>
+<br/>This is probably be due to the user using sudo hardening.
+<br/>
+<br/>To view sdwdate logs, please open a terminal and run sdwdate-log-viewer manually.
+<blockquote><code>sudo sdwdate-log-viewer</code></blockquote></p>"
+  /usr/libexec/msgcollector/generic_gui_message "error" "$title" "$msg" "$question" "$button"
+  exit 1
+fi
+
 terminal_emulator_window_title="sdwdate Log Viewer"
 export terminal_emulator_window_title
 
