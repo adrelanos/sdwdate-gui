@@ -17,3 +17,6 @@ sdwdate-gui ALL=NOPASSWD: /usr/bin/tor-control-panel
 
 ## log-viewer
 sdwdate-gui ALL=NOPASSWD: /usr/bin/sdwdate-log-viewer
+
+## Comment in to allow user "user" running sdwdate-log-viewer without a password.
+#user ALL=NOPASSWD: /usr/bin/sdwdate-log-viewer
