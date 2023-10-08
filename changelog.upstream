@@ -1,3 +1,39 @@
+commit 830cba3fb33d596998d5cacdf2b48461a4bae995
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 12:56:24 2023 -0400
+
+    avoid `shell=True`
+
+commit e2e54013b634d4d351ea8d402129bbb0e6ac623b
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 12:41:54 2023 -0400
+
+    rework sudoers exceptions
+
+commit 92daf651f11ce2c3f88679e7a1c61e0d7007de7f
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 12:34:26 2023 -0400
+
+    wayland
+
+commit ad9cfbad0f86c0ad2887398de80b9bb2f56e7a8d
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 12:14:50 2023 -0400
+
+    allow termination through ctrl + c (signal sigterm)
+
+commit 7c94cbbe82372340a73997f6eb75acaef632b4a3
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 12:08:34 2023 -0400
+
+    wayland
+
+commit ba047c003da8a9643753116436085fe0a07cb48c
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Oct 8 06:31:15 2023 -0400
+
+    bumped changelog version
+
 commit 23c0a31232b35a49b79c8a94532cf0294adfca7f
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Oct 8 06:27:18 2023 -0400
