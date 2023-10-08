@@ -3,12 +3,4 @@
 ## Copyright (C) 2018 - 2023 ENCRYPTED SUPPORT LP <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
-## AUDIT: Is there a safer way?
-## Required since Debian buster.
-xhost +
-
-sudo \
-   --set-home \
-   --non-interactive \
-   -u sdwdate-gui \
-   /usr/libexec/sdwdate-gui/sdwdate-gui
+/usr/libexec/sdwdate-gui/sdwdate-gui
