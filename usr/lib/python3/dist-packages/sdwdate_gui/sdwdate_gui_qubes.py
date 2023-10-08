@@ -475,7 +475,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 subprocess.Popen(command.split())
 
 def signal_handler(sig, frame):
-    sys.exit(0)
+    sys.exit(128 + sig)
 
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
