@@ -4,6 +4,7 @@
 ## See the file COPYING for copying conditions.
 
 import sys
+import signal
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtCore import *
@@ -471,8 +472,19 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                 command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
                 call(command, shell=True)
 
+def signal_handler(sig, frame):
+    sys.exit(0)
+
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    timer = QtCore.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
+
     sdwdate_tray = SdwdateTrayIcon()
     sdwdate_tray.show()
     app.exec_()

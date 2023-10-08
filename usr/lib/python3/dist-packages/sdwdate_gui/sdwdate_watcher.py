@@ -4,7 +4,8 @@
 ## See the file COPYING for copying conditions.
 
 import sys
-from PyQt5 import QtWidgets
+import signal
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QFileSystemWatcher
 from subprocess import call, check_output
 import json
@@ -72,9 +73,19 @@ class SdwdateStatusWatch:
         except:
             pass
 
+def signal_handler(sig, frame):
+    sys.exit(0)
 
 def main():
     app = QtWidgets.QApplication(["Sdwdate"])
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    timer = QtCore.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
+
     watcher = SdwdateStatusWatch()
     app.exec_()
 
