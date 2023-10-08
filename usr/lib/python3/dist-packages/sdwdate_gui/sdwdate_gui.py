@@ -8,7 +8,7 @@ import signal
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtCore import *
-from subprocess import check_output, STDOUT, call, Popen, PIPE
+import subprocess
 import json
 import os
 import re
@@ -262,19 +262,21 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        show_status_command = 'tor-control-panel &'
-        Popen(show_status_command, shell=True)
+        command = 'tor-control-panel &'
+        subprocess.Popen(command.split())
 
     def show_sdwdate_log(self):
-        show_konsole = ('/usr/libexec/sdwdate-gui/log-viewer &')
-        Popen(show_konsole, shell=True)
+        command = ('/usr/libexec/sdwdate-gui/log-viewer &')
+        subprocess.Popen(command.split())
 
     def restart_sdwdate(self):
-        Popen('sudo --non-interactive /usr/sbin/sdwdate-clock-jump', shell=True)
+        command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
+        subprocess.Popen(command.split())
 
     def stop_sdwdate(self):
         if self.tor_status == 'running':
-            Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
+            command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
+            subprocess.Popen(command.split())
 
 def signal_handler(sig, frame):
     sys.exit(0)

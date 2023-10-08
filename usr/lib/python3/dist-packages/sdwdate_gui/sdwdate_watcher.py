@@ -7,7 +7,7 @@ import sys
 import signal
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QFileSystemWatcher
-from subprocess import call, check_output
+import subprocess
 import json
 import glob
 import os
@@ -69,7 +69,7 @@ class SdwdateStatusWatch:
                               gateway = re.search(r'=(.*)', line).group(1)
 
             command = 'qrexec-client-vm %s whonix.NewStatus+status' % (gateway)
-            call(command, shell=True)
+            subprocess.Popen(command.split())
         except:
             pass
 

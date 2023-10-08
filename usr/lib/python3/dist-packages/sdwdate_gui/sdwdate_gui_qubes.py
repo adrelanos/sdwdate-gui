@@ -8,7 +8,7 @@ import signal
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtCore import *
-from subprocess import check_output, STDOUT, call, Popen, PIPE
+import subprocess
 import json
 import os
 import re
@@ -398,7 +398,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         try:
             command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
-            p = Popen(command, stdout=PIPE, stderr=PIPE)
+            p = subprocess.Popen(command, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate()
             status = json.loads(stdout.decode())
         except:
@@ -445,32 +445,34 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        show_status_command = 'tor-control-panel &'
-        Popen(show_status_command, shell=True)
+        command = 'tor-control-panel &'
+        subprocess.Popen(command.split())
 
     def show_sdwdate_log(self, vm):
         if vm == self.name:
-            show_konsole = ('/usr/libexec/sdwdate-gui/log-viewer &')
-            Popen(show_konsole, shell=True)
+            command = ('/usr/libexec/sdwdate-gui/log-viewer &')
+            subprocess.Popen(command.split())
         else:
             command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
-            call(command, shell=True)
+            subprocess.Popen(command.split())
 
     def restart_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
-                Popen('sudo --non-interactive /usr/sbin/sdwdate-clock-jump', shell=True)
+                command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
+                subprocess.Popen(command.split())
             else:
                 command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
-                call(command, shell=True)
+                subprocess.Popen(command.split())
 
     def stop_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
-                Popen('sudo --non-interactive systemctl --no-pager --no-block stop sdwdate', shell=True)
+                command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
+                subprocess.Popen(command.split())
             else:
                 command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
-                call(command, shell=True)
+                subprocess.Popen(command.split())
 
 def signal_handler(sig, frame):
     sys.exit(0)
