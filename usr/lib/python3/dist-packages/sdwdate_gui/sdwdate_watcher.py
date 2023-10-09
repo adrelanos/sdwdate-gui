@@ -5,16 +5,15 @@
 
 import sys
 import signal
+
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QFileSystemWatcher
+
 import subprocess
 import json
 import glob
 import os
 import re
-
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class SdwdateStatusWatch:

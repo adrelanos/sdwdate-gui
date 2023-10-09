@@ -5,9 +5,11 @@
 
 import sys
 import signal
+
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMenu, QAction
 from PyQt5.QtCore import *
+
 import subprocess
 import json
 import os
