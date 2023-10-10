@@ -42,7 +42,7 @@ class AnonVmWatcher(QThread):
         for domain in self.domains[1:]: ## Do not check sys-whonix
             try:
                 command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
-                check_output(command, stderr=STDOUT, timeout=seconds)
+                subprocess.check_output(command, stderr=STDOUT, timeout=seconds)
             except:
                 self.signal.emit(domain)
 
@@ -57,9 +57,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.title = 'Time Synchronisation Monitor'
 
         try:
-            self.name = check_output(['qubesdb-read', '/name']).decode().strip()
+            self.name = subprocess.check_output(['qubesdb-read', '/name']).decode().strip()
         except:
-            error_msg = "__init__ unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "SdwdateTrayIcon __init__ unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             self.name = 'name'
 
