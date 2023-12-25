@@ -1,3 +1,15 @@
+commit 07818548d0eccec1c8978f5fd0ded3e16d6ac170
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Dec 25 15:19:14 2023 -0500
+
+    fix sdwdate-gui-qubes
+
+commit 3fa252a337357def70f04fa8c50b7ed61561a29c
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Nov 11 20:22:19 2023 +0000
+
+    bumped changelog version
+
 commit 5f263beac47c4963e5a6e747fe2c3baa02f08101
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sat Nov 11 13:41:31 2023 -0500
