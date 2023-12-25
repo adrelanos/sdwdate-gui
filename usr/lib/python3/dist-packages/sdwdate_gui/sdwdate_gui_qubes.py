@@ -38,12 +38,15 @@ class AnonVmWatcher(QThread):
 
         The killed or crashed vm is restarted by the qrexec-client-vm command.
         '''
+        #print("watch_anon_vms:")
         seconds = 8
         for domain in self.domains[1:]: ## Do not check sys-whonix
             try:
                 command = ['qrexec-client-vm', domain, 'whonix.SdwdateStatus']
-                subprocess.check_output(command, stderr=STDOUT, timeout=seconds)
+                subprocess.check_output(command, stderr=subprocess.STDOUT, timeout=seconds)
+                #print("ok: " + domain)
             except:
+                #print("emit: " + domain)
                 self.signal.emit(domain)
 
     def run(self):
@@ -211,10 +214,18 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def update_menu(self, vm, action):
         self.menu.removeAction(self.exit_action)
 
+        #print("update_menu:")
+        #print("vm:")
+        #print(vm)
+
         ## remove _shutdown
         vm = vm.rsplit('_', 1)[0]
+        #print(vm)
         sdwdate_icon = QtGui.QIcon(self.domain_icon_list[self.domain_list.index(vm)])
         tor_icon = QtGui.QIcon(self.tor_icon[self.tor_status_list.index(self.tor_status)])
+
+        #print("action:")
+        #print(action)
 
         if action == 'update':
             for item in self.menu_list:
@@ -317,6 +328,9 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             self.set_tray_icon()
 
     def parse_sdwdate_status(self, vm, status, message):
+        #print("parse_sdwdate_status:")
+        #print(vm + " | " + status + " | " + message)
+
         icon = self.icon[self.status.index(status)]
 
         if vm not in self.domain_list:
@@ -371,27 +385,32 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         vm_name = ''
         keyword = ''
 
-        with open(self.anon_status_path, 'r') as f:
-            file_content = f.read()
-            print(str(file_content))
-            file_content = file_content.strip()
-            print(str(file_content))
-            file_content = file_content.split(' ')
-            print(str(file_content))
-            try:
-               vm_name = file_content[0]
-            except:
-               error_msg = "anon_vm_status_changed could not set vm_name variable: " + str(sys.exc_info()[0])
-               print(error_msg)
-            try:
-               keyword = file_content[1]
-            except:
-               error_msg = "anon_vm_status_changed could not set keyword variable: " + str(sys.exc_info()[0])
-               print(error_msg)
+        #print("#####")
 
-        if vm_name == '':
-            error_msg = "anon_vm_status_changed unexpected error: vm_name is empty"
-            print(error_msg)
+        with open(self.anon_status_path, 'r') as f:
+            #print("file_content:")
+            file_content = f.read().strip()
+            #print(file_content)
+
+            # Splitting file content and handling possible errors
+            content_parts = file_content.split()
+            if content_parts:
+                vm_name = content_parts[0]
+                #print("vm_name:")
+                #print(vm_name)
+                if len(content_parts) > 1:
+                    keyword = content_parts[1]
+                    #print("keyword:")
+                    #print(keyword)
+                else:
+                    print("No keyword found in file.")
+            else:
+                #print("File content is empty or has no spaces.")
+                ## This happens after the file is truncated because it is being rewritten.
+                return
+
+        if not vm_name:
+            #print("anon_vm_status_changed unexpected error: vm_name is empty")
             return
 
         if keyword == 'shutdown':
@@ -400,13 +419,30 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         try:
             command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
-            p = subprocess.Popen(command, stdout=PIPE, stderr=PIPE)
+            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = p.communicate()
-            status = json.loads(stdout.decode())
-        except:
-            error_msg = "anon_vm_status_changed unexpected error: " + str(sys.exc_info()[0])
+        except Exception as e:
+            error_msg = "Error executing subprocess: " + str(e)
             print(error_msg)
             return
+
+        #print("stdout:")
+        #print(stdout)
+        #print("stderr:")
+        #print(stderr)
+
+        try:
+            status = json.loads(stdout.decode())
+        except json.JSONDecodeError as e:
+            error_msg = "Error parsing JSON: " + str(e)
+            print(error_msg)
+            return
+        except Exception as e:
+            error_msg = "Unexpected error during JSON parsing: " + str(e)
+            print(error_msg)
+            return
+
+        #print(status['message'])
 
         self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
 
