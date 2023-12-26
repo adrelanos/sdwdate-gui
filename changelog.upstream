@@ -1,3 +1,17 @@
+commit 205d5832df681b67c2cc6813a8529473ee647264
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Dec 26 18:06:08 2023 -0500
+
+    fix sdwdate-gui-qubes restart, stop, open log actions; refactoring
+    
+    https://forums.whonix.org/t/sdwdate-gui-for-qubes-testers-wanted-developers-welcome/5469/27
+
+commit eb14289dcc95920efb40d26931e1372c1ba767ef
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Dec 25 20:19:44 2023 +0000
+
+    bumped changelog version
+
 commit 07818548d0eccec1c8978f5fd0ded3e16d6ac170
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Mon Dec 25 15:19:14 2023 -0500
