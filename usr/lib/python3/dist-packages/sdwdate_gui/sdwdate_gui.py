@@ -232,7 +232,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             with open(self.status_path, 'r') as f:
                 status = json.load(f)
         except:
-            error_msg = "status_changed unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "status_changed: unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
@@ -247,7 +247,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
             tor_is_enabled = tor_status.tor_status() == 'tor_enabled'
             tor_is_running = os.path.exists(self.tor_running_path)
         except:
-            error_msg = "tor_status_changed unexpected error: " + str(sys.exc_info()[0])
+            error_msg = "tor_status_changed: unexpected error: " + str(sys.exc_info()[0])
             print(error_msg)
             return
 
@@ -264,21 +264,21 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        command = 'tor-control-panel &'
-        subprocess.Popen(command.split())
+        command = 'tor-control-panel'
+        subprocess.Popen(command.split(), shell=False)
 
     def show_sdwdate_log(self):
-        command = ('/usr/libexec/sdwdate-gui/log-viewer &')
-        subprocess.Popen(command.split())
+        command = ('/usr/libexec/sdwdate-gui/log-viewer')
+        subprocess.Popen(command.split(), shell=False)
 
     def restart_sdwdate(self):
         command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
-        subprocess.Popen(command.split())
+        subprocess.Popen(command.split(), shell=False)
 
     def stop_sdwdate(self):
         if self.tor_status == 'running':
             command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
-            subprocess.Popen(command.split())
+            subprocess.Popen(command.split(), shell=False)
 
 def signal_handler(sig, frame):
     sys.exit(128 + sig)

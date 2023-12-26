@@ -388,7 +388,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         #print("#####")
 
         with open(self.anon_status_path, 'r') as f:
-            #print("file_content:")
+            #print("anon_vm_status_changed: file_content:")
             file_content = f.read().strip()
             #print(file_content)
 
@@ -403,7 +403,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
                     #print("keyword:")
                     #print(keyword)
                 else:
-                    print("No keyword found in file.")
+                    print("anon_vm_status_changed: No keyword found in file.")
             else:
                 #print("File content is empty or has no spaces.")
                 ## This happens after the file is truncated because it is being rewritten.
@@ -419,10 +419,10 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
 
         try:
             command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
-            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
             stdout, stderr = p.communicate()
         except Exception as e:
-            error_msg = "Error executing subprocess: " + str(e)
+            error_msg = "anon_vm_status_changed: Error executing subprocess: " + str(e)
             print(error_msg)
             return
 
@@ -447,11 +447,23 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_sdwdate_status(vm_name, status['icon'], status['message'])
 
     def status_changed(self):
+        with open(self.status_path, 'r') as f:
+            #print("status_changed: file_content:")
+            file_content = f.read().strip()
+            #print(file_content)
+
+        if not file_content:
+            #print("status_changed: File is empty or truncated.")
+            return
+
         try:
-            with open(self.status_path, 'r') as f:
-                status = json.load(f)
-        except:
-            error_msg = "status_changed unexpected error: " + str(sys.exc_info()[0])
+            status = json.loads(file_content)
+        except json.JSONDecodeError as e:
+            error_msg = "status_changed: Error parsing JSON: " + str(e)
+            print(error_msg)
+            return
+        except Exception as e:
+            error_msg = "status_changed: Unexpected error during JSON parsing: " + str(e)
             print(error_msg)
             return
 
@@ -483,34 +495,34 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.parse_tor_status()
 
     def show_tor_status(self):
-        command = 'tor-control-panel &'
-        subprocess.Popen(command.split())
+        command = 'tor-control-panel'
+        subprocess.Popen(command.split(), shell=False)
 
     def show_sdwdate_log(self, vm):
         if vm == self.name:
-            command = ('/usr/libexec/sdwdate-gui/log-viewer &')
-            subprocess.Popen(command.split())
+            command = '/usr/libexec/sdwdate-gui/log-viewer'
         else:
-            command = 'qrexec-client-vm %s whonix.GatewayCommand+"showlog" &' % vm
-            subprocess.Popen(command.split())
+            command = f'qrexec-client-vm {vm} whonix.GatewayCommand+showlog'
+        print(f"show_tor_status: command: {command}")
+        subprocess.Popen(command.split(), shell=False)
 
     def restart_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
                 command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
-                subprocess.Popen(command.split())
             else:
-                command = 'qrexec-client-vm %s whonix.GatewayCommand+"restart" &' % vm
-                subprocess.Popen(command.split())
+                command = f'qrexec-client-vm {vm} whonix.GatewayCommand+restart'
+            print(f"restart_sdwdate: command: {command}")
+            subprocess.Popen(command.split(), shell=False)
 
     def stop_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
                 command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
-                subprocess.Popen(command.split())
             else:
-                command = 'qrexec-client-vm %s whonix.GatewayCommand+"stop" &' % vm
-                subprocess.Popen(command.split())
+                command = f'qrexec-client-vm {vm} whonix.GatewayCommand+stop'
+            print(f"stop_sdwdate: command: {command}")
+            subprocess.Popen(command.split(), shell=False)
 
 def signal_handler(sig, frame):
     sys.exit(128 + sig)
