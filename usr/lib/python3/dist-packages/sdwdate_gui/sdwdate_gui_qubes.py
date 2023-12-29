@@ -60,11 +60,19 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         self.title = 'Time Synchronisation Monitor'
 
         try:
-            self.name = subprocess.check_output(['qubesdb-read', '/name']).decode().strip()
-        except:
-            error_msg = "SdwdateTrayIcon __init__ unexpected error: " + str(sys.exc_info()[0])
-            print(error_msg)
-            self.name = 'name'
+            command = ['qubesdb-read', '/name']
+            output = subprocess.check_output(command, timeout=5)
+        except subprocess.TimeoutExpired:
+            print("SdwdateTrayIcon __init__: ERROR: Command 'qubesdb-read /name' timed out.")
+            output = b''
+        except Exception as e:
+            print(f"Error executing command: {e}")
+            output = b''
+
+        if output:
+            self.name = output.decode().strip()
+        else:
+            self.name = "qubesdb-read-slash-name-timeout"
 
         self.status_path =          '/run/sdwdate/status'
         self.anon_status_path =     '/run/sdwdate-gui/anon-status'
