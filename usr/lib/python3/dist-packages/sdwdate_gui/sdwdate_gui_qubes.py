@@ -428,7 +428,13 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         try:
             command = ['qrexec-client-vm', vm_name, 'whonix.SdwdateStatus']
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
-            stdout, stderr = p.communicate()
+            try:
+                stdout, stderr = p.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                p.kill()
+                stdout, stderr = p.communicate()
+                print(f"anon_vm_status_changed: Timeout: Command '{' '.join(command)}' timed out after 5 seconds.")
+                return
         except Exception as e:
             error_msg = "anon_vm_status_changed: Error executing subprocess: " + str(e)
             print(error_msg)
