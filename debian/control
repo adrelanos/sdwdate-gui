@@ -5,7 +5,7 @@ Source: sdwdate-gui
 Section: misc
 Priority: optional
 Maintainer: Patrick Schleizer <adrelanos@kicksecure.com>
-Build-Depends: debhelper (>= 13), debhelper-compat (= 13)
+Build-Depends: debhelper (>= 13.11.6), debhelper-compat (= 13)
 Homepage: https://www.kicksecure.com/wiki/sdwdate-gui
 Vcs-Browser: https://github.com/Kicksecure/sdwdate-gui
 Vcs-Git: https://github.com/Kicksecure/sdwdate-gui.git
