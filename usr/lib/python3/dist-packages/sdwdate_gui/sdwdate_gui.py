@@ -284,6 +284,10 @@ def signal_handler(sig, frame):
     sys.exit(128 + sig)
 
 def main():
+    if os.geteuid() == 0:
+        print('sdwdate_gui.py: ERROR: Do not run with sudo / as root!')
+        sys.exit(1)
+
     app = QtWidgets.QApplication(["Sdwdate"])
 
     signal.signal(signal.SIGINT, signal_handler)
