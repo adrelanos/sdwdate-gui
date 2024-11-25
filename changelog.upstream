@@ -1,3 +1,22 @@
+commit ce1af47c8ed803d786fa843664b926a6c60edae0
+Merge: 8b31892 5968a48
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Nov 25 16:01:25 2024 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/sudoers'
+
+commit 5968a48858bbbe0bc4397d33c5fbbab8bc7117ea
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Nov 21 19:24:17 2024 -0600
+
+    Remove redundant sudoers config line (already present in package sdwdate)
+
+commit 8b3189249ba65b949465f143082d4fff34f2cc23
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Sep 8 17:41:10 2024 +0000
+
+    bumped changelog version
+
 commit 244accf5078a4a9df8e51b02165761da62642b21
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Sep 8 13:13:35 2024 -0400
