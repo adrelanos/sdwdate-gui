@@ -523,7 +523,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def restart_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
-                command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
+                command = 'leaprun sdwdate-clock-jump'
             else:
                 command = f'qrexec-client-vm {vm} whonix.GatewayCommand+restart'
             print(f"restart_sdwdate: command: {command}")
@@ -532,7 +532,7 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
     def stop_sdwdate(self, vm):
         if self.tor_status == 'running':
             if vm == self.name:
-                command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
+                command = 'leaprun stop-sdwdate'
             else:
                 command = f'qrexec-client-vm {vm} whonix.GatewayCommand+stop'
             print(f"stop_sdwdate: command: {command}")

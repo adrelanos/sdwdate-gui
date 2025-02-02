@@ -6,8 +6,5 @@ user ALL=NOPASSWD: /bin/systemctl --no-pager --no-block start sdwdate
 user ALL=NOPASSWD: /bin/systemctl --no-pager --no-block restart sdwdate
 user ALL=NOPASSWD: /bin/systemctl --no-pager --no-block stop sdwdate
 
-## Allow user 'user' to run tor_control-panel without password.
-user ALL=NOPASSWD: /usr/bin/tor-control-panel
-
 ## Allow user "user" running sdwdate-log-viewer without a password.
 user ALL=NOPASSWD: /usr/bin/sdwdate-log-viewer
