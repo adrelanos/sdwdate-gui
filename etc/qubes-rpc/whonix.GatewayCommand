@@ -8,10 +8,10 @@ case $1 in
         /usr/libexec/sdwdate-gui/log-viewer
         ;;
     "restart")
-        sudo --non-interactive /usr/sbin/sdwdate-clock-jump
+        leaprun sdwdate-clock-jump
         ;;
     "stop")
-        sudo --non-interactive systemctl --no-pager --no-block stop sdwdate
+        leaprun stop-sdwdate
         ;;
     *)
 esac
