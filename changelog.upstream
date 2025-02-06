@@ -1,3 +1,40 @@
+commit 94a8ccb5d5f54790d4f98520eda39f1c17fbd1cb
+Merge: f00551d a8883de
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Feb 6 11:18:36 2025 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/privleap'
+
+commit a8883debf8fde9cedf3cdf8d8669a6df21cb6766
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Wed Feb 5 20:19:25 2025 -0500
+
+    Fix ASCII check in commit-sdwdate-gui-anon-status
+
+commit f91cd35568659bba629d455e92dd10a7fe820689
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Wed Feb 5 00:46:28 2025 -0600
+
+    (wip) Make sdwdate-gui-qubes work using privleap
+
+commit bad81db9218661ed34f116330b20782e696f6af0
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Mon Feb 3 21:33:56 2025 -0600
+
+    Add privleap as a dependency
+
+commit 4e0bf613ffa1755f7b73f8e26dd0e77b7cac7a8a
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Sun Feb 2 16:32:14 2025 -0600
+
+    Port to use leaprun rather than sudo
+
+commit f00551de59c04d28175ff2f36a0ac51e15d2e958
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Jan 23 16:28:40 2025 +0000
+
+    bumped changelog version
+
 commit 22c07ef7f56670fe5392c9e6186fa1827a5344f1
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Jan 23 11:12:24 2025 -0500
