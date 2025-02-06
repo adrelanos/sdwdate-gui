@@ -14,9 +14,13 @@ def main():
         sys.exit(1)
 
     for idx, byte_val in enumerate(anon_status_bytes):
-        ## Bail on anything other than 7-bit ASCII
-        if byte_val < 0x1F or byte_val > 0x7F:
-            sys.exit(1)
+        ## Bail on anything other than 7-bit ASCII.
+        ## Everything between 0x1F exclusive and 0x7F exclusive are printable
+        ## characters.
+        if byte_val <= 0x1F or byte_val >= 0x7F:
+            ## 0x0A == newline
+            if byte_val != 0x0A:
+                sys.exit(1)
 
     anon_status_str = anon_status_bytes.decode("utf-8").strip()
     anon_status_str_parts = anon_status_str.split(" ")
@@ -24,8 +28,7 @@ def main():
     if len(anon_status_str_parts) > 2:
         sys.exit(1)
 
-    ## TODO: Is "shutdown" really the only legal keyword?
-    if len(anon_status_str_parts) == 2 and anon_status_str_parts[1] != "shutdown":
+    if len(anon_status_str_parts) == 2 and anon_status_str_parts[1] not in ("shutdown", "status"):
         sys.exit(1)
 
     with open("/run/sdwdate-gui/anon-status", "w", encoding = "utf-8") as f:
