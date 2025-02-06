@@ -272,12 +272,12 @@ class SdwdateTrayIcon(QtWidgets.QSystemTrayIcon):
         subprocess.Popen(command.split(), shell=False)
 
     def restart_sdwdate(self):
-        command = 'sudo --non-interactive /usr/sbin/sdwdate-clock-jump'
+        command = 'leaprun sdwdate-clock-jump'
         subprocess.Popen(command.split(), shell=False)
 
     def stop_sdwdate(self):
         if self.tor_status == 'running':
-            command = 'sudo --non-interactive systemctl --no-pager --no-block stop sdwdate'
+            command = 'leaprun stop-sdwdate'
             subprocess.Popen(command.split(), shell=False)
 
 def signal_handler(sig, frame):

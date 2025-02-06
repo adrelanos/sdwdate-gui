@@ -1,0 +1,38 @@
+#!/usr/bin/python3 -u
+
+## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+import sys
+
+def main():
+    anon_status_bytes = b""
+    try:
+        with open("/tmp/sdwdate-gui-tmp-status", "rb") as f:
+            anon_status_bytes = f.read(1024)
+    except Exception:
+        sys.exit(1)
+
+    for idx, byte_val in enumerate(anon_status_bytes):
+        ## Bail on anything other than 7-bit ASCII.
+        ## Everything between 0x1F exclusive and 0x7F exclusive are printable
+        ## characters.
+        if byte_val <= 0x1F or byte_val >= 0x7F:
+            ## 0x0A == newline
+            if byte_val != 0x0A:
+                sys.exit(1)
+
+    anon_status_str = anon_status_bytes.decode("utf-8").strip()
+    anon_status_str_parts = anon_status_str.split(" ")
+    ## A maximum of two space-separated parts are legal.
+    if len(anon_status_str_parts) > 2:
+        sys.exit(1)
+
+    if len(anon_status_str_parts) == 2 and anon_status_str_parts[1] not in ("shutdown", "status"):
+        sys.exit(1)
+
+    with open("/run/sdwdate-gui/anon-status", "w", encoding = "utf-8") as f:
+        f.write(f"{anon_status_str}\n")
+
+if __name__ == "__main__":
+    main()
