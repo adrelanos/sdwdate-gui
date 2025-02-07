@@ -3,7 +3,8 @@
 ## Copyright (C) 2018 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions
 
-echo "$QREXEC_REMOTE_DOMAIN $1" | tee /tmp/sdwdate-gui-tmp-status
+mkdir --parents -- /run/user/1000/sdwdate
+echo "$QREXEC_REMOTE_DOMAIN $1" | tee /run/user/1000/sdwdate/sdwdate-gui-tmp-status
 leaprun commit-sdwdate-gui-anon-status
 
 #sudo \
