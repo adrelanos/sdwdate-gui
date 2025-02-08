@@ -1,3 +1,28 @@
+commit 0aeb59cc5b2ba6466c863367bcd5e159d02cfc48
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Feb 8 05:43:36 2025 -0500
+
+    use end of options
+
+commit ab790318112b5963c23d5dbed51aec1201cb5201
+Merge: 7516ca6 79df7da
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Feb 8 05:41:58 2025 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/temp-file-move'
+
+commit 79df7daaef3a15ddfee491362a427063cdfeee08
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Fri Feb 7 14:36:50 2025 -0600
+
+    Save sdwdate-gui-qubes temp status files under /run/user/1000/sdwdate
+
+commit 7516ca660f11966454914c6249d46677c37731ec
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Feb 6 16:21:59 2025 +0000
+
+    bumped changelog version
+
 commit 94a8ccb5d5f54790d4f98520eda39f1c17fbd1cb
 Merge: f00551d a8883de
 Author: Patrick Schleizer <adrelanos@whonix.org>
