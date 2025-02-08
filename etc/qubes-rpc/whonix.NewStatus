@@ -4,7 +4,7 @@
 ## See the file COPYING for copying conditions
 
 mkdir --parents -- /run/user/1000/sdwdate
-echo "$QREXEC_REMOTE_DOMAIN $1" | tee /run/user/1000/sdwdate/sdwdate-gui-tmp-status
+echo "$QREXEC_REMOTE_DOMAIN $1" | tee -- /run/user/1000/sdwdate/sdwdate-gui-tmp-status
 leaprun commit-sdwdate-gui-anon-status
 
 #sudo \
