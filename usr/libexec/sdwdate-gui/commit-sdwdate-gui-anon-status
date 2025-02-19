@@ -8,7 +8,7 @@ import sys
 def main():
     anon_status_bytes = b""
     try:
-        with open("/run/user/1000/sdwdate/sdwdate-gui-tmp-status", "rb") as f:
+        with open("/run/sdwdate-gui-qubes-status/sdwdate-gui-tmp-status", "rb") as f:
             anon_status_bytes = f.read(1024)
     except Exception:
         sys.exit(1)
