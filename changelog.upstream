@@ -1,3 +1,22 @@
+commit 7140b9ba263304d57a80ec933e17db667f5b6397
+Merge: fee8c77 29f32c6
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Feb 20 00:13:45 2025 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/run-user-1000'
+
+commit 29f32c63ee698465c73c626789cee3d5c25bdb3e
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Wed Feb 19 01:14:48 2025 -0600
+
+    Use a safe directory outside of /run/user/1000 for inter-qube sdwdate status communication
+
+commit fee8c771ef4ec8e60925f3aa35839525909ac4f9
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Feb 17 12:28:29 2025 +0000
+
+    bumped changelog version
+
 commit 797b63e061232a9cfc64fb6a36bcf295fb2787f2
 Merge: 5360fd2 414212e
 Author: Patrick Schleizer <adrelanos@whonix.org>
