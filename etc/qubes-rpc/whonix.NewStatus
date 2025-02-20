@@ -3,13 +3,7 @@
 ## Copyright (C) 2018 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions
 
-if [ ! -d '/run/user/1000' ]; then
-  mkdir --parents -- /run/user/1000 || true
-  chown 1000:1000 /run/user/1000 || true
-  chmod 0700 /run/user/1000 || true
-fi
-mkdir --parents -- /run/user/1000/sdwdate
-echo "$QREXEC_REMOTE_DOMAIN $1" | tee -- /run/user/1000/sdwdate/sdwdate-gui-tmp-status
+echo "$QREXEC_REMOTE_DOMAIN $1" | tee -- /run/sdwdate-gui-qubes-status/sdwdate-gui-tmp-status
 leaprun commit-sdwdate-gui-anon-status
 
 #sudo \
