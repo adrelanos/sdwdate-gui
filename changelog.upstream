@@ -1,3 +1,15 @@
+commit a40bf7d73673d027b524c1bcc3497938e5c78695
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Apr 17 08:15:39 2025 -0400
+
+    delete symlink: `man/sdwdate-gui-qubes.1.ronn`
+
+commit f31247a133434ce6623a727b7132aa5d20c63f82
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Feb 21 09:56:03 2025 +0000
+
+    bumped changelog version
+
 commit f9074e025c14bd6a9a576824ec1eef316682f505
 Merge: 1b5cee6 6e07eca
 Author: Patrick Schleizer <adrelanos@whonix.org>
