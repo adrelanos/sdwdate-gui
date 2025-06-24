@@ -1,0 +1,13 @@
+[Unit]
+Description=sdwdate graphical user interface - Qubes socket service enabler
+
+ConditionPathExists=/usr/share/qubes/marker-vm
+ConditionPathExists=!/run/qubes/this-is-templatevm
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/usr/libexec/sdwdate-gui/sdwdate-gui-qubes-proxy-helper
+
+[Install]
+WantedBy=multi-user.target
