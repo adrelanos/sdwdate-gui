@@ -118,7 +118,7 @@ class SdwdateGuiMonitor(QObject):
         self.torrc_path: str = "/usr/local/etc/torrc.d"
         self.tor_running_path: str = "/run/tor/tor.pid"
 
-        self.server_socket: QLocalSocket = QLocalSocket()
+        self.server_socket: QLocalSocket = QLocalSocket(self)
         uid_str: str = str(os.getuid())
         sdwdate_run_dir: Path = Path(f"/run/user/{uid_str}/sdwdate-gui")
         server_socket_path: Path = sdwdate_run_dir.joinpath("sdwdate-gui-server.socket")
@@ -165,12 +165,16 @@ class SdwdateGuiMonitor(QObject):
         else:
             self.tor_watcher = QFileSystemWatcher(
                 [self.tor_path, self.torrc_path],
+                self,
             )
             self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
             self.tor_status_changed()
 
         ## TODO: wait until file self.status_path is created
-        self.sdwdate_watcher = QFileSystemWatcher([self.sdwdate_status_path])
+        self.sdwdate_watcher = QFileSystemWatcher(
+            [self.sdwdate_status_path],
+            self,
+        )
         self.sdwdate_watcher.fileChanged.connect(self.sdwdate_status_changed)
         self.sdwdate_status_changed()
 
@@ -411,6 +415,8 @@ def try_reconnect_maybe() -> None:
         sys.exit(0)
 
     time.sleep(1)
+    if GlobalData.monitor is not None:
+        GlobalData.monitor.deleteLater()
     GlobalData.monitor = SdwdateGuiMonitor()
     GlobalData.monitor.serverDisconnected.connect(try_reconnect_maybe)
 

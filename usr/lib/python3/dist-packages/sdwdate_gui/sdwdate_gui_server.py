@@ -176,6 +176,10 @@ class SdwdateGuiClient(QObject):
         self.client_socket.readyRead.connect(self.__handle_incoming_data)
         self.client_socket.disconnected.connect(self.clientDisconnected.emit)
 
+    def cleanup(self) -> None:
+        self.client_socket.close()
+        self.client_socket.deleteLater()
+
     def client_name_or_unknown(self) -> str:
         """
         Returns the client name if set, otherwise returns "Unknown".
@@ -596,12 +600,12 @@ class SdwdateGuiFrame(QDialog):
         self.setWindowTitle("Time Synchronization Monitor")
         self.setMinimumWidth(200)
 
-        icon_widget = QLabel()
+        icon_widget = QLabel(self)
         image = QImage(icon_path)
         icon_widget.setAlignment(Qt.AlignRight)
         icon_widget.setPixmap(QPixmap.fromImage(image))
 
-        text_widget = QLabel()
+        text_widget = QLabel(self)
         text_widget.setTextInteractionFlags(
             Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse
         )
@@ -609,7 +613,7 @@ class SdwdateGuiFrame(QDialog):
         text_widget.setAlignment(Qt.AlignTop)
         text_widget.setText(text)
 
-        close_button = QPushButton("Close")
+        close_button = QPushButton("Close", self)
         close_button.setMaximumWidth(50)
         close_button.clicked.connect(self.quiet_close)
 
@@ -671,7 +675,7 @@ class SdwdateTrayIcon(QSystemTrayIcon):
         self.setContextMenu(self.menu)
         self.activated.connect(self.show_menu)
 
-        self.listener: SdwdateGuiListener = SdwdateGuiListener()
+        self.listener: SdwdateGuiListener = SdwdateGuiListener(self)
         self.listener.newClient.connect(self.accept_client)
 
     def show_status_msg(
@@ -737,6 +741,7 @@ to connect to or configure the Tor network."""
 
         if self.msg_window is not None and self.msg_window.isVisible():
             self.msg_window.close()
+            self.msg_window.deleteLater()
 
         self.msg_window = msg_window
         self.msg_window_type = message_type
@@ -765,10 +770,12 @@ to connect to or configure the Tor network."""
             ## is Tor-enabled or not.
             client_icon: QIcon
             if client.tor_status in (TorStatus.STOPPED, TorStatus.DISABLED):
-                client_icon = QIcon(self.tor_icon_list[client.tor_status.value])
+                client_icon = QIcon(
+                    self.tor_icon_list[client.tor_status.value],
+                )
             elif client.sdwdate_status != SdwdateStatus.UNKNOWN:
                 client_icon = QIcon(
-                    self.sdwdate_icon_list[client.sdwdate_status.value]
+                    self.sdwdate_icon_list[client.sdwdate_status.value],
                 )
             else:
                 continue
@@ -968,7 +975,9 @@ to connect to or configure the Tor network."""
 
         for idx, client in enumerate(self.client_list):
             if client.client_name == sender_client.client_name:
-                self.client_list.pop(idx)
+                del_client: SdwdateGuiClient = self.client_list.pop(idx)
+                del_client.cleanup()
+                del_client.deleteLater()
                 self.regen_menu()
                 return
 
@@ -1098,7 +1107,7 @@ class SdwdateGuiListener(QObject):
                 exc_info=e,
             )
 
-        self.server: QLocalServer = QLocalServer()
+        self.server: QLocalServer = QLocalServer(self)
         self.server.listen(str(sdwdate_socket_file))
         self.server.newConnection.connect(self.spawn_client)
 
@@ -1110,7 +1119,7 @@ class SdwdateGuiListener(QObject):
 
         new_socket: QLocalSocket | None = self.server.nextPendingConnection()
         assert new_socket is not None
-        client: SdwdateGuiClient = SdwdateGuiClient(new_socket)
+        client: SdwdateGuiClient = SdwdateGuiClient(new_socket, self)
         self.newClient.emit(client)
 
 
