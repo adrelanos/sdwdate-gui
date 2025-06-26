@@ -47,6 +47,12 @@ class GlobalData:
     anon_connection_wizard_installed: bool = False
     do_reconnect: bool = True
     monitor: SdwdateGuiMonitor | None = None
+    uid_str: str = str(os.getuid())
+    sdwdate_run_dir: Path = Path(f"/run/user/{uid_str}/sdwdate-gui")
+    server_socket_path: Path = sdwdate_run_dir.joinpath(
+        "sdwdate-gui-server.socket",
+    )
+    server_pid_path: Path = sdwdate_run_dir.joinpath("server_pid")
 
 
 GlobalData.anon_connection_wizard_installed = os.path.exists(
@@ -119,34 +125,29 @@ class SdwdateGuiMonitor(QObject):
         self.tor_running_path: str = "/run/tor/tor.pid"
 
         self.server_socket: QLocalSocket = QLocalSocket(self)
-        uid_str: str = str(os.getuid())
-        sdwdate_run_dir: Path = Path(f"/run/user/{uid_str}/sdwdate-gui")
-        server_socket_path: Path = sdwdate_run_dir.joinpath("sdwdate-gui-server.socket")
-        server_pid_path: Path = sdwdate_run_dir.joinpath("server_pid")
-        while not server_socket_path.exists():
+        while not GlobalData.server_socket_path.exists():
             time.sleep(0.1)
-        self.server_socket.connectToServer(str(server_socket_path))
+        self.server_socket.connectToServer(str(GlobalData.server_socket_path))
         self.server_socket.waitForConnected()
         if self.server_socket.state() != QLocalSocket.ConnectedState:
             logging.error("Could not connect to sdwdate-gui server!")
             self.serverDisconnected.emit()
             return
 
-        if server_pid_path.is_file() or not running_in_qubes_os():
+        if GlobalData.server_pid_path.is_file() or not running_in_qubes_os():
             ## We have to send our own blank qrexec header.
             while not self.server_socket.write(b"\0") == 1:
                 if self.server_socket.state() != QLocalSocket.ConnectedState:
-                    logging.error("sdwdate-gui server disconnected very quickly!")
+                    logging.error(
+                        "sdwdate-gui server disconnected very quickly!"
+                    )
                     self.serverDisconnected.emit()
                     return
 
             ## We also have to set our own name.
             if running_in_qubes_os():
                 client_name: str = subprocess.run(
-                    [
-                        "qubesdb-read",
-                        "/name"
-                    ],
+                    ["qubesdb-read", "/name"],
                     capture_output=True,
                     text=True,
                     check=False,
@@ -407,11 +408,16 @@ class SdwdateGuiMonitor(QObject):
 
 def try_reconnect_maybe() -> None:
     """
-    Attempts to reconnect to the sdwdate-gui server if running on Qubes OS.
-    Otherwise, terminates the client.
+    Attempts to reconnect to the sdwdate-gui server if running on Qubes OS
+    and there is NOT a server running on the local VM. Otherwise, terminates
+    the client.
     """
 
-    if not running_in_qubes_os() or not GlobalData.do_reconnect:
+    if (
+        not running_in_qubes_os()
+        or not GlobalData.do_reconnect
+        or GlobalData.server_pid_path.is_file()
+    ):
         sys.exit(0)
 
     time.sleep(1)

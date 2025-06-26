@@ -6,10 +6,10 @@
 # pylint: disable=no-name-in-module,broad-exception-caught,too-many-lines
 
 """
-The server component of sdwdate-gui. Presents a graphical interface to sdwdate
-to the user. Expects to be connected to by one or more sdwdate_gui_client
-instances which provide data about sdwdate to the server component and runs
-tasks at the server component's request.
+The server component of sdwdate-gui. Presents a graphical interface for
+sdwdate to the user. Expects to be connected to by one or more
+sdwdate_gui_client instances which provide data about sdwdate to the server
+component and runs tasks at the server component's request.
 """
 
 import os
@@ -164,6 +164,7 @@ class SdwdateGuiClient(QObject):
         """
         QObject.__init__(self, parent)
         self.client_socket: QLocalSocket = client_socket
+        self.client_socket.setParent(self)
         self.client_name: str | None = None
         self.client_name_set: bool = False
         self.sdwdate_status: SdwdateStatus = SdwdateStatus.UNKNOWN
@@ -175,10 +176,6 @@ class SdwdateGuiClient(QObject):
 
         self.client_socket.readyRead.connect(self.__handle_incoming_data)
         self.client_socket.disconnected.connect(self.clientDisconnected.emit)
-
-    def cleanup(self) -> None:
-        self.client_socket.close()
-        self.client_socket.deleteLater()
 
     def client_name_or_unknown(self) -> str:
         """
@@ -309,7 +306,9 @@ class SdwdateGuiClient(QObject):
                         )
                         self.kick_client()
                         return
-                    if not self.__set_sdwdate_status(msg_parts[1], msg_parts[2]):
+                    if not self.__set_sdwdate_status(
+                        msg_parts[1], msg_parts[2]
+                    ):
                         return
                 case "set_tor_status":
                     if len(msg_parts) != 2:
@@ -437,7 +436,7 @@ class SdwdateGuiClient(QObject):
                 self.kick_client()
                 return False
 
-        decode_re: Pattern[str] = re.compile(r"\\\d+")
+        decode_re: Pattern[str] = re.compile(r"\\\d{3}")
         octal_escape_set: set[str] = set(decode_re.findall(sdwdate_msg_str))
         for octal_escape in octal_escape_set:
             octal_str: str = octal_escape.strip("\\")
@@ -698,10 +697,17 @@ class SdwdateTrayIcon(QSystemTrayIcon):
         if message_type == MessageType.SDWDATE:
             if client.sdwdate_msg is None:
                 return
-            msg_window = SdwdateGuiFrame(
-                "Last message from sdwdate:<br><br>" + client.sdwdate_msg,
-                self.sdwdate_icon_list[client.sdwdate_status.value],
-            )
+            if running_in_qubes_os():
+                msg_window = SdwdateGuiFrame(
+                    "Last message from sdwdate on "
+                    f"{client.client_name}:<br><br>" + client.sdwdate_msg,
+                    self.sdwdate_icon_list[client.sdwdate_status.value],
+                )
+            else:
+                msg_window = SdwdateGuiFrame(
+                    "Last message from sdwdate:<br><br>" + client.sdwdate_msg,
+                    self.sdwdate_icon_list[client.sdwdate_status.value],
+                )
         else:  # message_type == MessageType.TOR
             msg_text: str
             match client.tor_status:
@@ -734,10 +740,16 @@ to connect to or configure the Tor network."""
                     )
                     return
 
-            msg_window = SdwdateGuiFrame(
-                msg_text,
-                self.tor_icon_list[client.tor_status.value],
-            )
+            if running_in_qubes_os():
+                msg_window = SdwdateGuiFrame(
+                    f"Tor status on {client.client_name}:<br><br>" + msg_text,
+                    self.tor_icon_list[client.tor_status.value],
+                )
+            else:
+                msg_window = SdwdateGuiFrame(
+                    "Tor status:<br><br>" + msg_text,
+                    self.tor_icon_list[client.tor_status.value],
+                )
 
         if self.msg_window is not None and self.msg_window.isVisible():
             self.msg_window.close()
@@ -803,7 +815,7 @@ to connect to or configure the Tor network."""
                 action: QAction = QAction(
                     QIcon(self.tor_icon_list[target_tor_status.value]),
                     "Show Tor status",
-                    self,
+                    action_menu,
                 )
                 action.triggered.connect(
                     functools.partial(
@@ -816,7 +828,7 @@ to connect to or configure the Tor network."""
                 action = QAction(
                     QIcon(self.icon_path + "advancedsettings.ico"),
                     "Tor control panel",
-                    self,
+                    action_menu,
                 )
                 action.triggered.connect(
                     functools.partial(client.open_tor_control_panel)
@@ -833,7 +845,7 @@ to connect to or configure the Tor network."""
             action = QAction(
                 QIcon(self.sdwdate_icon_list[target_sdwdate_status.value]),
                 "Show sdwdate status",
-                self,
+                action_menu,
             )
             action.triggered.connect(
                 functools.partial(
@@ -849,7 +861,7 @@ to connect to or configure the Tor network."""
             action = QAction(
                 QIcon(self.icon_path + "sdwdate-log.png"),
                 "Open sdwdate's log",
-                self,
+                action_menu,
             )
             action.triggered.connect(functools.partial(client.open_sdwdate_log))
             action_menu.addAction(action)
@@ -858,7 +870,7 @@ to connect to or configure the Tor network."""
             action = QAction(
                 QIcon(self.icon_path + "restart-sdwdate.png"),
                 "Restart sdwdate",
-                self,
+                action_menu,
             )
             action.triggered.connect(functools.partial(client.restart_sdwdate))
             action_menu.addAction(action)
@@ -867,7 +879,7 @@ to connect to or configure the Tor network."""
             action = QAction(
                 QIcon(self.icon_path + "stop-sdwdate.png"),
                 "Stop sdwdate",
-                self,
+                action_menu,
             )
             action.triggered.connect(functools.partial(client.stop_sdwdate))
             action_menu.addAction(action)
@@ -877,7 +889,9 @@ to connect to or configure the Tor network."""
         ## Add a button to quit the sdwdate GUI server underneath all the
         ## client entries
         action = QAction(
-            QIcon(self.icon_path + "application-exit.png"), "&Exit", self
+            QIcon(self.icon_path + "application-exit.png"),
+            "&Exit",
+            self.menu,
         )
         action.triggered.connect(sys.exit)
         self.menu.addAction(action)
@@ -905,7 +919,10 @@ to connect to or configure the Tor network."""
             ):
                 tor_status_index = client.tor_status.value
 
-        if tor_status_index in (TorStatus.STOPPED.value, TorStatus.DISABLED.value):
+        if tor_status_index in (
+            TorStatus.STOPPED.value,
+            TorStatus.DISABLED.value,
+        ):
             self.setIcon(QIcon(self.tor_icon_list[tor_status_index]))
         elif sdwdate_status_index > -1:
             self.setIcon(QIcon(self.sdwdate_icon_list[sdwdate_status_index]))
@@ -970,14 +987,11 @@ to connect to or configure the Tor network."""
         Purges a disconnected client from the client list.
         """
 
-        if not sender_client.client_name_set:
-            return
+        sender_client.deleteLater()
 
         for idx, client in enumerate(self.client_list):
-            if client.client_name == sender_client.client_name:
-                del_client: SdwdateGuiClient = self.client_list.pop(idx)
-                del_client.cleanup()
-                del_client.deleteLater()
+            if client == sender_client:
+                self.client_list.pop(idx)
                 self.regen_menu()
                 return
 
@@ -1087,6 +1101,7 @@ class SdwdateGuiListener(QObject):
                 "Could not erase old PID file!",
                 exc_info=e,
             )
+            sys.exit(1)
 
         try:
             with open(sdwdate_pid_file, "w", encoding="utf-8") as f:
@@ -1096,6 +1111,7 @@ class SdwdateGuiListener(QObject):
                 "Could not save PID to PID file!",
                 exc_info=e,
             )
+            sys.exit(1)
 
         try:
             os.remove(sdwdate_socket_file)
@@ -1106,6 +1122,7 @@ class SdwdateGuiListener(QObject):
                 "Could not erase old server socket!",
                 exc_info=e,
             )
+            sys.exit(1)
 
         self.server: QLocalServer = QLocalServer(self)
         self.server.listen(str(sdwdate_socket_file))
