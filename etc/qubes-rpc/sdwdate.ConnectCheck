@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+## See if the socket for sdwdate-gui-server exists or not.
+if [ -S '/run/qubes-rpc/sdwdate.Connect' ]; then
+  printf '%s\n' 'y'
+else
+  printf '%s\n' 'n'
+fi
