@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 13.11.6), debhelper-compat (= 13)
 Homepage: https://www.kicksecure.com/wiki/sdwdate-gui
 Vcs-Browser: https://github.com/Kicksecure/sdwdate-gui
 Vcs-Git: https://github.com/Kicksecure/sdwdate-gui.git
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 
 Package: sdwdate-gui
