@@ -931,11 +931,17 @@ to connect to or configure the Tor network."""
 
     def show_menu(self, event: QSystemTrayIcon.ActivationReason) -> None:
         """
-        Displays the context menu.
+        Swallows left-clicks on the context menu. This method of showing the
+        context menu is broken under Wayland, right-clicking should be used
+        instead.
+
+        TODO: Figure out how to get left-clicking to work rather than just
+        disabling it.
         """
 
-        if event == QSystemTrayIcon.ActivationReason.Trigger:
-            self.menu.exec_(QCursor.pos())
+        #if event == QSystemTrayIcon.ActivationReason.Trigger:
+        #    self.menu.exec_(QCursor.pos())
+        pass
 
     def handle_client_name_change(
         self,
