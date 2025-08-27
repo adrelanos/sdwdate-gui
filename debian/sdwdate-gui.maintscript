@@ -1,0 +1,13 @@
+## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+## Obsolete qrexec service scripts.
+rm_conffile /etc/qubes-rpc/whonix.GatewayCommand
+rm_conffile /etc/qubes-rpc/whonix.NewStatus
+rm_conffile /etc/qubes-rpc/whonix.SdwdateStatus
+
+## Obsolete privleap action used with old qrexec scripts
+rm_conffile /etc/privleap/conf.d/sdwdate-gui.conf
+
+## Obsolete desktop file for automatically starting monolithic sdwdate-gui
+rm_conffile /etc/xdg/autostart/sdwdate-gui.desktop

@@ -34,6 +34,10 @@ case "$1" in
        mkdir -p /run/sdwdate-gui || true
        ## Fix bug since /run/sdwdate-gui might be owned by onion-grater.
        chown sdwdate-gui:sdwdate-gui /run/sdwdate-gui || true
+
+       ## Enable Qubes-related services.
+       deb-systemd-helper enable sdwdate-gui-qubes@.socket
+       deb-systemd-helper enable sdwdate-gui-qubes-proxy-helper.service
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

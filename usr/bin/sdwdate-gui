@@ -1,6 +1,4 @@
 #!/bin/bash
 
-## Copyright (C) 2018 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
-
-/usr/libexec/sdwdate-gui/sdwdate-gui
+/usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui_server.py &
+/usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui_client.py &
