@@ -1,8 +1,41 @@
+commit 93d3102c4b882b994895d69b69cb2caac2161d29
+Merge: 45b3ca9 0bed235
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Aug 27 12:34:11 2025 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit 0bed2357538eed237d08aefe034bd8e9b36a0308
+Merge: e7b838a 45b3ca9
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Tue Aug 26 19:20:38 2025 -0500
+
+    Merge branch 'master' into arraybolt3/trixie
+
+commit 45b3ca99314d526a02481363d48c0cf33c707248
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 26 09:15:57 2025 +0000
+
+    bumped changelog version
+
 commit 0c9bc4bced3e3a031d3208c5f91bac83e31eff62
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Tue Aug 26 05:15:55 2025 -0400
 
     re-generate man pages (generated using "genmkfile manpages")
+
+commit e7b838a42a69eb9a59a12bfc11e3a03d7492fdbf
+Merge: 858bf0d aa5cbe8
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Aug 21 20:08:48 2025 -0500
+
+    Merge branch 'master' into arraybolt3/trixie
+
+commit 858bf0db230027fc2e1b276b7fc2ad3098716da5
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Aug 21 18:37:30 2025 -0500
+
+    Disable left-clicking on the sdwdate-gui icon
 
 commit aa5cbe8f1b3f21897efe9d90a676413c0c5a99c1
 Author: Patrick Schleizer <adrelanos@whonix.org>
@@ -15,6 +48,43 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Wed Aug 20 06:25:35 2025 -0400
 
     readme
+
+commit 0a132f2b5cbc1cada7748f6140c88d509747df66
+Merge: 987fe16 bb1de54
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Mon Aug 18 22:25:42 2025 -0500
+
+    Merge branch 'arraybolt3/qubes-redesign' into arraybolt3/trixie
+
+commit 987fe16c51ff22cbf8acb58f08b6ca413b8e34d9
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Tue Aug 5 22:58:06 2025 -0500
+
+    Port to Trixie.
+
+commit bb1de5438913133cf49cb11414516d00b55e32c2
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Fri Jun 27 11:05:05 2025 -0500
+
+    Add rm_conffile commands for migration to new sdwdate-gui architecture
+
+commit 9fe4b7c8e1b10b1c84805d11cbbe8205a4e76431
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Wed Jun 25 20:18:47 2025 -0500
+
+    More sdwdate-gui rewrite bugfixes
+
+commit 5d6d5e90f3bdb9a91a88f7c651fc3478f5b305a4
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Tue Jun 24 20:36:39 2025 -0500
+
+    Fix memory management issues in client and server
+
+commit b632c84f72dd2d03fa128e46ad38e13889bedad1
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Mon Jun 23 22:41:09 2025 -0500
+
+    Rewrite sdwdate-gui to use a client-server model
 
 commit b9869462ca0267c3ee43da61879e84ee2e0e7d35
 Author: Patrick Schleizer <adrelanos@whonix.org>
