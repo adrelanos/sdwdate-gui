@@ -12,7 +12,12 @@ target_key="${1:-}"
 [ -z "${target_key}" ] && exit 2
 final_val=""
 
-for config_file in /etc/sdwdate-gui.d/*; do
+shopt -s nullglob
+for config_file in
+  /etc/sdwdate-gui.d/*.conf \
+  /usr/local/etc/sdwdate-gui.d/*.conf \
+  ; do
+
   while read -r line; do
     # shellcheck disable=SC2076
     if [[ "${line}" =~ '.*#' ]]; then
