@@ -13,7 +13,7 @@ target_key="${1:-}"
 final_val=""
 
 shopt -s nullglob
-for config_file in
+for config_file in \
   /etc/sdwdate-gui.d/*.conf \
   /usr/local/etc/sdwdate-gui.d/*.conf \
   ; do
