@@ -1,3 +1,34 @@
+commit 94bdfd5050cc75d0670da067c57fda9fa7689a95
+Merge: 72614e6 ce60711
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Aug 30 07:59:14 2025 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit ce607117f7aad71a52f72b9e51623d0815f6832b
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Aug 28 23:27:57 2025 -0500
+
+    fix omitted backslash
+
+commit 2718e7e0dc9b786018f73f4d9bd8545adffbf74b
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Aug 28 23:12:24 2025 -0500
+
+    Make sdwdate-gui configuration parsing more robust, also parse /usr/local/etc/sdwdate-gui.d
+
+commit 53e0fa38311ad0d348a201f3d72f509fb456db24
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Aug 28 22:57:57 2025 -0500
+
+    Only enable Qubes-related services on Qubes OS
+
+commit 72614e6285a94cb24953859bb2a9075d53dd1169
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Aug 27 19:30:39 2025 +0000
+
+    bumped changelog version
+
 commit 93d3102c4b882b994895d69b69cb2caac2161d29
 Merge: 45b3ca9 0bed235
 Author: Patrick Schleizer <adrelanos@whonix.org>
