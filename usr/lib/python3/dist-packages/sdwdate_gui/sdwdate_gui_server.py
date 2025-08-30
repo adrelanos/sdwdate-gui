@@ -60,6 +60,7 @@ class GlobalData:
     """
 
     sdwdate_gui_conf_dir: Path = Path("/etc/sdwdate-gui.d")
+    sdwdate_gui_alt_conf_dir: Path = Path("/usr/local/etc/sdwdate-gui.d")
     should_run_in_qubes: bool = False
 
 
@@ -1211,7 +1212,16 @@ def parse_config_files() -> None:
     for config_file in GlobalData.sdwdate_gui_conf_dir.iterdir():
         if not config_file.is_file():
             continue
+        if not str(config_file).endswith(".conf"):
+            continue
         config_file_list.append(config_file)
+    if GlobalData.sdwdate_gui_alt_conf_dir.is_dir():
+        for config_file in GlobalData.sdwdate_gui_alt_conf_dir.iterdir():
+            if not config_file.is_file():
+                continue
+            if not str(config_file).endswith(".conf"):
+                continue
+            config_file_list.append(config_file)
     config_file_list.sort()
 
     for config_file in config_file_list:
