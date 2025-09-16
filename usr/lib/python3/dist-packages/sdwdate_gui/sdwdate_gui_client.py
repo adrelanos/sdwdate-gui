@@ -124,6 +124,9 @@ class SdwdateGuiMonitor(QObject):
         self.torrc_path: str = "/usr/local/etc/torrc.d"
         self.tor_running_path: str = "/run/tor/tor.pid"
 
+        self.sdwdate_watcher: QFileSystemWatcher | None = None
+        self.tor_watcher: QFileSystemWatcher | None = None
+
         self.server_socket: QLocalSocket = QLocalSocket(self)
         while not GlobalData.server_socket_path.exists():
             time.sleep(0.1)
@@ -164,18 +167,41 @@ class SdwdateGuiMonitor(QObject):
         if not GlobalData.anon_connection_wizard_installed:
             self.__set_tor_status("absent")
         else:
-            self.tor_watcher = QFileSystemWatcher(
-                [self.tor_path, self.torrc_path],
-                self,
-            )
-            self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
-            self.tor_status_changed()
+            for _ in range(20):
+                if (
+                    os.path.isdir(self.tor_path)
+                    and os.path.isdir(self.torrc_path)
+                ):
+                    self.tor_watcher = QFileSystemWatcher(
+                        [self.tor_path, self.torrc_path],
+                        self,
+                    )
+                    break
+                time.sleep(1)
+            if self.tor_watcher is None:
+                logging.error(
+                    "tor status or configuration path does not exist!"
+                )
+                self.__set_tor_status("disabled")
+            else:
+                self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
+                self.tor_status_changed()
 
-        ## TODO: wait until file self.status_path is created
-        self.sdwdate_watcher = QFileSystemWatcher(
-            [self.sdwdate_status_path],
-            self,
-        )
+        for _ in range(20):
+            if os.path.isfile(self.sdwdate_status_path):
+                self.sdwdate_watcher = QFileSystemWatcher(
+                    [self.sdwdate_status_path],
+                    self,
+                )
+                break
+            time.sleep(1)
+        if self.sdwdate_watcher is None:
+            logging.error("sdwdate status path does not exist!")
+            self.__set_sdwdate_status(
+                "error", "sdwdate status path does not exist!"
+            )
+            self.kick_server()
+            return
         self.sdwdate_watcher.fileChanged.connect(self.sdwdate_status_changed)
         self.sdwdate_status_changed()
 
@@ -188,7 +214,7 @@ class SdwdateGuiMonitor(QObject):
         security measure when the server sends invalid data to the client.
         """
 
-        logging.error("Server sent invalid data. Disconnecting and exiting.")
+        logging.error("Invalid data encountered. Disconnecting.")
         self.server_socket.disconnectFromServer()
         self.server_socket.waitForDisconnected()
         self.serverDisconnected.emit()
