@@ -1,3 +1,22 @@
+commit fe1e2d7ea5022f98d6c469085fb105a25e396114
+Merge: d65fb8c 5c76089
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Sep 16 01:00:00 2025 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit 5c7608971a16dcb3195f78ffbd88277b0bb5848b
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Mon Sep 15 20:02:41 2025 -0500
+
+    Avoid hanging with an error icon if Tor or sdwdate isn't started when sdwdate-gui-client is started
+
+commit d65fb8c6e013c41acc8bbaad58870084978daea1
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Sep 2 15:25:29 2025 +0000
+
+    bumped changelog version
+
 commit 164006421574ad8f07867660f23f2b4293631689
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sat Aug 30 14:19:11 2025 +0000
