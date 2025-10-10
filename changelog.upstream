@@ -1,3 +1,22 @@
+commit 8e7c639dc8fe25068df6c11f6416ca977d52117d
+Merge: d129f59 aa3d90b
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Oct 10 03:49:41 2025 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit aa3d90b65b4cfbc46535e0fd0666d1990f092fcd
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Oct 9 20:20:25 2025 -0500
+
+    Change sdwdate-gui tooltip to indicate that a right-click will open the menu
+
+commit d129f59f622a19274a607de42fe7b33852e4dcef
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Sep 19 16:18:16 2025 +0000
+
+    bumped changelog version
+
 commit 3fcd3a3d080bd0ea9b8d10239d3fed0b17f8a272
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Sep 18 10:08:10 2025 -0400
