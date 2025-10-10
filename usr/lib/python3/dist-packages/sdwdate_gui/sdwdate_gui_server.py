@@ -668,7 +668,7 @@ class SdwdateTrayIcon(QSystemTrayIcon):
             self.icon_path + "sdwdate-stopped.png",
         ]
         self.setIcon(QIcon(self.sdwdate_icon_list[SdwdateStatus.BUSY.value]))
-        self.setToolTip("Time Synchronization Monitor \nClick for menu.")
+        self.setToolTip("Time Synchronization Monitor \nRight-click for menu.")
 
         self.menu: QMenu = QMenu()
         self.regen_menu()
