@@ -4,7 +4,7 @@
 ## See the file COPYING for copying conditions.
 
 ## See if the socket for sdwdate-gui-server exists or not.
-if [ -S '/run/qubes-rpc/sdwdate.Connect' ]; then
+if [ -S '/run/qubes-rpc/sdwdate-gui.Connect' ]; then
   printf '%s\n' 'y'
 else
   printf '%s\n' 'n'

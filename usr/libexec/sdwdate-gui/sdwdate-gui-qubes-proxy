@@ -20,7 +20,7 @@ while (( connect_check_counter < 10 )); do
     ## We redirect a blank string into this qrexec-client-vm invocation's
     ## stdin, because otherwise it will eat the script's stdin up to this
     ## point, preventing some data from reaching the server.
-    qrexec-client-vm "${target_vm}" sdwdate.ConnectCheck <<< ""
+    qrexec-client-vm "${target_vm}" sdwdate-gui.ConnectCheck <<< ""
   )" || connect_check_ret="$?"
   if [ "${connect_check_ret}" != '0' ] \
     || [ "${connect_check_rslt}" = 'n' ]; then
@@ -33,4 +33,4 @@ if [ "${connect_check_rslt}" != 'y' ]; then
   exit 1
 fi
 
-exec qrexec-client-vm "${target_vm}" sdwdate.Connect
+exec qrexec-client-vm "${target_vm}" sdwdate-gui.Connect
