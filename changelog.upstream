@@ -1,3 +1,22 @@
+commit f971b921c8a6d38db5a7f4d5618e577a710d9228
+Merge: 6b09dc7 2dc019a
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Oct 24 00:22:24 2025 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit 2dc019a1e6967d55ca8a8cfd8e24a35e269bab10
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Thu Oct 23 21:24:45 2025 -0500
+
+    Rename sdwdate.Connect(Check) to sdwdate-gui.Connect(Check)
+
+commit 6b09dc705f88d273c4495cf47c88e4ee41a0417d
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Oct 10 08:06:23 2025 +0000
+
+    bumped changelog version
+
 commit 8e7c639dc8fe25068df6c11f6416ca977d52117d
 Merge: d129f59 aa3d90b
 Author: Patrick Schleizer <adrelanos@whonix.org>
