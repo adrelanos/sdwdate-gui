@@ -15,7 +15,7 @@ else
     (( socket_check_counter += 1 )) || true
     if [ -S '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' ]; then
       ln -s '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' \
-        '/run/qubes-rpc/sdwdate.Connect'
+        '/run/qubes-rpc/sdwdate-gui.Connect'
       break
     fi
   done
