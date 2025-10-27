@@ -3,38 +3,25 @@
 ## Copyright (C) 2015 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
-# pylint: disable=no-name-in-module,broad-exception-caught,import-error
+# pylint: disable=broad-exception-caught,import-error
 
 """
 The client component of sdwdate-gui. Monitors sdwdate and Tor states, reports
 these states to the server, and runs commands at the server's request.
 """
 
-from __future__ import annotations
-
-import signal
+import asyncio
 import os
 import sys
-import json
-import subprocess
 import re
-import time
 import logging
-
-from types import FrameType
-from typing import NoReturn, Pattern
+import subprocess
+import json
+from collections import deque
 from pathlib import Path
+from typing import NoReturn, Pattern, Any
 
-from PyQt5.QtCore import (
-    QCoreApplication,
-    QFileSystemWatcher,
-    QTimer,
-    QObject,
-    pyqtSignal,
-)
-from PyQt5.QtNetwork import (
-    QLocalSocket,
-)
+import pyinotify  # type: ignore
 
 
 # pylint: disable=too-few-public-methods
@@ -45,14 +32,102 @@ class GlobalData:
 
     sdwdate_gui_conf_dir: Path = Path("/etc/sdwdate-gui.d")
     anon_connection_wizard_installed: bool = False
-    do_reconnect: bool = True
-    monitor: SdwdateGuiMonitor | None = None
+    sock_read: asyncio.StreamReader | None = None
+    sock_write: asyncio.StreamWriter | None = None
     uid_str: str = str(os.getuid())
     sdwdate_run_dir: Path = Path(f"/run/user/{uid_str}/sdwdate-gui")
     server_socket_path: Path = sdwdate_run_dir.joinpath(
         "sdwdate-gui-server.socket",
     )
     server_pid_path: Path = sdwdate_run_dir.joinpath("server_pid")
+    do_reconnect: bool = True
+    sock_buf: bytes = b""
+    sdwdate_status_path: str = "/run/sdwdate/status"
+    tor_path: str = "/run/tor"
+    torrc_path: str = "/usr/local/etc/torrc.d"
+    tor_running_path: str = "/run/tor/tor.pid"
+    watch_manager: pyinotify.WatchManager | None = None
+    notifier: pyinotify.AsyncioNotifier | None = None
+    awaitable_tasks: deque[asyncio.Task[Any]] = deque()
+
+
+# pylint: disable=invalid-name
+class INotifyEventHandler(pyinotify.ProcessEvent):  # type: ignore[misc]
+    """
+    Handles incoming inotify events for Tor and sdwdate status files.
+    """
+
+    def file_changed(self, path_str: str) -> None:
+        """
+        Handler for file change events.
+        """
+
+        if path_str.startswith(
+            f"{GlobalData.tor_path}/"
+        ) or path_str.startswith(f"{GlobalData.torrc_path}/"):
+            GlobalData.awaitable_tasks.append(
+                asyncio.create_task(tor_status_changed())
+            )
+        elif path_str == GlobalData.sdwdate_status_path:
+            GlobalData.awaitable_tasks.append(
+                asyncio.create_task(sdwdate_status_changed())
+            )
+        else:
+            logging.error("Unexpected path change at '%s'!", path_str)
+
+    def process_IN_MODIFY(self, event: pyinotify.Event) -> None:
+        """
+        Modify event handler.
+        """
+        self.file_changed(event.pathname)
+
+    def process_IN_CREATE(self, event: pyinotify.Event) -> None:
+        """
+        Create event handler.
+        """
+        self.file_changed(event.pathname)
+
+    def process_IN_DELETE(self, event: pyinotify.Event) -> None:
+        """
+        Delete event handler.
+        """
+        self.file_changed(event.pathname)
+
+    def process_IN_MOVED_FROM(self, event: pyinotify.Event) -> None:
+        """
+        Moved-from event handler.
+        """
+        self.file_changed(event.pathname)
+
+    def process_IN_MOVED_TO(self, event: pyinotify.Event) -> None:
+        """
+        Moved-to event handler.
+        """
+        self.file_changed(event.pathname)
+
+    def process_IN_DELETE_SELF(self, event: pyinotify.Event) -> None:
+        """
+        Delete-self event handler.
+        """
+        if event.pathname == GlobalData.sdwdate_status_path:
+            logging.error("sdwdate status path '%s' deleted!", event.pathname)
+        else:
+            logging.error(
+                "BUG: Unexpected file deletion at '%s' detected!",
+                event.pathname,
+            )
+
+    def process_IN_MOVE_SELF(self, event: pyinotify.Event) -> None:
+        """
+        Move-self event handler.
+        """
+        if event.pathname == GlobalData.sdwdate_status_path:
+            logging.error("sdwdate status path '%s' moved!", event.pathname)
+        else:
+            logging.error(
+                "BUG: Unexpected file move at '%s' detected!",
+                event.pathname,
+            )
 
 
 GlobalData.anon_connection_wizard_installed = os.path.exists(
@@ -85,372 +160,6 @@ def check_bytes_printable(buf: bytes) -> bool:
             return False
 
     return True
-
-
-# pylint: disable=too-many-instance-attributes
-class SdwdateGuiMonitor(QObject):
-    """
-    Keeps the server up-to-date about sdwdate and Tor status, and runs
-    commands from the server.
-
-    The following functions are provided by the client and can be called by
-    the server:
-    - open_tor_control_panel
-    - open_sdwdate_log
-    - restart_sdwdate
-    - stop_sdwdate
-    - suppress_client_reconnect
-
-    The following functions are provided by the server and can be called by
-    the client:
-    - set_client_name <name>
-    - set_sdwdate_status [success|busy|error] [message]
-    - set_tor_status [running|stopped|disabled|disabled_running|absent]
-    """
-
-    serverDisconnected = pyqtSignal()
-
-    def __init__(self, parent: QObject | None = None) -> None:
-        """
-        Connects to the server.
-        """
-
-        QObject.__init__(self, parent)
-
-        # pylint: disable=invalid-name
-
-        self.sdwdate_status_path: str = "/run/sdwdate/status"
-        self.tor_path: str = "/run/tor"
-        self.torrc_path: str = "/usr/local/etc/torrc.d"
-        self.tor_running_path: str = "/run/tor/tor.pid"
-
-        self.sdwdate_watcher: QFileSystemWatcher | None = None
-        self.tor_watcher: QFileSystemWatcher | None = None
-
-        self.server_socket: QLocalSocket = QLocalSocket(self)
-        while not GlobalData.server_socket_path.exists():
-            time.sleep(0.1)
-        self.server_socket.connectToServer(str(GlobalData.server_socket_path))
-        self.server_socket.waitForConnected()
-        if self.server_socket.state() != QLocalSocket.ConnectedState:
-            logging.error("Could not connect to sdwdate-gui server!")
-            self.serverDisconnected.emit()
-            return
-
-        if GlobalData.server_pid_path.is_file() or not running_in_qubes_os():
-            ## We have to send our own blank qrexec header.
-            while not self.server_socket.write(b"\0") == 1:
-                if self.server_socket.state() != QLocalSocket.ConnectedState:
-                    logging.error(
-                        "sdwdate-gui server disconnected very quickly!"
-                    )
-                    self.serverDisconnected.emit()
-                    return
-
-            ## We also have to set our own name.
-            if running_in_qubes_os():
-                client_name: str = subprocess.run(
-                    ["qubesdb-read", "/name"],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    encoding="utf-8",
-                ).stdout.strip()
-                if client_name == "":
-                    client_name = os.uname()[1]
-            else:
-                client_name = os.uname()[1]
-            self.__set_client_name(client_name)
-
-        self.__sock_buf: bytes = b""
-
-        if not GlobalData.anon_connection_wizard_installed:
-            self.__set_tor_status("absent")
-        else:
-            for _ in range(20):
-                if (
-                    os.path.isdir(self.tor_path)
-                    and os.path.isdir(self.torrc_path)
-                ):
-                    self.tor_watcher = QFileSystemWatcher(
-                        [self.tor_path, self.torrc_path],
-                        self,
-                    )
-                    break
-                time.sleep(1)
-            if self.tor_watcher is None:
-                logging.error(
-                    "tor status or configuration path does not exist!"
-                )
-                self.__set_tor_status("disabled")
-            else:
-                self.tor_watcher.directoryChanged.connect(self.tor_status_changed)
-                self.tor_status_changed()
-
-        for _ in range(20):
-            if os.path.isfile(self.sdwdate_status_path):
-                self.sdwdate_watcher = QFileSystemWatcher(
-                    [self.sdwdate_status_path],
-                    self,
-                )
-                break
-            time.sleep(1)
-        if self.sdwdate_watcher is None:
-            logging.error("sdwdate status path does not exist!")
-            self.__set_sdwdate_status(
-                "error", "sdwdate status path does not exist!"
-            )
-            self.kick_server()
-            return
-        self.sdwdate_watcher.fileChanged.connect(self.sdwdate_status_changed)
-        self.sdwdate_status_changed()
-
-        self.server_socket.readyRead.connect(self.__handle_incoming_data)
-        self.server_socket.disconnected.connect(self.__handle_disconnect)
-
-    def kick_server(self) -> None:
-        """
-        Forcibly disconnects the server from the client. Used as a
-        security measure when the server sends invalid data to the client.
-        """
-
-        logging.error("Invalid data encountered. Disconnecting.")
-        self.server_socket.disconnectFromServer()
-        self.server_socket.waitForDisconnected()
-        self.serverDisconnected.emit()
-
-    def __try_parse_commands(self) -> None:
-        """
-        Tries to run any commands in the buffer.
-        """
-
-        while len(self.__sock_buf) >= 2:
-            msg_len: int = int.from_bytes(
-                self.__sock_buf[:2], byteorder="big", signed=False
-            )
-            self.__sock_buf = self.__sock_buf[2:]
-
-            if msg_len == 0:
-                continue
-            if msg_len > len(self.__sock_buf):
-                continue
-
-            msg_buf: bytes = self.__sock_buf[:msg_len]
-            self.__sock_buf = self.__sock_buf[msg_len:]
-
-            if not check_bytes_printable(msg_buf):
-                self.kick_server()
-                return
-
-            msg_string: str = msg_buf.decode(encoding="ascii")
-            msg_parts: list[str] = msg_string.split(" ")
-            if len(msg_parts) < 1:
-                continue
-            function_name = msg_parts[0]
-
-            match function_name:
-                case "open_tor_control_panel":
-                    if len(msg_parts) != 1:
-                        self.kick_server()
-                        return
-                    self.__open_tor_control_panel()
-                case "open_sdwdate_log":
-                    if len(msg_parts) != 1:
-                        self.kick_server()
-                        return
-                    self.__open_sdwdate_log()
-                case "restart_sdwdate":
-                    if len(msg_parts) != 1:
-                        self.kick_server()
-                        return
-                    self.__restart_sdwdate()
-                case "stop_sdwdate":
-                    if len(msg_parts) != 1:
-                        self.kick_server()
-                        return
-                    self.__stop_sdwdate()
-                case "suppress_client_reconnect":
-                    if len(msg_parts) != 1:
-                        self.kick_server()
-                        return
-                    self.__suppress_client_reconnect()
-
-    def __handle_incoming_data(self) -> None:
-        """
-        Reads incoming data from the server into a buffer, parsing and running
-        commands from the data.
-        """
-
-        self.__sock_buf += self.server_socket.readAll().data()
-        self.__try_parse_commands()
-
-    def __handle_disconnect(self) -> None:
-        logging.warning("Server disconnected!")
-        self.serverDisconnected.emit()
-
-    ## SERVER-TO-CLIENT RPC CALLS
-    @staticmethod
-    def __open_tor_control_panel() -> None:
-        # pylint: disable=consider-using-with
-        subprocess.Popen(["/usr/bin/tor-control-panel"], shell=False)
-
-    @staticmethod
-    def __open_sdwdate_log() -> None:
-        # pylint: disable=consider-using-with
-        subprocess.Popen(["/usr/libexec/sdwdate-gui/log-viewer"], shell=False)
-
-    @staticmethod
-    def __restart_sdwdate() -> None:
-        # pylint: disable=consider-using-with
-        subprocess.Popen(["leaprun", "sdwdate-clock-jump"], shell=False)
-
-    @staticmethod
-    def __stop_sdwdate() -> None:
-        # pylint: disable=consider-using-with
-        subprocess.Popen(["leaprun", "stop-sdwdate"], shell=False)
-
-    @staticmethod
-    def __suppress_client_reconnect() -> None:
-        GlobalData.do_reconnect = False
-
-    ## CLIENT-TO-SERVER RPC CALLS
-    def __generic_rpc_call(self, msg_bytes: bytes) -> None:
-        """
-        Sends an RPC call from the server to the client, following the wire
-        format documented for this object.
-        """
-
-        if self.server_socket.state() != QLocalSocket.ConnectedState:
-            return
-
-        msg_len: int = len(msg_bytes)
-        msg_buf: bytes = (
-            msg_len.to_bytes(2, byteorder="big", signed=False) + msg_bytes
-        )
-        msg_len += 2
-        while msg_len > 0:
-            bytes_written: int = self.server_socket.write(
-                msg_buf[len(msg_buf) - msg_len :]
-            )
-            msg_len -= bytes_written
-
-    def __set_client_name(self, name: str) -> None:
-        """
-        RPC call from client to server. Sets the client's name on the
-        server side.
-
-        IMPORTANT: On non-Qubes systems, this data MUST be provided by the
-        client itself, while on Qubes OS, this data MUST be provided by the
-        qrexec subsystem. NOT provided by the client. If a client never
-        sends a client name, the client will never appear in the GUI on
-        non-Qubes systems, while if the client always sends a client name,
-        the server will forcibly disconnect it under Qubes OS.
-        """
-
-        self.__generic_rpc_call(
-            b"set_client_name " + name.encode(encoding="ascii")
-        )
-
-    def __set_sdwdate_status(self, status: str, msg: str) -> None:
-        """
-        RPC call from client to server. Updates the sdwdate status shown by
-        the server.
-        """
-
-        # Encode spaces, newlines, and backslashes into octal escapes.
-        msg_copy: str = msg.replace("\\", "\\134")
-        msg_copy = msg_copy.replace(" ", "\\040")
-        msg_copy = msg_copy.replace("\n", "\\012")
-
-        self.__generic_rpc_call(
-            b"set_sdwdate_status "
-            + status.encode(encoding="ascii")
-            + b" "
-            + msg_copy.encode(encoding="ascii")
-        )
-
-    def __set_tor_status(self, status: str) -> None:
-        """
-        RPC call from client to server. Updates the sdwdate status shown by
-        the server.
-        """
-
-        self.__generic_rpc_call(
-            b"set_tor_status " + status.encode(encoding="ascii")
-        )
-
-    ## WATCHER EVENTS
-    def sdwdate_status_changed(self) -> None:
-        """
-        Determine the current sdwdate status and send it to the server.
-        """
-
-        if not os.path.isfile(self.sdwdate_status_path):
-            return
-
-        try:
-            with open(self.sdwdate_status_path, "r", encoding="utf-8") as f:
-                status_dict: dict[str, str] = json.load(f)
-        except json.decoder.JSONDecodeError as e:
-            logging.warning("Could not parse JSON from sdwdate", exc_info=e)
-            return
-        except Exception as e:
-            logging.error("Unexpected error", exc_info=e)
-            return
-
-        status_str: str = status_dict["icon"]
-        message_str: str = status_dict["message"]
-        if status_str in ("success", "busy", "error"):
-            self.__set_sdwdate_status(status_str, message_str)
-        else:
-            logging.warning("Invalid data found in sdwdate status file!")
-
-    def tor_status_changed(self) -> None:
-        """
-        Determine the current Tor status and send it to the server.
-        """
-
-        if not GlobalData.anon_connection_wizard_installed:
-            ## tor_status() unavailable.
-            return
-
-        try:
-            tor_is_enabled: bool = tor_status.tor_status() == "tor_enabled"
-            tor_is_running: bool = os.path.exists(self.tor_running_path)
-        except Exception as e:
-            logging.error("Unexpected error", exc_info=e)
-            return
-
-        if tor_is_enabled and tor_is_running:
-            self.__set_tor_status("running")
-        elif not tor_is_enabled:
-            if tor_is_running:
-                self.__set_tor_status("disabled-running")
-            else:
-                self.__set_tor_status("disabled")
-        else:
-            self.__set_tor_status("stopped")
-
-
-def try_reconnect_maybe() -> None:
-    """
-    Attempts to reconnect to the sdwdate-gui server if running on Qubes OS
-    and there is NOT a server running on the local VM. Otherwise, terminates
-    the client.
-    """
-
-    if (
-        not running_in_qubes_os()
-        or not GlobalData.do_reconnect
-        or GlobalData.server_pid_path.is_file()
-    ):
-        sys.exit(0)
-
-    time.sleep(1)
-    if GlobalData.monitor is not None:
-        GlobalData.monitor.deleteLater()
-    GlobalData.monitor = SdwdateGuiMonitor()
-    GlobalData.monitor.serverDisconnected.connect(try_reconnect_maybe)
 
 
 def parse_config_file(config_file: str) -> None:
@@ -514,16 +223,392 @@ def parse_config_files() -> None:
         parse_config_file(str(config_file))
 
 
-# pylint: disable=unused-argument
-def signal_handler(sig: int, frame: FrameType | None) -> None:
+async def kick_server() -> None:
     """
-    Handles SIGINT and SIGTERM.
+    Forcibly disconnects the server from the client. Used as a security
+    measure when the server sends invalid data to the client.
     """
 
-    sys.exit(128 + sig)
+    assert GlobalData.sock_write is not None
+    logging.error("Invalid data encountered. Disconnecting.")
+    GlobalData.sock_write.close()
+    await GlobalData.sock_write.wait_closed()
 
 
-def main() -> NoReturn:
+async def try_parse_commands() -> None:
+    """
+    Tries to run any commands in the buffer.
+    """
+
+    while len(GlobalData.sock_buf) >= 2:
+        msg_len: int = int.from_bytes(
+            GlobalData.sock_buf[:2], byteorder="big", signed=False
+        )
+
+        if msg_len > len(GlobalData.sock_buf):
+            break
+        GlobalData.sock_buf = GlobalData.sock_buf[2:]
+        if msg_len == 0:
+            continue
+
+        msg_buf: bytes = GlobalData.sock_buf[:msg_len]
+        GlobalData.sock_buf = GlobalData.sock_buf[msg_len:]
+
+        if not check_bytes_printable(msg_buf):
+            await kick_server()
+            return
+
+        msg_string: str = msg_buf.decode(encoding="ascii")
+        msg_parts: list[str] = msg_string.split(" ")
+        if len(msg_parts) < 1:
+            continue
+        function_name = msg_parts[0]
+
+        match function_name:
+            case "open_tor_control_panel":
+                if len(msg_parts) != 1:
+                    await kick_server()
+                    return
+                open_tor_control_panel()
+            case "open_sdwdate_log":
+                if len(msg_parts) != 1:
+                    await kick_server()
+                    return
+                open_sdwdate_log()
+            case "restart_sdwdate":
+                if len(msg_parts) != 1:
+                    await kick_server()
+                    return
+                restart_sdwdate()
+            case "stop_sdwdate":
+                if len(msg_parts) != 1:
+                    await kick_server()
+                    return
+                stop_sdwdate()
+            case "suppress_client_reconnect":
+                if len(msg_parts) != 1:
+                    await kick_server()
+                    return
+                suppress_client_reconnect()
+
+
+async def handle_incoming_data() -> bool:
+    """
+    Reads incoming data from the server into a buffer, parsing and running
+    commands from the data.
+    """
+
+    assert GlobalData.sock_read is not None
+    new_data: bytes = await GlobalData.sock_read.read(1024)
+    if new_data == b"":
+        return False
+    GlobalData.sock_buf += new_data
+    await try_parse_commands()
+    return True
+
+
+## SERVER-TO-CLIENT RPC CALLS
+def open_tor_control_panel() -> None:
+    """
+    RPC call from server to client. Opens Tor Control Panel.
+    """
+    # pylint: disable=consider-using-with
+    subprocess.Popen(["/usr/bin/tor-control-panel"], shell=False)
+
+
+def open_sdwdate_log() -> None:
+    """
+    RPC call from server to client. Opens the sdwdate log in a terminal.
+    """
+    # pylint: disable=consider-using-with
+    subprocess.Popen(["/usr/libexec/sdwdate-gui/log-viewer"], shell=False)
+
+
+def restart_sdwdate() -> None:
+    """
+    RPC call from server to client. Restarts the sdwdate service.
+    """
+    # pylint: disable=consider-using-with
+    subprocess.Popen(["leaprun", "sdwdate-clock-jump"], shell=False)
+
+
+def stop_sdwdate() -> None:
+    """
+    RPC call from server to client. Stops the sdwdate service.
+    """
+    # pylint: disable=consider-using-with
+    subprocess.Popen(["leaprun", "stop-sdwdate"], shell=False)
+
+
+def suppress_client_reconnect() -> None:
+    """
+    RPC call from server to client. Prevents the client from attempting to
+    reconnect to the server after a disconnect.
+    """
+    GlobalData.do_reconnect = False
+
+
+## CLIENT-TO-SERVER RPC CALLS
+async def generic_rpc_call(msg_bytes: bytes) -> None:
+    """
+    Sends an RCP call from the server to the client, following the wire format
+    documented for this module.
+    """
+
+    assert GlobalData.sock_write is not None
+    msg_len: int = len(msg_bytes)
+    msg_buf: bytes = (
+        msg_len.to_bytes(2, byteorder="big", signed=False) + msg_bytes
+    )
+    GlobalData.sock_write.write(msg_buf)
+    await GlobalData.sock_write.drain()
+
+
+async def set_client_name(name: str) -> None:
+    """
+    RPC call from client to server. Sets the client's name on the
+    server side.
+
+    IMPORTANT: On non-Qubes systems, this data MUST be provided by the
+    client itself, while on Qubes OS, this data MUST be provided by the
+    qrexec subsystem. NOT provided by the client. If a client never
+    sends a client name, the client will never appear in the GUI on
+    non-Qubes systems, while if the client always sends a client name,
+    the server will forcibly disconnect it under Qubes OS.
+    """
+
+    await generic_rpc_call(b"set_client_name " + name.encode(encoding="ascii"))
+
+
+async def set_sdwdate_status(status: str, msg: str) -> None:
+    """
+    RPC call from client to server. Updates the sdwdate status shown by
+    the server.
+    """
+
+    ## Encode spaces, newlines, and backslashes into octal escapes.
+    msg_copy: str = msg.replace("\\", "\\134")
+    msg_copy = msg_copy.replace(" ", "\\040")
+    msg_copy = msg_copy.replace("\n", "\\012")
+
+    await generic_rpc_call(
+        b"set_sdwdate_status "
+        + status.encode(encoding="ascii")
+        + b" "
+        + msg_copy.encode(encoding="ascii")
+    )
+
+
+async def set_tor_status(status: str) -> None:
+    """
+    RPC call from client to server. Updates the sdwdate status shown by
+    the server.
+    """
+
+    await generic_rpc_call(b"set_tor_status " + status.encode(encoding="ascii"))
+
+
+## WATCHER EVENTS
+async def sdwdate_status_changed() -> None:
+    """
+    Determine the current sdwdate status and send it to the server.
+    """
+
+    if not os.path.isfile(GlobalData.sdwdate_status_path):
+        return
+
+    try:
+        with open(GlobalData.sdwdate_status_path, "r", encoding="utf-8") as f:
+            status_dict: dict[str, str] = json.load(f)
+    except json.decoder.JSONDecodeError as e:
+        logging.warning("Could not parse JSON from sdwdate", exc_info=e)
+        return
+    except Exception as e:
+        logging.error("Unexpected error", exc_info=e)
+        return
+
+    status_str: str = status_dict["icon"]
+    message_str: str = status_dict["message"]
+    if status_str in ("success", "busy", "error"):
+        await set_sdwdate_status(status_str, message_str)
+    else:
+        logging.warning("Invalid data found in sdwdate status file!")
+
+
+async def tor_status_changed() -> None:
+    """
+    Determine the current Tor status and send it to the server.
+    """
+
+    if not GlobalData.anon_connection_wizard_installed:
+        ## tor_status() unavailable.
+        return
+
+    try:
+        tor_is_enabled: bool = tor_status.tor_status() == "tor_enabled"
+        tor_is_running: bool = os.path.exists(GlobalData.tor_running_path)
+    except Exception as e:
+        logging.error("Unexpected error", exc_info=e)
+        return
+
+    if tor_is_enabled and tor_is_running:
+        await set_tor_status("running")
+    elif not tor_is_enabled:
+        if tor_is_running:
+            await set_tor_status("disabled-running")
+        else:
+            await set_tor_status("disabled")
+    else:
+        await set_tor_status("stopped")
+
+
+## SETUP FUNCTIONS
+async def open_connection() -> bool:
+    """
+    Opens a connection with the sdwdate-gui server.
+    """
+
+    while not GlobalData.server_socket_path.exists():
+        await asyncio.sleep(0.1)
+    try:
+        GlobalData.sock_read, GlobalData.sock_write = (
+            await asyncio.open_unix_connection(GlobalData.server_socket_path)
+        )
+    except Exception:
+        logging.error("Could not connect to sdwdate-gui server!")
+        return False
+    return True
+
+
+async def setup_connection() -> None:
+    """
+    Sends data to the server that will be vital for the rest of the session
+    between the client and server.
+    """
+
+    assert GlobalData.sock_write is not None
+    if GlobalData.server_pid_path.is_file() or not running_in_qubes_os():
+        ## We have to send our own blank qrexec header.
+        GlobalData.sock_write.write(b"\0")
+        await GlobalData.sock_write.drain()
+
+        ## We also have to set our own name.
+        if running_in_qubes_os():
+            client_name: str = subprocess.run(
+                ["qubesdb-read", "/name"],
+                capture_output=True,
+                text=True,
+                check=False,
+                encoding="utf-8",
+            ).stdout.strip()
+            if client_name == "":
+                client_name = os.uname()[1]
+        else:
+            client_name = os.uname()[1]
+        await set_client_name(client_name)
+
+
+async def find_and_handle_tor_and_sdwdate_state() -> tuple[bool, bool]:
+    """
+    Waits for the Tor and sdwdate state files to appear, sends information
+    about them to the server, and determines which files are available to be
+    watched via inotify.
+    """
+
+    found_tor_paths: bool = False
+    found_sdwdate_path: bool = False
+
+    if not GlobalData.anon_connection_wizard_installed:
+        await set_tor_status("absent")
+    else:
+        for _ in range(20):
+            if os.path.isdir(GlobalData.tor_path) and os.path.isdir(
+                GlobalData.torrc_path
+            ):
+                found_tor_paths = True
+                break
+            await asyncio.sleep(1)
+        if not found_tor_paths:
+            logging.error("tor status or configuration path does not exist!")
+            await set_tor_status("disabled")
+        else:
+            await tor_status_changed()
+
+    for _ in range(20):
+        if os.path.isfile(GlobalData.sdwdate_status_path):
+            found_sdwdate_path = True
+            break
+        await asyncio.sleep(1)
+    if not found_sdwdate_path:
+        logging.error("sdwdate status path does not exist!")
+        await set_sdwdate_status("error", "sdwdate status path does not exist!")
+        await kick_server()
+    await sdwdate_status_changed()
+
+    return found_tor_paths, found_sdwdate_path
+
+
+async def setup_inotify_watches(
+    found_tor_paths: bool,
+    found_sdwdate_path: bool,
+) -> None:
+    """
+    Creates the inotify watches.
+    """
+
+    GlobalData.watch_manager = pyinotify.WatchManager()
+    loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
+    GlobalData.notifier = pyinotify.AsyncioNotifier(
+        GlobalData.watch_manager, loop, default_proc_fun=INotifyEventHandler()
+    )
+    if found_tor_paths:
+        GlobalData.watch_manager.add_watch(
+            GlobalData.tor_path,
+            pyinotify.ALL_EVENTS,
+            rec=True,
+        )
+        GlobalData.watch_manager.add_watch(
+            GlobalData.torrc_path,
+            pyinotify.ALL_EVENTS,
+            rec=True,
+        )
+    if found_sdwdate_path:
+        GlobalData.watch_manager.add_watch(
+            GlobalData.sdwdate_status_path,
+            pyinotify.ALL_EVENTS,
+        )
+
+
+async def do_setup() -> bool:
+    """
+    Connects to the server and sets up inotify if needed.
+    """
+
+    if not await open_connection():
+        return False
+
+    try:
+        await setup_connection()
+
+        found_tor_paths: bool
+        found_sdwdate_path: bool
+        found_tor_paths, found_sdwdate_path = (
+            await find_and_handle_tor_and_sdwdate_state()
+        )
+        if not found_sdwdate_path:
+            return False
+
+        if GlobalData.watch_manager is None:
+            await setup_inotify_watches(found_tor_paths, found_sdwdate_path)
+
+    except Exception:
+        logging.error("sdwdate-gui server disconnected very quickly!")
+        return False
+
+    return True
+
+
+async def main() -> NoReturn:
     """
     Main function.
     """
@@ -540,24 +625,44 @@ def main() -> NoReturn:
         format="%(funcName)s: %(levelname)s: %(message)s", level=logging.INFO
     )
 
-    app: QCoreApplication = QCoreApplication(["Sdwdate"])
-
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
     parse_config_files()
 
-    timer: QTimer = QTimer()
-    timer.start(500)
-    timer.timeout.connect(lambda: None)
+    while True:
+        if await do_setup():
+            while True:
+                try:
+                    in_data_task: asyncio.Task[bool] = asyncio.create_task(
+                        handle_incoming_data()
+                    )
+                    GlobalData.awaitable_tasks.appendleft(in_data_task)
+                    start_deque_len: int = len(GlobalData.awaitable_tasks)
+                    return_vals: list[Any] = await asyncio.gather(
+                        *GlobalData.awaitable_tasks,
+                        return_exceptions=True,
+                    )
+                    for _ in range(start_deque_len):
+                        _ = GlobalData.awaitable_tasks.popleft()
+                    if isinstance(return_vals[0], bool):
+                        is_still_connected: bool = return_vals[0]
+                        if not is_still_connected:
+                            break
+                    else:
+                        break
+                except Exception:
+                    break
 
-    # pylint: disable=unused-variable
-    GlobalData.monitor = SdwdateGuiMonitor()
-    GlobalData.monitor.serverDisconnected.connect(try_reconnect_maybe)
+        if (
+            not running_in_qubes_os()
+            or not GlobalData.do_reconnect
+            or GlobalData.server_pid_path.is_file()
+        ):
+            sys.exit(0)
+        await asyncio.sleep(1)
+        continue
 
-    app.exec_()
+
     sys.exit(0)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
