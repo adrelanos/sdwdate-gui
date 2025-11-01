@@ -1,3 +1,15 @@
+commit 6a6753ec14092f54bd35e9ffc187b72986d00a16
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Nov 1 02:35:34 2025 -0400
+
+    remove no longer necessary dependency on sudo
+
+commit e0f251454e7bec56b354e8fadfce7018e7c84193
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Oct 24 04:31:25 2025 +0000
+
+    bumped changelog version
+
 commit f971b921c8a6d38db5a7f4d5618e577a710d9228
 Merge: 6b09dc7 2dc019a
 Author: Patrick Schleizer <adrelanos@whonix.org>
