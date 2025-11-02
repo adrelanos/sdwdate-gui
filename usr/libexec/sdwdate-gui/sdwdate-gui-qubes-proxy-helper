@@ -3,6 +3,9 @@
 ## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
+set -x
+set -e
+
 socket_check_counter=0
 
 server_enabled="$(/usr/libexec/sdwdate-gui/sdwdate-gui-config-read 'run_server_in_qubes')" || exit 1
@@ -13,10 +16,12 @@ else
   while (( socket_check_counter < 20 )); do
     sleep 1
     (( socket_check_counter += 1 )) || true
+    true "INFO: $0: Check if /run/user/1000/sdwdate-gui/sdwdate-gui-server.socket socket file already exists..."
     if [ -S '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' ]; then
-      ln -s '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' \
-        '/run/qubes-rpc/sdwdate-gui.Connect'
+      true "INFO: $0: socket file exists: yes"
+      ln -s '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' '/run/qubes-rpc/sdwdate-gui.Connect'
       break
     fi
+    true "INFO: $0: socket file exists: no"
   done
 fi
