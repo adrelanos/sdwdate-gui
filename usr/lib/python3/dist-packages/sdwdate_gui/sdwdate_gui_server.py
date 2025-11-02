@@ -764,9 +764,7 @@ to connect to or configure the Tor network."""
 
     def regen_menu(self) -> None:
         """
-        Regenerates the context menu for the tray icon. This must be called
-        every time a client connects and is assigned a name, and every time a
-        client disconnects.
+        Regenerates the context menu for the tray icon.
         """
 
         self.menu.clear()
@@ -1000,6 +998,7 @@ to connect to or configure the Tor network."""
             if client == sender_client:
                 self.client_list.pop(idx)
                 self.regen_menu()
+                self.set_tray_icon()
                 return
 
         logging.warning("Dropped client not present in client list!")
