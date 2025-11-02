@@ -9,8 +9,11 @@ set -e
 socket_check_counter=0
 
 server_enabled="$(/usr/libexec/sdwdate-gui/sdwdate-gui-config-read 'run_server_in_qubes')" || exit 1
+default_user="$(qubesdb-read /default-user)" || exit 1
+default_user_uid="$(id -u "$default_user")" || exit 1
+server_sock_path="/run/user/$default_user_uid/sdwdate-gui/sdwdate-gui-server.socket"
 
-if [ "${server_enabled}" != 'true' ]; then
+if [ "$server_enabled" != 'true' ]; then
   touch /run/sdwdate-gui-qubes-should-proxy
 else
   while (( socket_check_counter < 20 )); do
@@ -19,12 +22,12 @@ else
     ## XXX: Hardcoded. uid 1000 is hardcoded.
     ## BUG: When sys-whonix is booted in sysmaint session, uid is not 1000.
     ##      It is 1001 but that may not be guaranteed.
-    true "INFO: $0: Check if /run/user/1000/sdwdate-gui/sdwdate-gui-server.socket socket file already exists..."
-    if [ -S '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' ]; then
-      true "INFO: $0: socket file exists: yes"
-      ln -s '/run/user/1000/sdwdate-gui/sdwdate-gui-server.socket' '/run/qubes-rpc/sdwdate-gui.Connect'
+    true "INFO: $0: Check if '$server_sock_path' socket file already exists..."
+    if [ -S "$server_sock_path" ]; then
+      true "INFO: $0: socket file '$server_sock_path' exists: yes"
+      ln -s "$server_sock_path" '/run/qubes-rpc/sdwdate-gui.Connect'
       break
     fi
-    true "INFO: $0: socket file exists: no"
+    true "INFO: $0: socket file '$server_sock_path' exists: no"
   done
 fi
