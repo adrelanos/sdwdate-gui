@@ -1,3 +1,28 @@
+commit 9e80a6d83d7b11248a1b058d7b20efc9a46d66f3
+Merge: 7451bc4 deffa50
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Nov 3 03:59:17 2025 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit deffa5039800d1eac28d83ed5cb9dc7dc9cb1f19
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Sun Nov 2 12:54:19 2025 -0600
+
+    Fix icon change failure when a Whonix-Workstation is shut down, remove confusing info from a docstring
+
+commit 8b7071eb57fdc2bc437d42c8bc9225a1ec86c30f
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Sun Nov 2 12:38:47 2025 -0600
+
+    Autodetect server socket location rather than hardcoding it in sdwdate-gui-qubes-proxy-helper
+
+commit 7451bc4d257e6fd647e0c85cba1dd924298e8979
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 2 11:41:17 2025 +0000
+
+    bumped changelog version
+
 commit ae89be6220f04f362344483e38af13ef8e803035
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sun Nov 2 03:46:14 2025 -0500
