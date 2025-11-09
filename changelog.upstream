@@ -1,3 +1,16 @@
+commit 04b5f5c1c78df585c348387ff3b5e24f97379c0c
+Merge: 84315d5 32860fd
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 9 06:07:08 2025 -0500
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/sdwdate-gui-client-asyncio'
+
+commit 84315d595de6faf2a224ef38a6bd801756d29d17
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Nov 3 11:22:22 2025 +0000
+
+    bumped changelog version
+
 commit 9e80a6d83d7b11248a1b058d7b20efc9a46d66f3
 Merge: 7451bc4 deffa50
 Author: Patrick Schleizer <adrelanos@whonix.org>
@@ -52,6 +65,12 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sat Nov 1 02:35:34 2025 -0400
 
     remove no longer necessary dependency on sudo
+
+commit 32860fdc4f30a2e02f28536ba733e5f7ba9a3972
+Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
+Date:   Sun Oct 26 23:10:53 2025 -0500
+
+    Port sdwdate_gui_client.py to asyncio/pyinotify, in place of Qt
 
 commit e0f251454e7bec56b354e8fadfce7018e7c84193
 Author: Patrick Schleizer <adrelanos@whonix.org>
