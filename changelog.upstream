@@ -1,3 +1,15 @@
+commit 421913fd01efc9058ffc676da38a7fe7c5fa3357
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 9 08:00:05 2025 -0500
+
+    `Depends:` `python3-pyinotify`
+
+commit 4377045b741575fb031cc83a3909b08563c51188
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Nov 9 11:08:51 2025 +0000
+
+    bumped changelog version
+
 commit 04b5f5c1c78df585c348387ff3b5e24f97379c0c
 Merge: 84315d5 32860fd
 Author: Patrick Schleizer <adrelanos@whonix.org>
