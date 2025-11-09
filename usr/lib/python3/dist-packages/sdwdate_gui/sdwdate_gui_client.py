@@ -378,7 +378,7 @@ async def tor_status_changed() -> None:
         await set_tor_status("running")
     elif not tor_is_enabled:
         if tor_is_running:
-            await set_tor_status("disabled-running")
+            await set_tor_status("disabled_running")
         else:
             await set_tor_status("disabled")
     else:
