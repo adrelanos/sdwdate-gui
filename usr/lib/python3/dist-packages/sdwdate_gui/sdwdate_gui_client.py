@@ -531,30 +531,10 @@ async def do_setup() -> bool:
     return True
 
 
-async def main() -> NoReturn:
+async def main_loop() -> None:
     """
-    Main function.
+    Main loop.
     """
-
-    if os.geteuid() == 0:
-        print("ERROR: Do not run with sudo / as root!")
-        sys.exit(1)
-
-    if Path("/run/qubes/this-is-templatevm").is_file():
-        print("INFO: Refusing to run in a QubesOS TemplateVM.")
-        sys.exit(0)
-
-    logging.basicConfig(
-        format="%(funcName)s: %(levelname)s: %(message)s", level=logging.INFO
-    )
-
-    parse_config_files()
-    assert isinstance(ConfigData.conf_dict["disable"], bool)
-    if ConfigData.conf_dict["disable"]:
-        logging.info(
-            "'disable' configuration key set to 'True', therefore exiting."
-        )
-        sys.exit(0)
 
     while True:
         if not await do_setup():
@@ -582,12 +562,46 @@ async def main() -> NoReturn:
                 break
 
         if (
-            not running_in_qubes_os()
-            or not GlobalData.do_reconnect
-            or GlobalData.server_pid_path.is_file()
+                not running_in_qubes_os()
+                or not GlobalData.do_reconnect
+                or GlobalData.server_pid_path.is_file()
         ):
             sys.exit(0)
         await asyncio.sleep(1)
         continue
 
+
+async def main() -> NoReturn:
+    """
+    Main function.
+    """
+
+    if os.geteuid() == 0:
+        print("ERROR: Do not run with sudo / as root!")
+        sys.exit(1)
+
+    if Path("/run/qubes/this-is-templatevm").is_file():
+        print("INFO: Refusing to run in a QubesOS TemplateVM.")
+        sys.exit(0)
+
+    logging.basicConfig(
+        format="%(funcName)s: %(levelname)s: %(message)s", level=logging.INFO
+    )
+
+    try:
+        parse_config_files()
+    except Exception as e:
+        logging.error(
+            "Configuration file parsing failed!",
+            exc_info=e
+        )
+        sys.exit(1)
+    assert isinstance(ConfigData.conf_dict["disable"], bool)
+    if ConfigData.conf_dict["disable"]:
+        logging.info(
+            "'disable' configuration key set to 'True', therefore exiting."
+        )
+        sys.exit(0)
+
+    await main_loop()
     sys.exit(0)

@@ -1155,7 +1155,14 @@ def main() -> NoReturn:
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
-    parse_config_files()
+    try:
+        parse_config_files()
+    except Exception as e:
+        logging.error(
+            "Configuration file parsing failed!",
+            exc_info=e
+        )
+        sys.exit(1)
     assert isinstance(ConfigData.conf_dict["disable"], bool)
     assert isinstance(ConfigData.conf_dict["run_server_in_qubes"], bool)
     if ConfigData.conf_dict["disable"]:

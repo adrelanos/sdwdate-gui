@@ -3,11 +3,14 @@
 ## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
+# pylint: disable=broad-exception-caught
+
 """
 Allows reading sdwdate-gui config values from Bash scripts.
 """
 
 import sys
+import traceback
 from typing import NoReturn
 
 from .sdwdate_gui_shared import (
@@ -30,6 +33,14 @@ def main() -> NoReturn:
             file=sys.stderr,
         )
         sys.exit(1)
-    parse_config_files()
+    try:
+        parse_config_files()
+    except Exception:
+        print(
+            "ERROR: Configuration file parsing failed!",
+            file=sys.stderr,
+        )
+        traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
     print(ConfigData.conf_dict[sys.argv[1]])
     sys.exit(0)
