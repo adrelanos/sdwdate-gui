@@ -13,7 +13,7 @@ default_user="$(qubesdb-read /default-user)" || exit 1
 default_user_uid="$(id -u "$default_user")" || exit 1
 server_sock_path="/run/user/$default_user_uid/sdwdate-gui/sdwdate-gui-server.socket"
 
-if [ "$server_enabled" != 'true' ]; then
+if [ "$server_enabled" != 'True' ]; then
   touch /run/sdwdate-gui-qubes-should-proxy
 else
   while (( socket_check_counter < 20 )); do

@@ -52,16 +52,12 @@ from PyQt5.QtNetwork import (
     QLocalServer,
 )
 
-
-# pylint: disable=too-few-public-methods
-class GlobalData:
-    """
-    Global data for sdwdate_gui_server.
-    """
-
-    sdwdate_gui_conf_dir: Path = Path("/etc/sdwdate-gui.d")
-    sdwdate_gui_alt_conf_dir: Path = Path("/usr/local/etc/sdwdate-gui.d")
-    should_run_in_qubes: bool = False
+from .sdwdate_gui_shared import (
+    ConfigData,
+    check_bytes_printable,
+    parse_ipc_command,
+    parse_config_files,
+)
 
 
 class SdwdateStatus(Enum):
@@ -110,18 +106,6 @@ def running_in_qubes_os() -> bool:
         return True
 
     return False
-
-
-def check_bytes_printable(buf: bytes) -> bool:
-    """
-    Checks if all bytes in the provided buffer are printable ASCII.
-    """
-
-    for byte in buf:
-        if byte < 0x20 or byte > 0x7E:
-            return False
-
-    return True
 
 
 # pylint: disable=too-many-instance-attributes
@@ -250,26 +234,24 @@ class SdwdateGuiClient(QObject):
 
         return True
 
+    # pylint: disable=too-many-return-statements
     def __try_parse_commands(self) -> None:
         """
         Tries to run any commands in the buffer.
         """
 
         while len(self.__sock_buf) >= 2:
-            msg_len: int = int.from_bytes(
-                self.__sock_buf[:2], byteorder="big", signed=False
-            )
-            self.__sock_buf = self.__sock_buf[2:]
-
-            if msg_len == 0:
-                continue
-            if msg_len > len(self.__sock_buf):
-                continue
-
-            msg_buf: bytes = self.__sock_buf[:msg_len]
-            self.__sock_buf = self.__sock_buf[msg_len:]
-
-            if not check_bytes_printable(msg_buf):
+            function_name: str | None
+            msg_parts: list[str] | None
+            try:
+                self.__sock_buf, function_name, msg_parts = parse_ipc_command(
+                    self.__sock_buf
+                )
+                if function_name is None:
+                    continue
+                assert function_name is not None
+                assert msg_parts is not None
+            except ValueError:
                 logging.warning(
                     "Kicking client '%s' for sending invalid bytes in "
                     "command buffer",
@@ -278,15 +260,9 @@ class SdwdateGuiClient(QObject):
                 self.kick_client()
                 return
 
-            msg_string: str = msg_buf.decode(encoding="ascii")
-            msg_parts: list[str] = msg_string.split(" ")
-            if len(msg_parts) < 1:
-                continue
-            function_name = msg_parts[0]
-
             match function_name:
                 case "set_client_name":
-                    if len(msg_parts) != 2:
+                    if len(msg_parts) != 1:
                         logging.warning(
                             "Kicking client '%s' for sending incorrect "
                             "number of arguments for 'set_client_name' "
@@ -295,10 +271,10 @@ class SdwdateGuiClient(QObject):
                         )
                         self.kick_client()
                         return
-                    if not self.__set_client_name(msg_parts[1]):
+                    if not self.__set_client_name(msg_parts[0]):
                         return
                 case "set_sdwdate_status":
-                    if len(msg_parts) != 3:
+                    if len(msg_parts) != 2:
                         logging.warning(
                             "Kicking client '%s' for sending incorrect "
                             "number of arguments for 'set_sdwdate_status' "
@@ -308,11 +284,11 @@ class SdwdateGuiClient(QObject):
                         self.kick_client()
                         return
                     if not self.__set_sdwdate_status(
-                        msg_parts[1], msg_parts[2]
+                        msg_parts[0], msg_parts[1]
                     ):
                         return
                 case "set_tor_status":
-                    if len(msg_parts) != 2:
+                    if len(msg_parts) != 1:
                         logging.warning(
                             "Kicking client '%s' for sending incorrect "
                             "number of arguments for 'set_tor_status' "
@@ -321,7 +297,7 @@ class SdwdateGuiClient(QObject):
                         )
                         self.kick_client()
                         return
-                    if not self.__set_tor_status(msg_parts[1]):
+                    if not self.__set_tor_status(msg_parts[0]):
                         return
 
     def __handle_incoming_data(self) -> None:
@@ -762,6 +738,7 @@ to connect to or configure the Tor network."""
         self.msg_window.move(self.pos_x, self.pos_y)
         self.msg_window.show()
 
+    # pylint: disable=too-many-statements
     def regen_menu(self) -> None:
         """
         Regenerates the context menu for the tray icon.
@@ -938,9 +915,8 @@ to connect to or configure the Tor network."""
         disabling it.
         """
 
-        #if event == QSystemTrayIcon.ActivationReason.Trigger:
+        # if event == QSystemTrayIcon.ActivationReason.Trigger:
         #    self.menu.exec_(QCursor.pos())
-        pass
 
     def handle_client_name_change(
         self,
@@ -1146,87 +1122,6 @@ class SdwdateGuiListener(QObject):
         self.newClient.emit(client)
 
 
-def parse_config_file(config_file: str) -> None:
-    """
-    Parses a single config file.
-    """
-
-    comment_re: Pattern[str] = re.compile(".*#")
-    with open(config_file, "r", encoding="utf-8") as f:
-        for line in f:
-            if comment_re.match(line):
-                continue
-            line = line.strip()
-            if line == "":
-                continue
-            if not "=" in line:
-                logging.error(
-                    "Invalid line detected in file {config_file}",
-                )
-                sys.exit(1)
-            line_parts: list[str] = line.split("=", maxsplit=1)
-            config_key: str = line_parts[0]
-            config_val: str = line_parts[1]
-            match config_key:
-                case "disable":
-                    if config_val == "true":
-                        sys.exit(0)
-                    elif config_val == "false":
-                        continue
-                    else:
-                        logging.error(
-                            "Invalid value for 'disable' key detected in "
-                            "file '%s'",
-                            config_file,
-                        )
-                        sys.exit(1)
-                case "run_server_in_qubes":
-                    if config_val == "true":
-                        GlobalData.should_run_in_qubes = True
-                    elif config_val == "false":
-                        GlobalData.should_run_in_qubes = False
-                    else:
-                        logging.error(
-                            "Invalid value for 'run_server_in_qubes' key "
-                            "detected in file '%s'",
-                            config_file,
-                        )
-                        sys.exit(1)
-                case _:
-                    continue
-
-
-def parse_config_files() -> None:
-    """
-    Parses all config files under /etc/sdwdate-gui.d.
-    """
-
-    config_file_list: list[Path] = []
-    if not GlobalData.sdwdate_gui_conf_dir.is_dir():
-        logging.error(
-            "'%s' is not a directory!",
-            GlobalData.sdwdate_gui_conf_dir,
-        )
-        sys.exit(1)
-    for config_file in GlobalData.sdwdate_gui_conf_dir.iterdir():
-        if not config_file.is_file():
-            continue
-        if not str(config_file).endswith(".conf"):
-            continue
-        config_file_list.append(config_file)
-    if GlobalData.sdwdate_gui_alt_conf_dir.is_dir():
-        for config_file in GlobalData.sdwdate_gui_alt_conf_dir.iterdir():
-            if not config_file.is_file():
-                continue
-            if not str(config_file).endswith(".conf"):
-                continue
-            config_file_list.append(config_file)
-    config_file_list.sort()
-
-    for config_file in config_file_list:
-        parse_config_file(str(config_file))
-
-
 # pylint: disable=unused-argument
 def signal_handler(sig: int, frame: FrameType | None) -> None:
     """
@@ -1261,11 +1156,18 @@ def main() -> NoReturn:
     signal.signal(signal.SIGTERM, signal_handler)
 
     parse_config_files()
+    assert isinstance(ConfigData.conf_dict["disable"], bool)
+    assert isinstance(ConfigData.conf_dict["run_server_in_qubes"], bool)
+    if ConfigData.conf_dict["disable"]:
+        logging.info(
+            "'disable' configuration key set to 'True', therefore exiting."
+        )
+        sys.exit(0)
     if running_in_qubes_os():
-        if not GlobalData.should_run_in_qubes:
+        if not ConfigData.conf_dict["run_server_in_qubes"]:
             logging.info(
                 "Running in Qubes OS, but 'run_server_in_qubes' config is "
-                "not set to 'true', therefore exiting."
+                "set to 'False', therefore exiting."
             )
             sys.exit(0)
 
@@ -1277,7 +1179,3 @@ def main() -> NoReturn:
     sdwdate_tray.show()
     app.exec_()
     sys.exit(0)
-
-
-if __name__ == "__main__":
-    main()
