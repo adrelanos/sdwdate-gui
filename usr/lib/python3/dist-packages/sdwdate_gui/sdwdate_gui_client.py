@@ -13,15 +13,21 @@ these states to the server, and runs commands at the server's request.
 import asyncio
 import os
 import sys
-import re
 import logging
 import subprocess
 import json
+
 from collections import deque
 from pathlib import Path
-from typing import NoReturn, Pattern, Any
+from typing import NoReturn, Any
 
 import pyinotify  # type: ignore
+
+from .sdwdate_gui_shared import (
+    ConfigData,
+    parse_ipc_command,
+    parse_config_files,
+)
 
 
 # pylint: disable=too-few-public-methods
@@ -30,7 +36,6 @@ class GlobalData:
     Global data for sdwdate_gui_client.
     """
 
-    sdwdate_gui_conf_dir: Path = Path("/etc/sdwdate-gui.d")
     anon_connection_wizard_installed: bool = False
     sock_read: asyncio.StreamReader | None = None
     sock_write: asyncio.StreamWriter | None = None
@@ -150,79 +155,6 @@ def running_in_qubes_os() -> bool:
     return False
 
 
-def check_bytes_printable(buf: bytes) -> bool:
-    """
-    Checks if all bytes in the provided buffer are printable ASCII.
-    """
-
-    for byte in buf:
-        if byte < 0x20 or byte > 0x7E:
-            return False
-
-    return True
-
-
-def parse_config_file(config_file: str) -> None:
-    """
-    Parses a single config file.
-    """
-
-    comment_re: Pattern[str] = re.compile(".*#")
-    with open(config_file, "r", encoding="utf-8") as f:
-        for line in f:
-            if comment_re.match(line):
-                continue
-            line = line.strip()
-            if line == "":
-                continue
-            if not "=" in line:
-                logging.error(
-                    "Invalid line detected in file '%s'",
-                    config_file,
-                )
-                sys.exit(1)
-            line_parts: list[str] = line.split("=", maxsplit=1)
-            config_key: str = line_parts[0]
-            config_val: str = line_parts[1]
-            match config_key:
-                case "disable":
-                    if config_val == "true":
-                        sys.exit(0)
-                    elif config_val == "false":
-                        continue
-                    else:
-                        logging.error(
-                            "Invalid value for 'disable' key detected "
-                            "in file '%s'",
-                            config_file,
-                        )
-                        sys.exit(1)
-                case _:
-                    continue
-
-
-def parse_config_files() -> None:
-    """
-    Parses all config files under /etc/sdwdate-gui.d.
-    """
-
-    config_file_list: list[Path] = []
-    if not GlobalData.sdwdate_gui_conf_dir.is_dir():
-        logging.error(
-            "'%s' is not a directory!",
-            GlobalData.sdwdate_gui_conf_dir,
-        )
-        sys.exit(1)
-    for config_file in GlobalData.sdwdate_gui_conf_dir.iterdir():
-        if not config_file.is_file():
-            continue
-        config_file_list.append(config_file)
-    config_file_list.sort()
-
-    for config_file in config_file_list:
-        parse_config_file(str(config_file))
-
-
 async def kick_server() -> None:
     """
     Forcibly disconnects the server from the client. Used as a security
@@ -241,52 +173,43 @@ async def try_parse_commands() -> None:
     """
 
     while len(GlobalData.sock_buf) >= 2:
-        msg_len: int = int.from_bytes(
-            GlobalData.sock_buf[:2], byteorder="big", signed=False
-        )
-
-        if msg_len > len(GlobalData.sock_buf):
-            break
-        GlobalData.sock_buf = GlobalData.sock_buf[2:]
-        if msg_len == 0:
-            continue
-
-        msg_buf: bytes = GlobalData.sock_buf[:msg_len]
-        GlobalData.sock_buf = GlobalData.sock_buf[msg_len:]
-
-        if not check_bytes_printable(msg_buf):
+        function_name: str | None
+        msg_parts: list[str] | None
+        try:
+            GlobalData.sock_buf, function_name, msg_parts = parse_ipc_command(
+                GlobalData.sock_buf
+            )
+            if function_name is None:
+                continue
+            assert function_name is not None
+            assert msg_parts is not None
+        except ValueError:
             await kick_server()
             return
 
-        msg_string: str = msg_buf.decode(encoding="ascii")
-        msg_parts: list[str] = msg_string.split(" ")
-        if len(msg_parts) < 1:
-            continue
-        function_name = msg_parts[0]
-
         match function_name:
             case "open_tor_control_panel":
-                if len(msg_parts) != 1:
+                if len(msg_parts) != 0:
                     await kick_server()
                     return
                 open_tor_control_panel()
             case "open_sdwdate_log":
-                if len(msg_parts) != 1:
+                if len(msg_parts) != 0:
                     await kick_server()
                     return
                 open_sdwdate_log()
             case "restart_sdwdate":
-                if len(msg_parts) != 1:
+                if len(msg_parts) != 0:
                     await kick_server()
                     return
                 restart_sdwdate()
             case "stop_sdwdate":
-                if len(msg_parts) != 1:
+                if len(msg_parts) != 0:
                     await kick_server()
                     return
                 stop_sdwdate()
             case "suppress_client_reconnect":
-                if len(msg_parts) != 1:
+                if len(msg_parts) != 0:
                     await kick_server()
                     return
                 suppress_client_reconnect()
@@ -455,7 +378,7 @@ async def tor_status_changed() -> None:
         await set_tor_status("running")
     elif not tor_is_enabled:
         if tor_is_running:
-            await set_tor_status("disabled-running")
+            await set_tor_status("disabled_running")
         else:
             await set_tor_status("disabled")
     else:
@@ -608,6 +531,46 @@ async def do_setup() -> bool:
     return True
 
 
+async def main_loop() -> None:
+    """
+    Main loop.
+    """
+
+    while True:
+        if not await do_setup():
+            continue
+        while True:
+            try:
+                in_data_task: asyncio.Task[bool] = asyncio.create_task(
+                    handle_incoming_data()
+                )
+                GlobalData.awaitable_tasks.appendleft(in_data_task)
+                start_deque_len: int = len(GlobalData.awaitable_tasks)
+                return_vals: list[Any] = await asyncio.gather(
+                    *GlobalData.awaitable_tasks,
+                    return_exceptions=True,
+                )
+                for _ in range(start_deque_len):
+                    _ = GlobalData.awaitable_tasks.popleft()
+                if isinstance(return_vals[0], bool):
+                    is_still_connected: bool = return_vals[0]
+                    if not is_still_connected:
+                        break
+                else:
+                    break
+            except Exception:
+                break
+
+        if (
+                not running_in_qubes_os()
+                or not GlobalData.do_reconnect
+                or GlobalData.server_pid_path.is_file()
+        ):
+            sys.exit(0)
+        await asyncio.sleep(1)
+        continue
+
+
 async def main() -> NoReturn:
     """
     Main function.
@@ -625,44 +588,20 @@ async def main() -> NoReturn:
         format="%(funcName)s: %(levelname)s: %(message)s", level=logging.INFO
     )
 
-    parse_config_files()
+    try:
+        parse_config_files()
+    except Exception as e:
+        logging.error(
+            "Configuration file parsing failed!",
+            exc_info=e
+        )
+        sys.exit(1)
+    assert isinstance(ConfigData.conf_dict["disable"], bool)
+    if ConfigData.conf_dict["disable"]:
+        logging.info(
+            "'disable' configuration key set to 'True', therefore exiting."
+        )
+        sys.exit(0)
 
-    while True:
-        if await do_setup():
-            while True:
-                try:
-                    in_data_task: asyncio.Task[bool] = asyncio.create_task(
-                        handle_incoming_data()
-                    )
-                    GlobalData.awaitable_tasks.appendleft(in_data_task)
-                    start_deque_len: int = len(GlobalData.awaitable_tasks)
-                    return_vals: list[Any] = await asyncio.gather(
-                        *GlobalData.awaitable_tasks,
-                        return_exceptions=True,
-                    )
-                    for _ in range(start_deque_len):
-                        _ = GlobalData.awaitable_tasks.popleft()
-                    if isinstance(return_vals[0], bool):
-                        is_still_connected: bool = return_vals[0]
-                        if not is_still_connected:
-                            break
-                    else:
-                        break
-                except Exception:
-                    break
-
-        if (
-            not running_in_qubes_os()
-            or not GlobalData.do_reconnect
-            or GlobalData.server_pid_path.is_file()
-        ):
-            sys.exit(0)
-        await asyncio.sleep(1)
-        continue
-
-
+    await main_loop()
     sys.exit(0)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

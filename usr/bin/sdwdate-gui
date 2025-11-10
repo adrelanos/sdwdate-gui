@@ -1,4 +1,4 @@
 #!/bin/bash
 
-/usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui_server.py &
-/usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui_client.py &
+/usr/bin/sdwdate-gui-server &
+/usr/bin/sdwdate-gui-client &

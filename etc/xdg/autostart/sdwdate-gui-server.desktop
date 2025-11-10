@@ -6,5 +6,5 @@ Name=sdwdate-gui-server
 Comment=Secure Distributed Web Date Graphical User Interface
 Type=Application
 Terminal=false
-Exec=/usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui_server.py
+Exec=/usr/bin/sdwdate-gui-server
 #NotShowIn=QUBES;

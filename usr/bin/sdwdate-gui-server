@@ -3,5 +3,5 @@
 ## Copyright (C) 2025 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
-from sdwdate_gui.sdwdate_gui_config_read import main
+from sdwdate_gui.sdwdate_gui_server import main
 main()
