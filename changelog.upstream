@@ -1,3 +1,9 @@
+commit e0deac3687b44e243a249212b7750960953876e9
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Apr 11 08:36:24 2026 +0000
+
+    bumped changelog version
+
 commit 128b27d10792b0672d36cf474cdf46dcdf8f8908
 Merge: 5e4a267 32edffb
 Author: Patrick Schleizer <adrelanos@whonix.org>
@@ -73,10 +79,10 @@ Author: Aaron Rainbolt <arraybolt3@gmail.com>
 Date:   Fri Apr 3 19:35:39 2026 -0400
 
     Avoid modifying the sdwdate-gui menu while the user has it open, fix an edge case that could result in clients not being shown when they should be
-    
+
     Inspired by a ChatGPT Codex PR, but substantially different from the PR
     in implementation.
-    
+
     Because the chances of a user running an action on a client that is no
     longer connected are now much higher, this also adds some code to tell
     the user that a client is no longer connected if this edge case is hit.
@@ -86,7 +92,7 @@ Author: Aaron Rainbolt <arraybolt3@gmail.com>
 Date:   Fri Apr 3 15:18:18 2026 -0400
 
     Fix sdwdate-gui.service silent failure
-    
+
     It looks like systemd was killing the sdwdate-gui-server and
     sdwdate-gui-client processes spun up by sdwdate-gui.service because
     RemainAfterExit=true had not been specified. Adding that seems to have
@@ -190,18 +196,18 @@ Author: Aaron Rainbolt <arraybolt3@ubuntu.com>
 Date:   Thu Dec 18 20:52:23 2025 -0600
 
     Remove sdwdate-gui-qubes@.socket's explicit dependency on sockets.target
-    
+
     systemd.socket(5) documents:
-    
+
       Socket units automatically gain a Before= dependency on sockets.target.
-    
+
     However, we had 'Requires/After' dependencies on sockets.target.
     Marek noticed that sockets.target and sdwdate-gui-qubes@1000.socket
     were ending up in a shutdown ordering cycle that was resulting in the
     stop job for user@1000.service being deleted during shutdown. This is
     a possible cause of the shutdown hanging bugs we are seeing in Qubes
     OS's testing infrastructure.
-    
+
     Get rid of the dependency on sockets.target entirely, just rely on the
     default 'Before' dependency.
 
@@ -941,7 +947,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Fri Dec 29 15:48:15 2023 -0500
 
     add timeout to whonix.SdwdateStatus qrexec call
-    
+
     https://github.com/QubesOS/qubes-issues/issues/8672
 
 commit 6092465c78e8df5e097c40249219b87e9997618c
@@ -949,7 +955,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Fri Dec 29 15:36:34 2023 -0500
 
     guard against slow/broken qubesdb-read
-    
+
     https://github.com/QubesOS/qubes-issues/issues/8672
 
 commit 4cf65f122a3b7e8c63bb2cb5384561c1588657ee
@@ -963,7 +969,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Tue Dec 26 18:06:08 2023 -0500
 
     fix sdwdate-gui-qubes restart, stop, open log actions; refactoring
-    
+
     https://forums.whonix.org/t/sdwdate-gui-for-qubes-testers-wanted-developers-welcome/5469/27
 
 commit eb14289dcc95920efb40d26931e1372c1ba767ef
@@ -989,7 +995,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sat Nov 11 13:41:31 2023 -0500
 
     change license to AGPL-3+
-    
+
     https://forums.whonix.org/t/license-change-to-agplv3/17455
 
 commit 29bc44a69f42599b78bcb16bd5635f3fc0bda211
@@ -1291,7 +1297,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Sat Jan 1 06:20:27 2022 -0500
 
     restart action: use `sdwdate-clock-jump`
-    
+
     instead of restarting sdwdate manually
 
 commit d2ff50f489b4459761633316fe25edb7a34c1ceb
@@ -1317,7 +1323,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Fri Dec 31 10:31:24 2021 -0500
 
     port to QREXEC_REMOTE_DOMAIN
-    
+
     part of https://phabricator.whonix.org/T930
 
 commit c45f0e38c116cf45cb198a67f8eaf7f819c1eb57
@@ -1331,9 +1337,9 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Dec 9 03:37:10 2021 -0500
 
     fix "Denied: whonix.NewStatus" dom0 permission when shutting down Whonix-Gateway [Qubes OS 4.1]
-    
+
     Thanks to @unknown for the bug report!
-    
+
     https://forums.whonix.org/t/qubes-os-4-1-denied-whonix-newstatus-dom0-permission/12954
 
 commit 19e6b6287229577647fc7556aefd92e1c15db4ea
@@ -1353,7 +1359,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Wed Nov 24 15:01:25 2021 -0500
 
     avoid start/restart of sdwdate-gui notify shutdown service during package install/upgrade
-    
+
     dh_installsystemd --no-start --no-stop-on-upgrade
 
 commit 02632d8e92742b4a7183810667c76de1a7ca94b4
@@ -1379,14 +1385,14 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Nov 11 15:48:14 2021 -0500
 
     Fix harmless but nuisance warnings in Qubes R4.1.
-    
+
     "Denied: whonix.NewStatus Denied whonix.NewStatus+whonix-gw-16_shutdown from whonix-gw-16 to sys-whonix"
     "Denied: whonix.NewStatus Denied whonix.NewStatus+whonix-ws-16_shutdown from whonix-ws-16 to sys-whonix"
-    
+
     By preventing `sdwdate-gui-shutdown-notify.service` from running inside Template.
-    
+
     Thanks to @zellchristensen for the bug report and @marmarek for the bug diagnosis!
-    
+
     https://github.com/QubesOS/qubes-issues/issues/6983
 
 commit bc70b1302dc3508ef411c74467e3442545682082
@@ -1442,7 +1448,7 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Wed Aug 4 12:31:15 2021 -0400
 
     chmod -x usr/lib/python3/dist-packages/sdwdate_gui/*
-    
+
     lintian FHS
 
 commit 818f8d10ff5a857ec8ecc736e256d187da159f0d
@@ -1510,9 +1516,9 @@ Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Mon Jun 7 10:11:58 2021 -0400
 
     port from tor-control-status tor_status to anon-connection-wizard
-    
+
     fix minor confusing log output
-    
+
     https://forums.whonix.org/t/full-system-apparmor-policy-testers-wanted/10381/83
 
 commit 9a17fb208fb5fe62191238b2a3f2c462c325daaf
@@ -1598,7 +1604,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Jan 9 09:51:36 2021 -0500
 
     limit sdwdate-gui log viewer to current boot
-    
+
     to avoid confusion showing log from previous Qubes TemplateVM boot
 
 commit 75c10dc28414684d6b41cb5dc421e465d3088d7b
@@ -1660,11 +1666,11 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Nov 24 06:03:45 2020 -0500
 
     fix unwanted automatic restart of Qubes-Whonix-Workstation in after shutdown
-    
+
     quoting fix
-    
+
     https://forums.whonix.org/t/impossible-to-shut-down-workstation-qubes-after-the-latest-update/10627
-    
+
     Thanks to @singularity for the bug report!
 
 commit caa2f73a15e32943c825367586826533ee47d495
@@ -1696,9 +1702,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Nov 5 06:55:38 2020 -0500
 
     fix, do not qrexec notify self on shutdown
-    
+
     fixes https://github.com/Whonix/sdwdate-gui/pull/3
-    
+
     Thanks to @icequbes1 for the bug report!
 
 commit 7b1e2a99d62f5d960783d576d7a75d560b12b040
@@ -1724,11 +1730,11 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue May 19 07:57:57 2020 -0400
 
     also open sdwdate-gui-qubes with left click
-    
+
     previously was sdwdate-gui (Non-Qubes-Whonix) only
-    
+
     emulate commit by @marmarta
-    
+
     a1af62b5435cd54a32080f3ebb810f807ad4b555
 
 commit e7bbf02f2d3ab19ca4c22554e1fcb90948e47443
@@ -1750,11 +1756,11 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue May 19 11:11:49 2020 +0000
 
     Merge pull request #2 from marmarta/icons_from_nina
-    
+
     Made the sdwdate-gui menu trigger on left click
 
 commit a1af62b5435cd54a32080f3ebb810f807ad4b555
-Author: Marta Marczykowska-Górecka <marta.maria.gorecka@gmail.com>
+Author: Marta Marczykowska-G_recka <marta.maria.gorecka@gmail.com>
 Date:   Sun May 17 16:24:37 2020 +0200
 
     Made the sdwdate-gui menu trigger on left click, too
@@ -1770,11 +1776,11 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed May 13 13:35:29 2020 -0400
 
     add improved sdwdate-gui systray icons for status waiting and stopped
-    
+
     Thanks to @ninavizz for contributing these new sdwdate-gui icons!
-    
+
     https://phabricator.whonix.org/T991
-    
+
     https://github.com/Whonix/sdwdate-gui/commit/0471ff0d93f337fe83c29705c7ac8618e3b122c6#commitcomment-39152183
 
 commit 0471ff0d93f337fe83c29705c7ac8618e3b122c6
@@ -1782,9 +1788,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed May 13 09:35:45 2020 -0400
 
     add improved sdwdate-gui systray icons for status success and stopped
-    
+
     Thanks to @ninavizz for contributing these new sdwdate-gui icons!
-    
+
     https://phabricator.whonix.org/T991
 
 commit e8a62ce289205561a488eaecd5e767f0bf391117
@@ -1810,7 +1816,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Apr 23 10:18:45 2020 -0400
 
     cleanup Recommends: vbox-disable-timesync
-    
+
     because deprecated
 
 commit fe497c3e2c37f4e74cc3ceb5862d892061de0646
@@ -2024,9 +2030,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Aug 7 02:05:31 2019 -0400
 
     support multiple Whonix-Gateways through configuration
-    
+
     parse config files
-    
+
     /etc/sdwdate-gui.d/*.conf
     /usr/local/etc/sdwdate-gui.d/*.conf
 
@@ -2251,7 +2257,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Apr 8 06:37:09 2019 -0400
 
     launch into background
-    
+
     consistent with above tor-control-panel
 
 commit af9207a3fe80c77418021b60443784149e7745f5
@@ -2373,18 +2379,18 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Mar 1 14:32:41 2019 +0000
 
     add improved legal protections clauses
-    
+
     The license for software created by Whonix is the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version with additional terms applicable per GNU GPL version 3 section 7.
-    
+
     The additional terms are based on the Doom 3 license which is Debian refers to as `GPL-3+-with-id-software-additional-terms`, which is Debian DFSG [1] (The Debian Free Software Guidelines) approved and which is therefore suitable for Debian `main`. Whonix made applied minimal changes to it:
-    
+
     * Rewrite `The Doom 3 BFG Edition GPL Source Code` to the more common `this program` which is used throughout the GPL.
     * Added a "trump clause" [2], in other words, any conflicts or disputes between the additional terms and the GPLv3 shall be resolved in favor of the GPLv3 by adding `Notwithstanding any other provision of this License` (as mentioned in GPL FAQ [3]) at the beginning of the additional terms.
-    
+
     [1] https://www.debian.org/social_contract#guidelines
     [2] https://www.fsf.org/news/canonical-updated-licensing-terms
     [3] https://www.gnu.org/licenses/gpl-faq.html#v3Notwithstanding
-    
+
     For more considerations, see also:
     https://www.whonix.org/wiki/Dev/Licensing
 
@@ -2399,7 +2405,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Oct 26 06:16:20 2018 -0400
 
     use /usr/lib/anon-shared-helper-scripts/terminal-wrapper rather than hardcoding Konsole
-    
+
     http://forums.whonix.org/t/calling-1-package-from-whonix-repo-will-pull-all-the-packages/6182/7
 
 commit 5854da27c78c07a0edb7500268efb82cdcbc9070
@@ -2425,7 +2431,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Sep 17 17:15:46 2018 +0000
 
     do not run sdwdate-gui-qubes by default in Qubes
-    
+
     until https://github.com/QubesOS/updates-status/issues/666 reaches Qubes stable
 
 commit 949278fb806cbb3978dfc9405cce3e1b58ab5594
@@ -2439,7 +2445,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Sep 17 11:30:50 2018 -0400
 
     do not run sdwdate-gui-qubes by default in Qubes
-    
+
     until https://github.com/QubesOS/updates-status/issues/666 reaches Qubes stable
 
 commit 70dc7b724fe43453091a38dfcb47aab7fad47aa6
@@ -2453,7 +2459,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Mon Sep 17 10:05:05 2018 +0000
 
     do not run sdwdate-gui-qubes by default in Qubes
-    
+
     until https://github.com/QubesOS/updates-status/issues/666 reaches Qubes stable
 
 commit 1b09852ed5c9e394a3912737eb3963880d1141a2
@@ -2492,7 +2498,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sun Sep 16 09:45:09 2018 +0000
 
     move to /usr/lib/sdwdate-gui/sdwdate-watcher so we don't need a man page
-    
+
     to fix lintian warning
 
 commit f4ba6c2160d5f10a2b80821695b7cc5e690f69cb
@@ -2669,7 +2675,7 @@ Author: troubadour <trobador@riseup.net>
 Date:   Thu Jul 12 19:01:20 2018 +0000
 
     Merge pull request #1 from adrelanos/sdwdate-gui-qubes
-    
+
     fixes systemd and tmpfiles
 
 commit 4b8002e9c669138bfecece9418d6be34a451fab2
@@ -2914,7 +2920,7 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Sat Feb 3 19:44:54 2018 +0000
 
     Revert "defensive code against qubes-db and qubes-qrexec-agent"
-    
+
     This reverts commit b67d3995982cf0f18df37bd5e1c26d32d2a4c72b.
 
 commit b67d3995982cf0f18df37bd5e1c26d32d2a4c72b
@@ -3079,9 +3085,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Feb 25 19:03:54 2017 +0000
 
     fix race conditions
-    
+
     remote race condition workarounds
-    
+
     refactoring, code simplification
 
 commit e7d862da460258334bddcf13045c965be7f61d08
@@ -3113,11 +3119,11 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Sat Feb 25 05:37:13 2017 +0000
 
     Remove two options Gradually / Instantly adjust the time
-    
+
     since it's not clear for users which one they should use
-    
+
     only leave a simple "restart sdwdate",
-    
+
     which will instantly adjust the time
 
 commit 6a34b3cce1affe9161a82860c0ce453a9ffc25c8
@@ -3145,7 +3151,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Feb 21 22:04:58 2017 +0000
 
     use systemctl --no-pager to prevent blocking due to systemctl interactivity
-    
+
     https://phabricator.whonix.org/T637
 
 commit c96cd00aa420ded6e9afd40f381327a77a088b8d
@@ -3179,7 +3185,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Feb 10 15:47:52 2017 +0000
 
     remove faketime from Build-Depends:
-    
+
     since no longer used for reproducible builds
 
 commit 515d1006c72e55c04816fe1bfd7e6a1e8d44c3f3
@@ -3216,7 +3222,7 @@ Date:   Wed Feb 8 14:14:10 2017 +0000
 
     usr/bin/sdwdate-gui: change shebang to python3;
     usr/lib/sdwdate-gui/show_message: change shebang to python3;
-    
+
     move files to fix lintian warnings:
     usr/lib/python3.4/dist-packages/sdwdate_gui/__init__.py -> usr/lib/python3/dist-packages/sdwdate_gui/__init__.py
     usr/lib/python3.4/dist-packages/sdwdate_gui/sdwdate_gui.py -> usr/lib/python3/dist-packages/sdwdate_gui/sdwdate_gui.py
@@ -3358,7 +3364,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Tue Aug 30 21:13:53 2016 +0000
 
     sudo --non-interactive
-    
+
     https://phabricator.whonix.org/T549
 
 commit 3c59489d839da7837f06c911de2f30230ddd3853
@@ -3366,7 +3372,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 20:33:37 2016 +0000
 
     Do not automatically start sdwdate-gui in Qubes due to various issues.
-    
+
     - https://github.com/QubesOS/qubes-issues/issues/2264
     - https://github.com/QubesOS/qubes-issues/issues/2268
     - https://phabricator.whonix.org/T534
@@ -3376,7 +3382,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Thu Aug 25 18:58:03 2016 +0000
 
     add startup wrapper to avoid starting sdwdate-gui in Qubes TemplateVM
-    
+
     https://phabricator.whonix.org/T533
 
 commit 815b6f2557d35635bc66e0f4f6a3653f652008e0
@@ -3402,7 +3408,7 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Fri Apr 22 00:02:16 2016 +0000
 
     fixed stale status bug and better error handling
-    
+
     solved duplicate event processing
 
 commit ddd3d806af0b957800c34449dfecad1933e79424
@@ -3410,9 +3416,9 @@ Author: Patrick Schleizer <adrelanos@riseup.net>
 Date:   Wed Apr 20 04:36:48 2016 +0000
 
     do not autostart sdwdate-gui in Qubes since it is not ready for Qubes
-    
+
     it would result in one systray per VM
-    
+
     i.e. two with a gateway and workstation setup and one more for each additional
     workstation
 
@@ -3494,10 +3500,10 @@ Author: troubadoour <trobador@riseup.net>
 Date:   Fri Nov 20 20:47:09 2015 +0000
 
     Two different .desktop files in /etc/xdg/autostart.
-    
+
     One for Qubes: run directly kdesudo (passwordless) + OnlyShowIn=QUBES;
     One for other (KVM & VirtualBox): run xhost +local:root && sudo + NotShowIn=QUBES;
-    
+
     Running kdesudo only in VirtualBox prompts the user to enter a password.
     "xhost +local:root" prevents sdwdate-gui to show in Qubes.
 
