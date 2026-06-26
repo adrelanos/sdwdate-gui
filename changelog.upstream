@@ -1,3 +1,39 @@
+commit d3698043821502d609ff4bb8c8fdfe6ab45db4b0
+Merge: 5afbdb0 bb1f7db
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Jun 26 12:51:30 2026 -0400
+
+    Merge remote-tracking branch 'org-ai-assisted/master'
+
+commit 5afbdb0e5db799d8312119c6aa3986f6adefade5
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Jun 26 12:30:44 2026 +0000
+
+    bumped changelog version
+
+commit bb1f7db5e8aa870d8d8754f4f87bf6c4b0eadf53
+Author: claude <noreply@anthropic.com>
+Date:   Fri Jun 26 08:29:15 2026 -0400
+
+    Fix Qubes write-error recursion in kick_client
+
+    On Qubes OS, kick_client() calls suppress_client_reconnect(), which sends
+    an RPC via __generic_rpc_call(). The send loop calls kick_client() again
+    on a write error (write() < 0), so a write error during the suppress
+    message recurses: kick_client -> suppress_client_reconnect ->
+    __generic_rpc_call -> write() < 0 -> kick_client -> ... -> RecursionError.
+
+    It is reachable in the narrow window where write() returns -1 while the
+    socket still reports ConnectedState (an abrupt peer close), which is
+    exactly the case the write-error kick was added for.
+
+    Guard kick_client() against re-entrancy with a per-client flag: the first
+    call proceeds, any nested or repeated call is a harmless no-op. This also
+    makes kick_client idempotent in general.
+
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
 commit deed860ca8dc0a55bb2b990ebcec397a4634a540
 Merge: b3809da 48db6de
 Author: Patrick Schleizer <adrelanos@whonix.org>
