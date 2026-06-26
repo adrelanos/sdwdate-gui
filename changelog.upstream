@@ -1,3 +1,368 @@
+commit deed860ca8dc0a55bb2b990ebcec397a4634a540
+Merge: b3809da 48db6de
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Fri Jun 26 06:03:55 2026 -0400
+
+    Merge remote-tracking branch 'ArrayBolt3/arraybolt3/trixie'
+
+commit 48db6de30e52f30ae6f4c48ef3f4ef7f71b34f2e
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Fri Jun 26 01:22:39 2026 -0400
+
+    Heavily modified and squashed commit of the following:
+
+    commit 797c1773fed1ab6bcb7296f33e8e8f14db346437
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 16:42:26 2026 -0400
+
+        Restrict IPC socket to the owning user (defense in depth)
+
+        SdwdateGuiListener created its QLocalServer socket without socket options,
+        so it landed at mode 0770 and was protected only by the 0700 mode of the
+        parent /run/user/UID directory. Set QLocalServer.UserAccessOption so the
+        socket itself is owner-only (0700), not reliant on the parent directory's
+        mode.
+
+        Verified safe on Qubes OS on a live system: the gateway's qrexec Connect
+        path reaches this socket as either root (qrexec-agent) or the default user
+        (qrexec-fork-server), and the server runs as that same default user, so
+        both possible connectors can still reach an owner-only socket. Confirmed
+        the socket is created mode 0700 and a same-user client connects.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit 496ba097f8ba82c81b1b09fe32040eb3a155a5e0
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 15:14:11 2026 -0400
+
+        Fix pre-existing issues: frame-size guard and subprocess reaping
+
+        Two pre-existing issues surfaced during the AI review, fixed:
+
+        1. The IPC senders (generic_rpc_call on both ends) built a two-byte length
+           prefix without checking the message size. A message larger than 65535
+           bytes would raise OverflowError; one between the receiver's 4 KiB limit
+           and 65535 would be sent only to be rejected and disconnect the client.
+           Current callers are bounded, so neither was reachable, but the limit is
+           now a single shared constant (MAX_FRAME_SIZE in sdwdate_gui_shared,
+           replacing the literal 4096 in the parser) and is enforced on send as
+           well as receive.
+
+        2. The client's server-to-client RPC handlers launched helpers with a
+           fire-and-forget subprocess.Popen() and discarded the handle. CPython
+           only reaps such children opportunistically (on the next Popen() or on
+           garbage collection), so the last few launches leave lingering zombies
+           (verified). The client is an asyncio program, so launch them with
+           asyncio.create_subprocess_exec() instead; the event loop's child
+           watcher reaps them automatically (verified: zero zombies). The handler
+           functions become coroutines and are awaited from the dispatch loop.
+
+        Regression tests are in the dist-ai sdwdate-gui-tests package.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit abe8ceb91ce6f8aab6b3fd2063be81f9ac663352
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 14:59:58 2026 -0400
+
+        Harden RPC send loop and empty-name display (AI review)
+
+        Two fixes from an external code review (Codex / CodeRabbit / a
+        fresh-context reviewer), reconciled against the code:
+
+        - __generic_rpc_call() looped `msg_len -= client_socket.write(...)` with
+          no check on the return value. write() returns -1 on error (and 0 should
+          never happen on a connected local socket); either would spin the loop or
+          rewind the offset with a negative count. The ConnectedState guard
+          usually catches a dropped peer on the next iteration, but bail
+          explicitly on write() <= 0 so a write error can never spin.
+        - A non-Qubes client name made entirely of markup (e.g. "<b></b>")
+          sanitizes to an empty string, which rendered dialogs as Client '' or
+          "Tor status on :". Fall back to "Unknown" when the sanitized name is
+          empty.
+
+        Both are minor robustness / display issues, not reachable bugs in normal
+        operation, but cheap to close. Regression tests are in the dist-ai
+        sdwdate-gui-tests package.
+
+        Rejected from the same review (verified against the code): a claim that
+        the client status message can overflow the 4096-byte frame -- the worst
+        case (1000 chars each expanding 4x, plus the longest status) is 4027
+        bytes, and the status is always one of success/busy/error.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit 07cac7152e904844f81a03038341df7f754ff9f7
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 14:44:51 2026 -0400
+
+        Bound connection count and client handshake lifetime
+
+        Hardening: the server accepted every incoming connection unconditionally,
+        with no cap on concurrent clients and no timeout for clients that connect
+        but never complete their handshake (never provide a name). A misbehaving
+        or hostile client (a separate, less-trusted VM under Qubes OS) could thus
+        exhaust memory or file descriptors with a flood of connections or idle
+        half-open ones. Dedup already bounds *named* clients to one per VM, so the
+        open vector was specifically unnamed / incomplete connections.
+
+        - accept_client() now rejects a new connection once MAX_CLIENTS (64, far
+          above any realistic VM count) are already connected. The reject path
+          kicks and frees the client before wiring it up, so it neither counts
+          against the limit nor logs a spurious drop warning.
+        - SdwdateGuiClient starts a single-shot handshake timer on construction
+          and kicks itself if it is still connected and nameless after
+          HANDSHAKE_TIMEOUT_MS (30s). The timer is stopped as soon as the name is
+          set (clientNameChanged), so it never affects a well-behaved client,
+          which sets its name within milliseconds of connecting.
+
+        Regression tests and a fuzzer case (connection cap; handshake timeout) are
+        in the dist-ai sdwdate-gui-tests package.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit 97b5ad70c30471e544e13d7195999bd07c9f831b
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 14:30:16 2026 -0400
+
+        Bound untrusted string lengths in the GUI and client
+
+        Audit follow-up: cap untrusted strings to reasonable lengths, and make
+        the client robust to long / non-ASCII status messages.
+
+        Server (sdwdate_gui_server.py):
+        - sanitize_for_richtext() now takes a max_length and truncates the
+          sanitized string (matching the sanitize-string command's own
+          semantics). The client name is capped at 255 and the sdwdate message at
+          2048 characters before being shown in a status window, so a long string
+          cannot bloat the dialog.
+        - __parse_qubes_data() now rejects a qrexec header whose source-VM name
+          exceeds the 31-character Qubes OS limit. The name is qrexec-provided and
+          thus trusted, but the previous code applied no length check at all
+          (unlike __set_client_name), so this is defense in depth and keeps a
+          pathological name out of the menu and dialogs.
+
+        Client (sdwdate_gui_client.py):
+        - set_sdwdate_status() now ASCII-coerces (errors="replace") and caps the
+          status message at 1000 characters before sending. Previously a message
+          longer than the server's 4096-byte frame got the client kicked, one
+          longer than 65535 bytes raised OverflowError on the two-byte length
+          prefix, and a non-ASCII message raised UnicodeEncodeError - all silently
+          swallowed, so the status would simply stop updating.
+        - set_client_name() ASCII-coerces the name for the same reason.
+
+        Regression tests and fuzzer cases (header-name cap, display truncation,
+        client send cap + ASCII coercion) are in the dist-ai sdwdate-gui-tests
+        package.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit a6db339d7607656c007129b16f7871acbd9d720d
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 14:13:03 2026 -0400
+
+        Sanitize rich-text status/name with helper-scripts sanitize_string
+
+        Follow-up to the rich-text injection fix. Replace the plain html.escape()
+        of the client name and sdwdate message with helper-scripts'
+        sanitize_string() followed by html.escape(), via a small
+        sanitize_for_richtext() helper.
+
+        html.escape() alone only neutralises HTML metacharacters; it does nothing
+        about control characters, ANSI escapes or non-ASCII confusables
+        (right-to-left overrides, zero-width and homoglyph characters).
+        sanitize_string() (strip_markup + stdisplay) strips markup with a real
+        HTML parser that detects evasion, and replaces everything outside
+        printable ASCII (plus newline/tab) with underscores. html.escape() then
+        neutralises the lone '<', '>' or '&' that sanitize_string() leaves intact
+        (harmless on a terminal, not in a rich-text renderer).
+
+        In practice the wire protocol already restricts a status message and a
+        client name to printable ASCII (check_bytes_printable, and the octal
+        escape validator rejects bytes outside 0x20-0x7E), so non-ASCII cannot
+        currently reach the GUI; the markup case (ASCII < > &) is the reachable
+        one. Routing through sanitize_string is both a more robust markup
+        defense and defense in depth for the display path.
+
+        sdwdate-gui already depends on helper-scripts, which ships the
+        sanitize_string Python module.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit 22b55c8f8ffe9c9f044b368f1858d394c963fd47
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 14:00:12 2026 -0400
+
+        Fix non-deterministic status decode and rich-text injection
+
+        Two more defects found by the dist-ai sdwdate-gui simulator/fuzzer:
+
+        1. Order-dependent status-message escape decoding. __set_sdwdate_status
+           decoded the octal escapes (\NNN) with one global str.replace() per
+           distinct escape, iterating a set. A replacement can form a sequence
+           that a later replacement then re-decodes, so the same wire message
+           decoded differently depending on set / hash iteration order. With
+           Python's per-process hash randomization the result was effectively
+           non-deterministic: e.g. a message that should decode to a newline
+           followed by the literal "\012" decoded to two newlines for some
+           PYTHONHASHSEED values (observed: wrong for 4 of 6 seeds tried).
+           Replaced with a single left-to-right re.sub() pass that rewrites each
+           match exactly once and never rescans its own output.
+
+        2. Rich-text / HTML injection from an attacker-controlled status message.
+           The status and Tor message windows render as Qt.RichText, and the
+           client name and the sdwdate message were interpolated unescaped. A
+           client is a separate, less-trusted VM under Qubes OS, and the sdwdate
+           message is never charset-restricted beyond printable ASCII, so a
+           client could inject markup (e.g. <img src=...> for local-resource
+           probing, or spoofed status text) into the server's GUI. Note the
+           non-Qubes client name has no charset check either. html.escape() the
+           client name and the message at every rich-text interpolation site
+           (show_status_msg sdwdate/Tor, show_disconnected_msg).
+
+        Regression tests and the fuzzer cases (round-trip fidelity and markup
+        escaping) are in the dist-ai sdwdate-gui-tests package.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit ca245ec109098062c570e9167a150fc87028f111
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 12:58:42 2026 -0400
+
+        Fix server hang on fragmented message, newline-kicks, double-drop
+
+        Three defects found by the new sdwdate-gui simulator/fuzzer in dist-ai,
+        affecting both the Qubes and non-Qubes paths:
+
+        1. Infinite loop / hang on an incomplete (fragmented) message.
+           SdwdateGuiClient.__try_parse_commands() looped on
+           `if function_name is None: continue`, but parse_ipc_command() returns
+           None with the buffer UNCHANGED when only part of a message has
+           arrived. The loop then re-parsed the same bytes forever, wedging the
+           single-threaded Qt event loop (frozen GUI / menu, and a trivial DoS: a
+           client need only send a length prefix larger than its payload).
+           Fragmentation is normal over a socket, especially qrexec. Added the
+           same "buffer did not shrink -> break and wait for more" guard the
+           client side already had.
+
+        2. A newline in a status message kicked the client. The octal-escape
+           validation read `octal_int < 0x20 or octal_int > 0x7E and
+           octal_int != 0x0A`; `and` binds tighter than `or`, so 0x0A (newline,
+           which the client encodes as \012) tripped the `< 0x20` clause and the
+           client was kicked. Any multi-line sdwdate status message would drop
+           the client from the GUI. Parenthesized to the intended
+           `(octal_int < 0x20 or octal_int > 0x7E) and octal_int != 0x0A`.
+
+        3. drop_client logged a spurious "Dropped client not present in client
+           list!" warning. kick_client emits clientDisconnected, and the
+           socket's own disconnected() signal (wired to clientDisconnected) fires
+           too, so drop_client runs twice per kick. Made it idempotent via a
+           'dropped' flag, only warning when a client was never tracked (a real
+           bug), and only deleteLater()-ing on the call that actually removes it.
+
+        Regression tests and the fuzzer live in the dist-ai sdwdate-gui-tests
+        package. Reported (duplicate-name symptom):
+        https://forums.whonix.org/t/sdwd-symbol-malefunction/23330
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit c68bb09a06a1543b35b6c74567e24bd0e26a0091
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 11:06:40 2026 -0400
+
+        Also open the sdwdate-gui menu on right-click, not just left-click
+
+        Follow-up to the left-click restore. Right-clicking the tray icon relied
+        solely on the context menu set with setContextMenu(), whose automatic
+        display is unreliable on some platforms (on Qubes OS it frequently fails
+        to register: https://forums.whonix.org/t/sdwd-symbol-malefunction/23330).
+
+        Handle the Context activation reason in show_menu in addition to Trigger,
+        so both left- and right-click open the menu through our own popup() and
+        no longer depend on the platform's flaky automatic context menu. popup()
+        targets the same menu object the automatic handler would show, so a
+        right-click does not produce a second, separate menu (verified: exactly
+        one visible menu after either click). The Wayland opt-out is unchanged.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit d4e92646ed8878ac9a5b28bfdb779858d2b641e9
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 10:35:19 2026 -0400
+
+        Restore left-click to open the sdwdate-gui menu (except under Wayland)
+
+        Right-clicking the tray icon is meant to open the menu automatically via
+        the context menu set with setContextMenu(), but that automatic context
+        menu is unreliable on some platforms; on Qubes OS users report that
+        right-clicking the icon frequently fails to register
+        (https://forums.whonix.org/t/sdwd-symbol-malefunction/23330).
+
+        Opening the menu on a plain left-click used to provide a dependable
+        alternative, but it was disabled in 858bf0d because positioning a popup
+        at QCursor.pos() is broken under Wayland. That disabled it on every
+        platform, including Qubes OS, which is X11-only and unaffected by the
+        Wayland limitation, leaving Qubes users with only the flaky automatic
+        right-click path.
+
+        Re-enable the left-click popup, but skip it under Wayland (detected via
+        QApplication.platformName) so the Wayland breakage that motivated the
+        original change does not return. Right-click handling is left untouched:
+        the Context activation reason is still served by the automatic context
+        menu, avoiding a double menu on XEmbed-based trays.
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    commit 1c645bb438b61e21b30f9ef4f407a977f61e527b
+    Author: claude <noreply@anthropic.com>
+    Date:   Thu Jun 25 10:05:30 2026 -0400
+
+        Fix Qubes VM listed twice in sdwdate-gui menu
+
+        On Qubes OS a single VM (e.g. a DisposableVM "dispNNNN") could appear
+        twice in the tray menu when it reconnected before the gateway server
+        reaped its previous connection.
+
+        The "no two clients with the same name" invariant was only enforced on
+        the non-Qubes path: there the name arrives via the set_client_name RPC,
+        which emits clientNameChanged, driving the duplicate check in
+        handle_client_name_change. On Qubes the name instead comes from the
+        authenticated qrexec header in __parse_qubes_data, which set the name
+        but never emitted clientNameChanged, so the duplicate check was bypassed
+        entirely and regen_menu rendered one submenu per connection.
+
+        - __parse_qubes_data now emits clientNameChanged after setting the
+          qrexec-derived name, subjecting the Qubes path to the same invariant.
+        - handle_client_name_change now branches by trust model. On Qubes the
+          name is qrexec-authenticated, so a duplicate means the same VM
+          reconnected; kick the stale older connection(s) and keep the newest.
+          On non-Qubes the name is self-reported and untrusted, so keep the
+          existing impersonation guard that kicks the newcomer.
+
+        Reported: https://forums.whonix.org/t/sdwd-symbol-malefunction/23330
+
+        Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+        Claude-Session: https://claude.ai/code/session_01G5h63X68X5gGV5pbvW7iyy
+
+    Many efficiency improvements and at least one major bugfix were added on
+    top of this.
+
+commit b3809daa35749e76315175717390c2b3522dbc0f
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed May 20 22:19:40 2026 +0000
+
+    bumped changelog version
+
 commit 7d6d61560f9022d5baed1eb30bf5cd99056feadc
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Wed May 20 16:57:10 2026 -0400
