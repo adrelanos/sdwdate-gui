@@ -25,9 +25,15 @@ import pyinotify  # type: ignore
 
 from .sdwdate_gui_shared import (
     ConfigData,
+    MAX_MSG_SIZE,
     parse_ipc_command,
     parse_config_files,
 )
+
+## Maximum length of the sdwdate status message we send. Messages can be a
+## maximum of 4096 bytes long, and the escape encoding below can quadruple the
+## length, so cap the raw message well under a quarter of that limit.
+MAX_STATUS_MSG_LEN: int = 1000
 
 
 # pylint: disable=too-few-public-methods
@@ -58,6 +64,7 @@ class GlobalData:
     watch_manager: pyinotify.WatchManager | None = None
     notifier: pyinotify.AsyncioNotifier | None = None
     awaitable_tasks: deque[asyncio.Task[Any]] = deque()
+    background_tasks: set[asyncio.Task[Any]] = set()
 
 
 # pylint: disable=invalid-name
@@ -204,22 +211,38 @@ async def try_parse_commands() -> None:
                 if len(msg_parts) != 0:
                     await kick_server()
                     return
-                open_tor_control_panel()
+                otcp_task = asyncio.create_task(open_tor_control_panel())
+                GlobalData.background_tasks.add(otcp_task)
+                otcp_task.add_done_callback(
+                    GlobalData.background_tasks.discard
+                )
             case "open_sdwdate_log":
                 if len(msg_parts) != 0:
                     await kick_server()
                     return
-                open_sdwdate_log()
+                osl_task = asyncio.create_task(open_sdwdate_log())
+                GlobalData.background_tasks.add(osl_task)
+                osl_task.add_done_callback(
+                    GlobalData.background_tasks.discard
+                )
             case "restart_sdwdate":
                 if len(msg_parts) != 0:
                     await kick_server()
                     return
-                restart_sdwdate()
+                rs_task = asyncio.create_task(restart_sdwdate())
+                GlobalData.background_tasks.add(rs_task)
+                rs_task.add_done_callback(
+                    GlobalData.background_tasks.discard
+                )
             case "stop_sdwdate":
                 if len(msg_parts) != 0:
                     await kick_server()
                     return
-                stop_sdwdate()
+                ss_task = asyncio.create_task(stop_sdwdate())
+                GlobalData.background_tasks.add(ss_task)
+                ss_task.add_done_callback(
+                    GlobalData.background_tasks.discard
+                )
             case "suppress_client_reconnect":
                 if len(msg_parts) != 0:
                     await kick_server()
@@ -246,36 +269,49 @@ async def handle_incoming_data() -> bool:
 
 
 ## SERVER-TO-CLIENT RPC CALLS
-def open_tor_control_panel() -> None:
+## These launch a helper and wait for it to finish executing in a way that
+## prevents unintended garbage collection or zombie processes. If wrapped in
+## an asyncio task, they will run in the background.
+async def open_tor_control_panel() -> None:
     """
     RPC call from server to client. Opens Tor Control Panel.
     """
-    # pylint: disable=consider-using-with
-    subprocess.Popen(["/usr/bin/tor-control-panel"], shell=False)
+    process_obj: asyncio.subprocess.Process = (
+        await asyncio.create_subprocess_exec("/usr/bin/tor-control-panel")
+    )
+    await process_obj.wait()
 
 
-def open_sdwdate_log() -> None:
+async def open_sdwdate_log() -> None:
     """
     RPC call from server to client. Opens the sdwdate log in a terminal.
     """
-    # pylint: disable=consider-using-with
-    subprocess.Popen(["/usr/libexec/sdwdate-gui/log-viewer"], shell=False)
+    process_obj: asyncio.subprocess.Process = (
+        await asyncio.create_subprocess_exec(
+            "/usr/libexec/sdwdate-gui/log-viewer"
+        )
+    )
+    await process_obj.wait()
 
 
-def restart_sdwdate() -> None:
+async def restart_sdwdate() -> None:
     """
     RPC call from server to client. Restarts the sdwdate service.
     """
-    # pylint: disable=consider-using-with
-    subprocess.Popen(["leaprun", "sdwdate-clock-jump"], shell=False)
+    process_obj: asyncio.subprocess.Process = (
+        await asyncio.create_subprocess_exec("leaprun", "sdwdate-clock-jump")
+    )
+    await process_obj.wait()
 
 
-def stop_sdwdate() -> None:
+async def stop_sdwdate() -> None:
     """
     RPC call from server to client. Stops the sdwdate service.
     """
-    # pylint: disable=consider-using-with
-    subprocess.Popen(["leaprun", "stop-sdwdate"], shell=False)
+    process_obj: asyncio.subprocess.Process = (
+        await asyncio.create_subprocess_exec("leaprun", "stop-sdwdate")
+    )
+    await process_obj.wait()
 
 
 def suppress_client_reconnect() -> None:
@@ -295,6 +331,9 @@ async def generic_rpc_call(msg_bytes: bytes) -> None:
 
     assert GlobalData.sock_write is not None
     msg_len: int = len(msg_bytes)
+    if msg_len > MAX_MSG_SIZE:
+        logging.critical("Tried to send oversized IPC message!")
+        sys.exit(1)
     msg_buf: bytes = (
         msg_len.to_bytes(2, byteorder="big", signed=False) + msg_bytes
     )
@@ -315,7 +354,9 @@ async def set_client_name(name: str) -> None:
     the server will forcibly disconnect it under Qubes OS.
     """
 
-    await generic_rpc_call(b"set_client_name " + name.encode(encoding="ascii"))
+    await generic_rpc_call(
+        b"set_client_name " + name.encode(encoding="ascii", errors="replace")
+    )
 
 
 async def set_sdwdate_status(status: str, msg: str) -> None:
@@ -323,6 +364,15 @@ async def set_sdwdate_status(status: str, msg: str) -> None:
     RPC call from client to server. Updates the sdwdate status shown by
     the server.
     """
+
+    ## Coerce to ASCII (the wire is ASCII only, otherwise encode() below
+    ## raises) and cap the length, so a long or non-ASCII status message
+    ## cannot overflow the two-byte length prefix or get the client kicked
+    ## by the server's 4096-byte frame limit.
+    msg = msg.encode(
+        encoding="ascii", errors="replace"
+    ).decode(encoding="ascii")
+    msg = msg[:MAX_STATUS_MSG_LEN]
 
     ## Encode spaces, newlines, and backslashes into octal escapes.
     msg_copy: str = msg.replace("\\", "\\134")
@@ -525,6 +575,7 @@ def setup_inotify_watch(target_path: str, watch_mask: int) -> None:
     Sets up an inotify watch on one path, warning if the process fails.
     """
 
+    assert GlobalData.watch_manager is not None
     ret: dict[str, int] = GlobalData.watch_manager.add_watch(
         target_path, watch_mask,
     )
