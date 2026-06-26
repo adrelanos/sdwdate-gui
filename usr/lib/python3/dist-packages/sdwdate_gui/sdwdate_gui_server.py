@@ -50,12 +50,41 @@ from PyQt5.QtNetwork import (
     QLocalServer,
 )
 
+from sanitize_string.sanitize_string_lib import sanitize_string
+
 from .sdwdate_gui_shared import (
     ConfigData,
+    MAX_MSG_SIZE,
     check_bytes_printable,
     parse_ipc_command,
     parse_config_files,
 )
+
+
+## Reasonable maximum lengths for untrusted strings shown in the GUI. A VM
+## name under Qubes OS is at most 31 characters; the non-Qubes self-reported
+## name is capped at 255. sdwdate messages are already limited to 4096 bytes,
+## but that is far more than is useful in a status window.
+MAX_QUBES_NAME_LEN: int = 31
+MAX_DISPLAY_NAME_LEN: int = 255
+MAX_DISPLAY_MSG_LEN: int = 2048
+
+## Bound how many clients may be connected at once, and how long a client may
+## stay connected without completing its handshake (providing a name), so a
+## misbehaving or hostile client cannot exhaust memory or file descriptors
+## with a flood of connections or idle half-open ones. The limit is far above
+## any realistic number of VMs for desktop use.
+MAX_CLIENTS: int = 64
+HANDSHAKE_TIMEOUT_MS: int = 30000
+
+
+def sanitize_for_richtext(untrusted: str, max_length: int) -> str:
+    """
+    Remove Unicode and HTML from an untrusted string and truncate it to a
+    maximum length.
+    """
+
+    return sanitize_string(untrusted)[:max_length]
 
 
 class SdwdateStatus(Enum):
@@ -162,6 +191,30 @@ class SdwdateGuiClient(QObject):
         self.client_socket.readyRead.connect(self.__handle_incoming_data)
         self.client_socket.disconnected.connect(self.clientDisconnected.emit)
 
+        ## Kick a client that connects but never completes its handshake by
+        ## providing a name, so half-open / idle connections cannot
+        ## accumulate. The timer is stopped as soon as the name is set.
+        self.handshake_timer: QTimer = QTimer(self)
+        self.handshake_timer.setSingleShot(True)
+        self.handshake_timer.timeout.connect(self.__handshake_timeout)
+        self.clientNameChanged.connect(self.handshake_timer.stop)
+        self.handshake_timer.start(HANDSHAKE_TIMEOUT_MS)
+
+    def __handshake_timeout(self) -> None:
+        """
+        Kick a still-connected client that never set its name in time.
+        """
+
+        if self.client_name_set:
+            return
+        if self.client_socket.state() != QLocalSocket.ConnectedState:
+            return
+        logging.warning(
+            "Kicking client '%s' for not completing its handshake in time",
+            self.client_name_or_unknown(),
+        )
+        self.kick_client()
+
     def client_name_or_unknown(self) -> str:
         """
         Returns the client name if set, otherwise returns "Unknown".
@@ -186,6 +239,14 @@ class SdwdateGuiClient(QObject):
             ## client may disregard this; we cannot assume the client won't
             ## try to reconnect after receiving this.
             self.suppress_client_reconnect()
+
+        ## Disconnect the "disconnected" signal from the
+        ## "clientDisconnected.emit" function, so that we don't end up
+        ## triggering clientDisconnected twice. The similar naming of the
+        ## "disconnected" signal and "disconnect" method is a coincidence, the
+        ## "disconnect" method has nothing to do with disconnecting a socket
+        ## connection.
+        self.client_socket.disconnected.disconnect()
 
         self.client_socket.disconnectFromServer()
         self.clientDisconnected.emit()
@@ -229,8 +290,10 @@ class SdwdateGuiClient(QObject):
         if len(qrexec_header_parts) < 2:
             return True
 
-        self.client_name = qrexec_header_parts[1]
-        self.client_name_set = True
+        ## Don't set the client name directly in this function,
+        ## __set_client_name is designed to handle the qrexec case too.
+        header_name: str = qrexec_header_parts[1]
+        self.__set_client_name(header_name)
 
         return True
 
@@ -244,9 +307,16 @@ class SdwdateGuiClient(QObject):
             function_name: str | None
             msg_parts: list[str] | None
             try:
+                preproc_sock_buf_len: int = len(self.__sock_buf)
                 self.__sock_buf, function_name, msg_parts = parse_ipc_command(
                     self.__sock_buf
                 )
+                postproc_sock_buf_len: int = len(self.__sock_buf)
+                if preproc_sock_buf_len == postproc_sock_buf_len:
+                    ## If the buffer didn't shrink, that means that we've only
+                    ## received part of a message. Break so that we can receive
+                    ## the rest of it later on.
+                    break
                 if function_name is None:
                     continue
                 assert function_name is not None
@@ -299,6 +369,9 @@ class SdwdateGuiClient(QObject):
                         return
                     if not self.__set_tor_status(msg_parts[0]):
                         return
+                case _:
+                    self.kick_client()
+                    return
 
     def __handle_incoming_data(self) -> None:
         """
@@ -376,10 +449,30 @@ class SdwdateGuiClient(QObject):
                 self.kick_client()
                 return False
 
-        self.client_name = client_name
+        ## It's theoretically possible for a client name to be "unsafe"
+        ## without being malicious (what if the hostname contains Unicode?),
+        ## so fix unsafe names instead of rejecting them.
+        safe_name: str = sanitize_for_richtext(
+            client_name, MAX_DISPLAY_NAME_LEN
+        )
+
+        self.client_name = safe_name
         self.client_name_set = True
         self.clientNameChanged.emit()
         return True
+
+    @staticmethod
+    def __octal_decode(octal_match: re.Match[str]) -> str:
+        """
+        Decodes an octal escape in an sdwdate status string.
+        """
+
+        octal_str: str = octal_match.group().strip("\\")
+        octal_int: int = int(octal_str, 8)
+        if (octal_int < 0x20 or octal_int > 0x7E) and octal_int != 0x0A:
+            raise ValueError(f"Unsafe octal escape '{octal_str}'")
+        real_char: str = chr(octal_int)
+        return real_char
 
     def __set_sdwdate_status(
         self, sdwdate_status_str: str, sdwdate_msg_str: str
@@ -415,37 +508,27 @@ class SdwdateGuiClient(QObject):
                 self.kick_client()
                 return False
 
+        ## Decode octal escapes. We used to do this by getting a set of all
+        ## escapes, then iterating through them and replacing each one, but
+        ## this could cause non-deterministic behavior and was inefficient.
+        ## Now we offload most of the work to Python's regex engine, which
+        ## processes everything in a single left-to-right pass.
         decode_re: Pattern[str] = re.compile(r"\\\d{3}")
-        octal_escape_set: set[str] = set(decode_re.findall(sdwdate_msg_str))
-        for octal_escape in octal_escape_set:
-            octal_str: str = octal_escape.strip("\\")
-            try:
-                octal_int: int = int(octal_str, 8)
-            except ValueError:
-                logging.warning(
-                    "Kicking client '%s' for sending an invalid octal escape "
-                    "code '%s' in sdwdate status message '%s' ",
-                    self.client_name_or_unknown(),
-                    octal_str,
-                    sdwdate_msg_str,
-                )
-                self.kick_client()
-                return False
+        try:
+            sdwdate_msg_str = decode_re.sub(
+                self.__octal_decode, sdwdate_msg_str
+            )
+        except Exception as e:
+            logging.warning(
+                "Kicking client '%s' for sending invalid or unsafe octal "
+                "escape in sdwdate status message '%s'",
+                self.client_name_or_unknown(),
+                sdwdate_msg_str,
+                exc_info=e,
+            )
+            self.kick_client()
+            return False
 
-            if octal_int < 0x20 or octal_int > 0x7E and octal_int != 0x0A:
-                logging.warning(
-                    "Kicking client '%s' for attempting to embed unsafe "
-                    "character as octal escape '%s' in sdwdate status "
-                    "message '%s'",
-                    self.client_name_or_unknown(),
-                    octal_str,
-                    sdwdate_msg_str,
-                )
-                self.kick_client()
-                return False
-
-            real_char: str = chr(octal_int)
-            sdwdate_msg_str = sdwdate_msg_str.replace(octal_escape, real_char)
         self.sdwdate_msg = sdwdate_msg_str
 
         self.sdwdateStatusChanged.emit()
@@ -498,6 +581,11 @@ class SdwdateGuiClient(QObject):
         """
 
         msg_len: int = len(msg_bytes)
+        if msg_len > MAX_MSG_SIZE:
+            ## We already reject overly large messages on the receiving end,
+            ## try to not send them either.
+            logging.critical("Server tried to send an oversized IPC message!")
+            sys.exit(1)
         msg_buf: bytes = (
             msg_len.to_bytes(2, byteorder="big", signed=False) + msg_bytes
         )
@@ -508,6 +596,15 @@ class SdwdateGuiClient(QObject):
             bytes_written: int = self.client_socket.write(
                 msg_buf[len(msg_buf) - msg_len :]
             )
+            if bytes_written < 0:
+                ## write() returns -1 on error. 0 is a theoretically possible
+                ## return value depending on how Qt (both current and future
+                ## versions) implements write() internally, so do not bail out
+                ## when 0 is returned. This has a chance of causing us to
+                ## busy-wait, but that shouldn't happen unless there is a bug
+                ## in Qt or PyQt.
+                self.kick_client()
+                return
             msg_len -= bytes_written
 
     def open_tor_control_panel(self) -> None:
@@ -579,14 +676,15 @@ class SdwdateGuiFrame(QDialog):
         self.setMinimumWidth(200)
 
         icon_widget: QLabel = QLabel(self)
+        icon_widget.setTextFormat(Qt.TextFormat.PlainText)
         icon_widget.setAlignment(Qt.AlignRight)
         icon_widget.setPixmap(icon.pixmap(64, 64))
 
         text_widget: QLabel = QLabel(self)
+        text_widget.setTextFormat(Qt.TextFormat.PlainText)
         text_widget.setTextInteractionFlags(
             Qt.LinksAccessibleByMouse | Qt.TextSelectableByMouse
         )
-        text_widget.setTextFormat(Qt.RichText)
         text_widget.setAlignment(Qt.AlignTop)
         text_widget.setText(text)
 
@@ -726,15 +824,18 @@ class SdwdateTrayIcon(QSystemTrayIcon):
         if message_type == MessageType.SDWDATE:
             if client.sdwdate_msg is None:
                 return
+            safe_msg: str = sanitize_for_richtext(
+                client.sdwdate_msg, MAX_DISPLAY_MSG_LEN
+            )
             if running_in_qubes_os():
                 msg_window = SdwdateGuiFrame(
                     "Last message from sdwdate on "
-                    f"{client.client_name}:<br><br>" + client.sdwdate_msg,
+                    f"{client.client_name}:\n\n{safe_msg}",
                     self.sdwdate_icon_list[client.sdwdate_status.value],
                 )
             else:
                 msg_window = SdwdateGuiFrame(
-                    "Last message from sdwdate:<br><br>" + client.sdwdate_msg,
+                    f"Last message from sdwdate:\n\n{safe_msg}",
                     self.sdwdate_icon_list[client.sdwdate_status.value],
                 )
         else:  # message_type == MessageType.TOR
@@ -744,22 +845,28 @@ class SdwdateTrayIcon(QSystemTrayIcon):
                     msg_text = "Tor is running."
                 case TorStatus.DISABLED:
                     msg_text = """\
-<b>Tor is disabled</b>. Therefore you most likely<br> \
-can not connect to the internet. <br><br> \
-Run <b>Anon Connection Wizard</b> from the menu."""
+Tor is disabled. Therefore you most likely
+can not connect to the internet.
+
+Run "Anon Connection Wizard" from the menu."""
                 case TorStatus.STOPPED:
                     msg_text = """\
-<b>Tor is not running.</b> <br><br> \
-You have to fix this error, before you can use Tor. <br> \
-Please restart Tor after fixing this error. <br><br> \
-Start Menu -> System -> Restart Tor GUI<br> \
-or in Terminal: <br> \
-sudo service tor@default restart <br><br>"""
+Tor is not running.
+
+You have to fix this error, before you can use Tor.
+Please restart Tor after fixing this error.
+
+Start Menu -> System -> Restart Tor GUI
+or in Terminal:
+sudo service tor@default restart
+
+"""
                 case TorStatus.DISABLED_RUNNING:
                     msg_text = """\
-<b>Tor is running but is disabled.</b><br><br> \
-A line <i>DisableNetwork 1</i> exists in torrc <br> \
-Run <b>Anon Connection Wizard</b> from the menu <br>\
+Tor is running but is disabled.
+
+A line "DisableNetwork 1" exists in torrc.
+Run "Anon Connection Wizard" from the menu
 to connect to or configure the Tor network."""
                 case _:
                     logging.warning(
@@ -771,12 +878,12 @@ to connect to or configure the Tor network."""
 
             if running_in_qubes_os():
                 msg_window = SdwdateGuiFrame(
-                    f"Tor status on {client.client_name}:<br><br>" + msg_text,
+                    f"Tor status on {client.client_name}:\n\n{msg_text}",
                     self.tor_icon_list[client.tor_status.value],
                 )
             else:
                 msg_window = SdwdateGuiFrame(
-                    "Tor status:<br><br>" + msg_text,
+                    f"Tor status:\n\n{msg_text}",
                     self.tor_icon_list[client.tor_status.value],
                 )
 
@@ -1038,16 +1145,19 @@ to connect to or configure the Tor network."""
 
     def show_menu(self, event: QSystemTrayIcon.ActivationReason) -> None:
         """
-        Swallows left-clicks on the context menu. This method of showing the
-        context menu is broken under Wayland, right-clicking should be used
-        instead.
-
-        TODO: Figure out how to get left-clicking to work rather than just
-        disabling it.
+        Opens the menu on either a left-click (Trigger) or a right-click
+        (Context) of the tray icon. This is skipped under Wayland, as Wayland
+        does not allow us to position the popup and would display it in the
+        middle of the screen instead of near the tray icon.
         """
 
-        # if event == QSystemTrayIcon.ActivationReason.Trigger:
-        #    self.menu.exec_(QCursor.pos())
+        if QApplication.platformName() == "wayland":
+            return
+        if event in (
+            QSystemTrayIcon.ActivationReason.Trigger,
+            QSystemTrayIcon.ActivationReason.Context,
+        ):
+            self.menu.popup(QCursor.pos())
 
     def handle_client_name_change(
         self,
@@ -1059,19 +1169,31 @@ to connect to or configure the Tor network."""
         kicked.
         """
 
-        name_match_count: int = 0
-        for client in self.client_list:
-            if client.client_name == sender_client.client_name:
-                name_match_count += 1
-                if name_match_count > 1:
-                    logging.warning(
-                        "Kicking client '%s' for attempting to set a name "
-                        "'%s' identical to another client's name",
-                        client.client_name_or_unknown(),
-                        client.client_name,
-                    )
-                    sender_client.kick_client()
-                    return
+        duplicate_clients: list[SdwdateGuiClient] = [
+            client
+            for client in self.client_list
+            if client is not sender_client
+            and client.client_name == sender_client.client_name
+        ]
+        if len(duplicate_clients) != 0:
+            if running_in_qubes_os():
+                ## The same VM reconnected before the server noticed the
+                ## previous connection had dropped. Keep the new connection
+                ## and discard the stale duplicate(s).
+                for old_client in duplicate_clients:
+                    old_client.kick_client()
+            else:
+                ## On non-Qubes systems the name is self-reported, so treat a
+                ## duplicate name as an impersonation attempt and kick the
+                ## newcomer.
+                logging.warning(
+                    "Kicking client '%s' for attempting to set a name "
+                    "'%s' identical to another client's name",
+                    sender_client.client_name_or_unknown(),
+                    sender_client.client_name,
+                )
+                sender_client.kick_client()
+                return
 
         self.regen_menu()
 
@@ -1116,6 +1238,15 @@ to connect to or configure the Tor network."""
         Adds a new client to the client list.
         """
 
+        if len(self.client_list) >= MAX_CLIENTS:
+            logging.warning(
+                "Rejecting new client; already at the %d client limit",
+                MAX_CLIENTS,
+            )
+            client.kick_client()
+            client.deleteLater()
+            return
+
         self.client_list.append(client)
         client.clientNameChanged.connect(
             functools.partial(
@@ -1153,6 +1284,7 @@ class SdwdateGuiListener(QObject):
 
     newClient: pyqtSignal = pyqtSignal(SdwdateGuiClient)
 
+    # pylint: disable=too-many-statements
     def __init__(self, parent: QObject | None = None) -> None:
         """
         Initializes a listening socket.
@@ -1172,7 +1304,7 @@ class SdwdateGuiListener(QObject):
                 exist_ok=True,
             )
         except Exception:
-            logging.error(
+            logging.critical(
                 "Could not create '%s' directory!'!",
                 str(sdwdate_run_dir),
             )
@@ -1239,6 +1371,9 @@ class SdwdateGuiListener(QObject):
             sys.exit(1)
 
         self.server: QLocalServer = QLocalServer(self)
+        ## Restrict the IPC socket to the owning user rather than relying
+        ## solely on the 0700 mode of the parent /run/user/UID directory.
+        self.server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
         self.server.listen(str(sdwdate_socket_file))
         self.server.newConnection.connect(self.spawn_client)
 

@@ -12,7 +12,7 @@
 ##
 ## On the workstation, it drops a flag file that makes systemd enable the
 ## sdwdate-gui-qubes@.socket units, enabling sdwdate-gui-client to communicate
-## with the server on the gateway..
+## with the server on the gateway.
 
 #set -x
 set -e
