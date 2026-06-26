@@ -185,6 +185,7 @@ class SdwdateGuiClient(QObject):
         self.tor_status: TorStatus = TorStatus.UNKNOWN
         self.qubes_header_parsed: bool = False
         self.present_in_menu: bool = False
+        self.__kick_in_progress: bool = False
 
         self.__sock_buf: bytes = b""
 
@@ -230,6 +231,15 @@ class SdwdateGuiClient(QObject):
         Forcibly disconnects the client from the server. Used when a client
         sends invalid data to the server as a security measure.
         """
+
+        ## Guard against re-entrancy. On Qubes OS this calls
+        ## suppress_client_reconnect(), which sends an RPC; if that send hits
+        ## a write error, __generic_rpc_call() calls kick_client() again,
+        ## which would recurse indefinitely. It also makes a repeat kick (for
+        ## example one already in progress) a harmless no-op.
+        if self.__kick_in_progress:
+            return
+        self.__kick_in_progress = True
 
         if running_in_qubes_os():
             ## Under Qubes OS, the client will automatically reconnect if the
