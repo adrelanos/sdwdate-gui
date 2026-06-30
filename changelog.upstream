@@ -1,3 +1,22 @@
+commit 550b0fb13b016f00d2f3ffe4904918ed4a839983
+Merge: 1339b18 a9d64a4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Jun 30 15:03:52 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit a9d64a4e8a736e32627c87b96d16c71074a70cfa
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Mon Jun 29 23:41:10 2026 -0400
+
+    Remove obsolete sdwdate-gui-client.desktop file with rm_conffile
+
+commit 1339b183dc0a508cf2104a098d8c1752e2d416a4
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Jun 27 08:37:29 2026 +0000
+
+    bumped changelog version
+
 commit 040f398a87b0121cfd5bb4264c459ab0d550a984
 Merge: 3c76bbf 742f385
 Author: Patrick Schleizer <adrelanos@whonix.org>
