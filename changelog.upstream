@@ -1,3 +1,29 @@
+commit a48d44b151a8d57bbb31b6ab7bd5c7772e3487d0
+Merge: 239f7e8 8680379
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Jul 7 06:30:48 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/org-ai-assisted/master'
+
+commit 8680379ec38c17b2157ba443d578d048927d5907
+Author: claude (dev42 08e1f373-4824-43b0-b4d4-e48187e4d900) <noreply@anthropic.com>
+Date:   Fri Jul 3 15:30:51 2026 -0400
+
+    add AGENTS.md linking to the comprehensive test suite in dist-ai
+
+    The offscreen unit suite, wire-protocol/state fuzzer, and X11/Wayland/SNI integration suite are too high-volume for human review and live in the
+    AI-maintained dist-ai repo. AGENTS.md is a minimal pointer to that suite
+    plus its invocation; CLAUDE.md defers to it (sibling-package convention).
+
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_014Pag3UZHFWciJjKjnUwPWS
+
+commit 239f7e828a7543ba2323de909f241cacfac2fd35
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Jun 30 19:24:28 2026 +0000
+
+    bumped changelog version
+
 commit 550b0fb13b016f00d2f3ffe4904918ed4a839983
 Merge: 1339b18 a9d64a4
 Author: Patrick Schleizer <adrelanos@whonix.org>
