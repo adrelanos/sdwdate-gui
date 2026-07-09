@@ -42,7 +42,7 @@ class GlobalData:
     Global data for sdwdate_gui_client.
     """
 
-    anon_connection_wizard_installed: bool = False
+    tor_control_panel_installed: bool = False
     sock_read: asyncio.StreamReader | None = None
     sock_write: asyncio.StreamWriter | None = None
     uid_str: str = str(os.getuid())
@@ -146,11 +146,11 @@ class INotifyEventHandler(pyinotify.ProcessEvent):  # type: ignore[misc]
             )
 
 
-GlobalData.anon_connection_wizard_installed = os.path.exists(
-    "/usr/bin/anon-connection-wizard"
+GlobalData.tor_control_panel_installed = os.path.exists(
+    "/usr/bin/tor-control-panel"
 )
-if GlobalData.anon_connection_wizard_installed:
-    from anon_connection_wizard import tor_status
+if GlobalData.tor_control_panel_installed:
+    from tor_control_panel import tor_status
 
 
 def running_in_qubes_os() -> bool:
@@ -462,7 +462,7 @@ async def tor_status_changed() -> None:
     Determine the current Tor status and send it to the server.
     """
 
-    if not GlobalData.anon_connection_wizard_installed:
+    if not GlobalData.tor_control_panel_installed:
         ## tor_status() unavailable.
         return
 
@@ -540,7 +540,7 @@ async def find_and_handle_tor_and_sdwdate_state() -> tuple[bool, bool]:
     found_tor_paths: bool = False
     found_sdwdate_path: bool = False
 
-    if not GlobalData.anon_connection_wizard_installed:
+    if not GlobalData.tor_control_panel_installed:
         await set_tor_status("absent")
     else:
         for _ in range(20):
