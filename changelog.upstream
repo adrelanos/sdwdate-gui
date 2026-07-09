@@ -1,3 +1,15 @@
+commit a1a0f1c24d4a390f514d3d1076da9fe105ae72bf
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Jul 9 11:23:37 2026 -0400
+
+    fix
+
+commit 35dcdba2c28cc8d70bf3f28f0bcc60bc33ae7364
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Wed Jul 8 18:14:16 2026 +0000
+
+    bumped changelog version
+
 commit dd16dee8ed8b3e572cea76398c5927ef17db1b79
 Merge: ce4386f 73aa70a
 Author: Patrick Schleizer <adrelanos@whonix.org>
