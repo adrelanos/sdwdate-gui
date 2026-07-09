@@ -24,13 +24,13 @@ default_user="$(qubesdb-read /default-user)" || exit 1
 default_user_uid="$(id -u "$default_user")" || exit 1
 server_sock_path="/run/user/$default_user_uid/sdwdate-gui/sdwdate-gui-server.socket"
 
-if [ "$qubes_server_permitted" != 'True' ]; then
+if [ "$qubes_server_permitted" != 'true' ]; then
   true "INFO: $0: Running on Qubes, but not supposed to run server in this VM. Enabling server proxy and exiting, ok."
   touch /run/sdwdate-gui-qubes-should-proxy
   exit 0
 else
   server_disabled="$(/usr/libexec/sdwdate-gui/sdwdate-gui-config-read 'disable')" || exit 1
-  if [ "$server_disabled" = 'True' ]; then
+  if [ "$server_disabled" = 'true' ]; then
     true "INFO: $0: Running on Qubes, but server disabled. Exiting, ok."
     exit 0;
   fi

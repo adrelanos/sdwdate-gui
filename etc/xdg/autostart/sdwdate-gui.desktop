@@ -2,7 +2,7 @@
 ## See the file COPYING for copying conditions.
 
 [Desktop Entry]
-Name=sdwdate-gui-client
+Name=sdwdate-gui
 Comment=Secure Distributed Web Date Graphical User Interface
 Type=Application
 Terminal=false

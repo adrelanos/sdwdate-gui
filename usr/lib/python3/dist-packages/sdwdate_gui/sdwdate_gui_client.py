@@ -661,6 +661,11 @@ async def main_loop() -> None:
         if GlobalData.qubes_gateway_server_disabled_path.is_file():
             ## We're running under Qubes, and the gateway has 'disable=true'
             ## set in its configuration. Give up.
+            logging.info(
+                "Qubes sdwdate-gui-server has indiciated it is disabled "
+                + "('%s' exists on the client side). Exiting.",
+                str(GlobalData.qubes_gateway_server_disabled_path),
+            )
             break
         if not await do_setup():
             continue
