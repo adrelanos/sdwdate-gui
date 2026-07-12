@@ -1,3 +1,22 @@
+commit 88afc947888602a896c1da5ac3e155cd9fc2d02b
+Merge: eb913a6 0ab4e34
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Jul 12 11:53:04 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit 0ab4e34280afa71e16e6cf2b3f2e55d28da7bd03
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Thu Jul 9 13:07:58 2026 -0400
+
+    Remove unneeded sdwdate-gui user, adjust permissions on /run/sdwdate-gui, fix client reconnect control under Qubes, log message when client reconnect is disabled, fix inaccurate name in autostart desktop file
+
+commit eb913a60a6b1bf8eca11f10bd6a50d16f12161a1
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Thu Jul 9 15:25:22 2026 +0000
+
+    bumped changelog version
+
 commit a1a0f1c24d4a390f514d3d1076da9fe105ae72bf
 Author: Patrick Schleizer <adrelanos@whonix.org>
 Date:   Thu Jul 9 11:23:37 2026 -0400
