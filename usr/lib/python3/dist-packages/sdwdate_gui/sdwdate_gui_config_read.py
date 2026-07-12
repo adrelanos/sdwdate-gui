@@ -11,7 +11,7 @@ Allows reading sdwdate-gui config values from Bash scripts.
 
 import sys
 import traceback
-from typing import NoReturn
+from typing import NoReturn, Any
 
 from .sdwdate_gui_shared import (
     ConfigData,
@@ -45,5 +45,12 @@ def main() -> NoReturn:
         )
         traceback.print_exc(file=sys.stderr)
         sys.exit(1)
-    print(ConfigData.conf_dict[sys.argv[1]])
+    config_val: Any = ConfigData.conf_dict[sys.argv[1]]
+    if isinstance(config_val, bool):
+        ## Kicksecure's Bash scripts use 'true' and 'false' for booleans, but
+        ## Python uses 'True' and 'False' as the string representations of
+        ## booleans. Translate to Bash-script-style.
+        print(str(config_val).lower())
+    else:
+        print(config_val)
     sys.exit(0)
