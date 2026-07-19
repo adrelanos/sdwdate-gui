@@ -5,5 +5,11 @@
 
 ## Per-repo parameters for developer-meta-files consumer workflows, read at
 ## workflow runtime. Here: extra apt packages the dist-ai test suites need.
+coverity:
+  ## scan.coverity.com project name (org-ai-assisted-owned; the "/" is
+  ## rejected in manual registration so the name is slash-free).
+  project-name:    "org-ai-assisted-sdwdate-gui"
+  canonical-repos: "org-ai-assisted/sdwdate-gui"
+
 dist-ai-tests:
   apt-packages: "python3 python3-pytest python3-hypothesis python3-pyqt5"
