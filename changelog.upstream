@@ -1,3 +1,28 @@
+commit bd5054fb8d92a9c51d3cba23712e061969b1d869
+Merge: e7ffa72 8642558
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Jul 21 06:23:50 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/org-ai-assisted/master'
+
+commit 864255869ff18961c3073f6ffa8f72069dd3ef64
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Sat Jul 18 20:00:37 2026 -0400
+
+    Coverity: point CI at the org-ai-assisted-sdwdate-gui project
+
+commit f677550b967453721d7a299bbea3b3df35784d52
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Sat Jul 18 20:00:33 2026 -0400
+
+    Add consumer-coverity.yml (opt into Coverity Scan)
+
+commit e7ffa721ec37a3c2660f7cf4fa76dda38fb76851
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Jul 12 17:43:42 2026 +0000
+
+    bumped changelog version
+
 commit 88afc947888602a896c1da5ac3e155cd9fc2d02b
 Merge: eb913a6 0ab4e34
 Author: Patrick Schleizer <adrelanos@whonix.org>
